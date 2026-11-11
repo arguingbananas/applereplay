@@ -5,5 +5,30 @@ Description=Turn on HDMI audio whenever a stream starts
 ExecStart=/usr/local/sbin/applereplay-hdmi-audio
 Restart=always
 
+# It runs as root because hda-verb's ioctl on the codec needs CAP_SYS_RAWIO.
+# Beyond that it reads /proc/asound and the sound devices, and nothing else.
+CapabilityBoundingSet=CAP_SYS_RAWIO
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateNetwork=yes
+DevicePolicy=closed
+DeviceAllow=char-alsa rw
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictAddressFamilies=none
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+
 [Install]
 WantedBy=multi-user.target

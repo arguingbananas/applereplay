@@ -12,7 +12,7 @@ build-essential clang make git ca-certificates curl file xxd
 autoconf automake libtool pkgconf uuid-dev libssl-dev
 flex bison bc libelf-dev kmod cpio zstd xz-utils python3
 gdisk dosfstools mtools e2fsprogs libarchive13t64 7zip bmap-tools
-shellcheck
+shellcheck python3-apt
 "
 
 die() { echo "bootstrap.sh: $*" >&2; exit 1; }

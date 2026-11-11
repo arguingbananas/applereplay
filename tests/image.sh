@@ -9,7 +9,7 @@ mkdir -p "$T/root"
 # One pass over the tarball for the files we look at.
 tar -x -f "$PROJECT/out/rootfs.tar" -C "$T/root" --wildcards \
     ./etc/hostname ./etc/asound.conf ./etc/X11 ./etc/totalreplay \
-    ./etc/ssh/sshd_config.d ./etc/systemd/system ./etc/modprobe.d \
+    ./etc/ssh/sshd_config.d ./etc/systemd/system ./etc/modprobe.d ./etc/nftables.conf \
     './home/apple/.ssh/authorized_keys' './usr/local/bin/*' './usr/local/sbin/*' \
     ./usr/bin/hda-verb './boot/vmlinuz-*' 2>/dev/null
 R=$T/root
@@ -32,7 +32,7 @@ check "linapple is windowed at 1.75x" sh -c '
 check "HDMI (card 0 device 3) is the default sound output" \
     grep -qx 'defaults.pcm.device 3' etc/asound.conf
 check "the box's services are enabled" sh -c '
-    for s in applereplay-fb-wc applereplay-hdmi-audio ssh avahi-daemon systemd-timesyncd; do
+    for s in applereplay-fb-wc applereplay-hdmi-audio ssh avahi-daemon systemd-timesyncd nftables; do
         ls etc/systemd/system/*.wants/$s.service >/dev/null 2>&1 || { echo "$s not enabled"; exit 1; }
     done'
 check "apt's background timers are masked" sh -c '
@@ -41,6 +41,21 @@ check "apt's background timers are masked" sh -c '
 check "SSH takes keys only, never root" sh -c '
     grep -qx "PasswordAuthentication no" etc/ssh/sshd_config.d/*.conf &&
     grep -qx "PermitRootLogin no" etc/ssh/sshd_config.d/*.conf'
+check "the firewall drops what it doesn't name, and names SSH and mDNS" sh -c '
+    grep -q "hook input priority filter; policy drop;" etc/nftables.conf &&
+    grep -qx " *tcp dport 22 accept" etc/nftables.conf &&
+    grep -qx " *udp dport 5353 accept" etc/nftables.conf'
+check "the root services are confined to the one capability each needs" sh -c '
+    grep -qx "CapabilityBoundingSet=CAP_SYS_ADMIN" etc/systemd/system/applereplay-fb-wc.service &&
+    grep -qx "CapabilityBoundingSet=CAP_SYS_RAWIO" etc/systemd/system/applereplay-hdmi-audio.service &&
+    for u in applereplay-fb-wc applereplay-hdmi-audio; do
+        grep -qx "ProtectSystem=strict" etc/systemd/system/$u.service &&
+        grep -qx "NoNewPrivileges=yes" etc/systemd/system/$u.service || exit 1
+    done'
+check "linapple is built without its FTP client (no libcurl)" sh -c '
+    for b in usr/local/bin/linapple-sdl2 usr/local/bin/linapple-sdl1; do
+        if grep -q "libcurl\.so" "$b"; then echo "$b links libcurl"; exit 1; fi
+    done'
 check "apple's authorized key is out/ssh's public key" \
     cmp home/apple/.ssh/authorized_keys "$PROJECT/out/ssh/totalreplay_ed25519.pub"
 check "linapple (sdl2 and sdl1), fps, the kiosk and the services' scripts are installed" sh -c '

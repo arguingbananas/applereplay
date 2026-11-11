@@ -15,19 +15,23 @@ LINAPPLE_REF=${LINAPPLE_REF:-0b22441e91cb95cb813193195187d02db7227bd0}
 PACKAGES="
 systemd-sysv udev dbus kmod initramfs-tools zstd
 ifupdown isc-dhcp-client iproute2 iputils-ping openssh-server
-avahi-daemon libnss-mdns systemd-timesyncd sudo
+avahi-daemon libnss-mdns systemd-timesyncd sudo nftables
 less nano procps pciutils usbutils evtest alsa-utils alsa-tools libdrm-tests
 xserver-xorg-core xserver-xorg-legacy
 xserver-xorg-video-fbdev xserver-xorg-input-libinput xinit x11-xserver-utils xterm
-libsdl2-2.0-0 libsdl1.2debian libsdl-image1.2 libzip4 libcurl4
+libsdl2-2.0-0 libsdl1.2debian libsdl-image1.2 libzip4
 build-essential cmake pkg-config imagemagick
-libzip-dev libcurl4-openssl-dev zlib1g-dev libsdl2-dev libsdl1.2-dev libsdl-image1.2-dev
+libzip-dev zlib1g-dev libsdl2-dev libsdl1.2-dev libsdl-image1.2-dev
 "
 
 die() { echo "build.sh: $*" >&2; exit 1; }
 
 [ "$(id -u)" -ne 0 ] || die "run as your normal user, not root"
 [ -f "$HERE/assets/total-replay.hdv" ] || die "missing assets/total-replay.hdv"
+# assets.sha256 has the release this was tested with (Total Replay 6.1). Another
+# release is fine, so only warn; a damaged download looks the same from here.
+(cd "$HERE" && grep ' assets/total-replay\.hdv$' assets.sha256 | sha256sum -c --status -) ||
+    echo "build.sh: warning: assets/total-replay.hdv isn't the file in assets.sha256 (another release, or a bad download)" >&2
 mkdir -p "$OUT/ssh" "$OUT/src" "$OUT/boot" "$OUT/hostkeys/etc/ssh"
 
 # Our login key, and the box's SSH host keys. Both persist across rebuilds.

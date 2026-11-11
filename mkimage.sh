@@ -28,6 +28,14 @@ die() { echo "mkimage.sh: $*" >&2; exit 1; }
 for f in rootfs.tar boot/vmlinuz boot/initrd; do
     [ -f "$OUT/$f" ] || die "missing out/$f, run ./build.sh first"
 done
+# The boot files you fetch yourself (see the README). assets.sha256 has the ones
+# this was tested with; others may work, so a different file is only a warning.
+for f in boot.efi System/Library/Extensions/Dummy.kext/Contents/Info.plist \
+    System/Library/Extensions/Dummy.kext/Contents/MacOS/DummyKext; do
+    [ -f "$HERE/assets/atv-boot/$f" ] || die "missing assets/atv-boot/$f"
+done
+(cd "$HERE" && grep ' assets/atv-boot/' assets.sha256 | sha256sum -c --quiet - >&2) ||
+    echo "mkimage.sh: warning: the files above aren't the ones in assets.sha256" >&2
 
 echo "== mach_kernel"
 rm -rf "$OUT/loader"

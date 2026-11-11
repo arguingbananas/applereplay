@@ -1,0 +1,40 @@
+#!/bin/sh
+# List known vulnerabilities in the built image that Debian has already fixed,
+# i.e. what a rebuild (or `sudo apt update && sudo apt upgrade` on the box)
+# would cure. Reads the package list in out/rootfs.tar and asks Debian's
+# security tracker, with debsecan.
+#   env/vuln-check           one line per vulnerability and package
+#   env/vuln-check --all     also those with no fix yet
+# Exits 1 when there is something to fix.
+set -eu
+
+ENV=$(cd "$(dirname "$0")" && pwd)
+OUT=$(dirname "$ENV")/out
+[ -f "$OUT/rootfs.tar" ] || { echo "env/vuln-check: no out/rootfs.tar, run ./build.sh first" >&2; exit 1; }
+only=--only-fixed
+[ "${1:-}" = --all ] && only=
+
+mkdir -p "$OUT/test"
+tar -x -f "$OUT/rootfs.tar" -O ./var/lib/dpkg/status > "$OUT/test/dpkg-status"
+# debsecan's package can't be configured inside env (it wants its own user),
+# and only its script is needed: unpack it in env's /tmp, which is gone afterwards.
+"$ENV/run" sh -euc "
+    cd /tmp
+    apt-get -q -o APT::Sandbox::User=root download debsecan >/dev/null
+    dpkg -x debsecan_*.deb .
+    python3 usr/bin/debsecan --suite bookworm --format summary $only \
+        --status /work/out/test/dpkg-status
+" > "$OUT/test/vulns.txt"
+rm -f "$OUT/test/dpkg-status"
+
+n=$(grep -c . "$OUT/test/vulns.txt" || true)
+cat "$OUT/test/vulns.txt"
+if [ "$n" -eq 0 ]; then
+    echo "env/vuln-check: nothing to fix"
+elif [ -z "$only" ]; then
+    echo "env/vuln-check: $n known, most with no fix in Debian 12 yet (many are minor); without --all, only the fixable ones"
+    exit 1
+else
+    echo "env/vuln-check: $n to fix: rebuild the image, or upgrade those packages on the box"
+    exit 1
+fi

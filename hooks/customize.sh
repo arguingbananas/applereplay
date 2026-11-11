@@ -44,7 +44,7 @@ rm -rf /usr/local/src/linapple
 cp -r --no-preserve=ownership "$STAGE/linapple" /usr/local/src/linapple
 cd /usr/local/src/linapple
 for fe in sdl2 sdl1; do
-    cmake -S . -B build-$fe -DFRONTEND=$fe -DBUILD_TESTING=OFF \
+    cmake -S . -B build-$fe -DFRONTEND=$fe -DBUILD_TESTING=OFF -DENABLE_FTP=OFF \
         -DCMAKE_BUILD_TYPE=Release -DENABLE_STRICT_WARNINGS=OFF
     cmake --build build-$fe -j"$(nproc)"
     install -m 755 build-$fe/linapple /usr/local/bin/linapple-$fe
@@ -60,6 +60,9 @@ install -m 755 "$STAGE/fps" /usr/local/bin/fps
 # black lines above and below: many TVs overscan 720p, and the one this was
 # tuned on has no setting to stop it. Fullscreen would try to switch modes,
 # which the firmware framebuffer can't.
+# The directory is made here, not as an empty one in overlay/: git doesn't
+# keep empty directories, and a fresh clone then failed at this point.
+install -d /etc/totalreplay
 sed -e 's/^Screen factor = .*/Screen factor = 1.75/' \
     /usr/local/src/linapple/res/linapple.conf > /etc/totalreplay/linapple.conf
 grep -qx 'Screen factor = 1.75' /etc/totalreplay/linapple.conf
@@ -74,6 +77,8 @@ chown -R apple:apple /var/games/apple2
 echo "== services"
 install -d -m 2755 -g systemd-journal /var/log/journal
 systemctl enable applereplay-fb-wc.service applereplay-hdmi-audio.service ssh.service avahi-daemon.service systemd-timesyncd.service networking.service
+# The firewall: overlay/etc/nftables.conf (SSH, mDNS and ping in; everything out).
+systemctl enable nftables.service
 # A kiosk shouldn't be running apt in the background.
 systemctl mask apt-daily.timer apt-daily-upgrade.timer
 

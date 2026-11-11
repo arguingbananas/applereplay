@@ -5,12 +5,15 @@
 #   Sound, 5 s each, with the screen colour as the cue:
 #     red = analog (device 0), green = S/PDIF (device 1), blue = HDMI (device 3).
 set -u
+# Runs as root, so no fixed names in /tmp: a private directory instead.
+AVDIR=$(mktemp -d) || exit 1
+export AVDIR
 touch /etc/totalreplay/no-kiosk
 pkill -x linapple-sdl2; sleep 3; pkill -x Xorg; sleep 2
 
-cat > /tmp/av-session <<'INNER'
+cat > "$AVDIR/session" <<'INNER'
 #!/bin/sh
-show() { convert -size 1280x720 "xc:$1" /tmp/av.png; display -window root /tmp/av.png; }
+show() { convert -size 1280x720 "xc:$1" "$AVDIR/av.png"; display -window root "$AVDIR/av.png"; }
 for c in black white red green blue gray50; do show $c; sleep 5; done
 amixer -q -c 0 set IEC958 on; amixer -q -c 0 set IEC958,16 on
 for pair in red:0 green:1 blue:3; do
@@ -19,8 +22,12 @@ for pair in red:0 green:1 blue:3; do
 done
 show black; sleep 1
 INNER
-chmod +x /tmp/av-session
-xinit /tmp/av-session -- :0 vt1 -nolisten tcp -nocursor >/tmp/av-test.log 2>&1
+chmod +x "$AVDIR/session"
+if xinit "$AVDIR/session" -- :0 vt1 -nolisten tcp -nocursor >"$AVDIR/log" 2>&1; then
+    rm -rf "$AVDIR"
+else
+    echo "av-test: X failed, see $AVDIR/log" >&2
+fi
 
 rm -f /etc/totalreplay/no-kiosk
 systemctl restart getty@tty1

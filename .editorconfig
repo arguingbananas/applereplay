@@ -1,0 +1,21 @@
+# How files here are laid out (https://editorconfig.org). Shell scripts are
+# checked with shellcheck (tests/static.sh); there is no automatic formatter.
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+# Patches keep whatever whitespace the code they change has.
+[*.patch]
+trim_trailing_whitespace = false
+indent_style = unset
+indent_size = unset
+
+[*.{asc,efi,hdv}]
+trim_trailing_whitespace = false
+insert_final_newline = unset

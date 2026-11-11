@@ -21,7 +21,11 @@ stick needs root.
 - A Linux PC (x86_64) with `mmdebstrap`, `bubblewrap`, `uidmap` and `git`, and
   unprivileged user namespaces enabled. Built and tested on Linux Mint 22
   (Ubuntu 24.04 based); other distributions should work but are untested.
-  Writing the stick needs `bmap-tools` and `gdisk`.
+  Writing the stick needs `bmap-tools` and `gdisk`. On Debian, Ubuntu or Mint:
+
+  ```
+  sudo apt install mmdebstrap bubblewrap uidmap git openssh-client bmap-tools gdisk
+  ```
 
 ## Files you get yourself
 
@@ -39,6 +43,11 @@ in `assets/`:
   [Total Replay's releases](https://github.com/a2-4am/4cade/releases). It
   contains commercial games from the 1980s.
 
+`assets.sha256` has the SHA-256 of each file this was built and tested with
+(Total Replay 6.1, DummyKext 1.0). The build warns when yours differ; a newer
+Total Replay is fine, a damaged download is not. To check by hand:
+`sha256sum -c assets.sha256`.
+
 ## Build
 
 ```
@@ -52,11 +61,36 @@ env/build-cctools.sh     # once: Apple's linker, needed for the boot loader
 
 To change linapple, edit `out/src/linapple` and use `env/devroot build` and
 `env/devroot install`: it builds inside a copy of the box's own system on your
-PC, in seconds, and puts the result on the box. `tests/run` runs the test
-suite.
+PC, in seconds, and puts the result on the box.
 
 `build.sh` makes an SSH key for you in `out/ssh/` and the box's host keys in
-`out/hostkeys/`; both survive rebuilds. Keep `out/` private.
+`out/hostkeys/`; both survive rebuilds. Keep `out/` private, and don't pass
+your image on to anyone: it holds the box's private host keys, lets your key
+log in as root, and contains Apple's boot loader and the games, which aren't
+yours to redistribute. Others should build their own.
+
+Settings, as environment variables:
+
+| Variable | For | Default |
+| --- | --- | --- |
+| `TMPDIR` | `build.sh`: where the system is unpacked (about 2 GB) | `/dev/shm` if it has 4 GB free, else `/tmp` |
+| `LINAPPLE_REF` | `build.sh`: the linapple commit to build | the tested commit |
+| `ROOT_SIZE_MIB` | `mkimage.sh`: size of the root partition | 6144 |
+| `TEST_BOX` | `tests/run`: `1` also tests a running Apple TV over SSH | unset |
+| `TEST_HOST` | `tests/run`: the Apple TV's SSH address | `apple@applereplay.local` |
+
+## Tests
+
+```
+tests/run                # everything that needs no Apple TV, about 1.5 minutes
+tests/run static         # one test by name: static, image, stretch, devroot, box
+TEST_BOX=1 tests/run     # also checks a running box: services, display and sound setup, 60 fps
+```
+
+Tests skip what they can't check yet and say what to run first: most need
+`env/bootstrap.sh` and a finished `./build.sh` and `./mkimage.sh`, and the
+i386 checks need `env/devroot init`. The shell scripts are checked with
+[shellcheck](https://www.shellcheck.net), which `env/bootstrap.sh` installs.
 
 ## Write the stick
 
@@ -76,6 +110,11 @@ some boot text, then Total Replay.
   help.
 - **SSH:** `ssh -i out/ssh/totalreplay_ed25519 apple@applereplay.local`. User
   `apple` has passwordless sudo, so the key is as good as root: keep it safe.
+- **Security:** the box is meant for a home network. A firewall lets in only
+  SSH, its name on the network (mDNS) and ping. It never updates itself:
+  rebuild now and then, or run `sudo apt update && sudo apt upgrade` on it;
+  `env/vuln-check` tells you when Debian has fixes your image lacks.
+  [SECURITY.md](SECURITY.md) has the details and how to report a problem.
 - **A shell instead of the game:** `sudo touch /etc/totalreplay/no-kiosk` and
   reboot (remove the file to go back).
 - **Speed check:** `sudo fps` prints linapple's frames per second (60 is full

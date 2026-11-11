@@ -47,6 +47,14 @@ else
     echo "  skip  patch checks (no out/src/linapple; run ./build.sh)"
 fi
 
+check "the overlay has no empty directories (git drops them, so a clone would lack them)" \
+    sh -c "[ -z \"\$(find '$PROJECT/overlay' -type d -empty)\" ]"
+# Which files they are, not whether yours match: build.sh and mkimage.sh warn about that.
+check "assets.sha256 names the four files the build takes from assets/" sh -c "
+    [ \"\$(grep -cE '^[0-9a-f]{64}  assets/' '$PROJECT/assets.sha256')\" -eq 4 ] &&
+    [ \"\$(wc -l < '$PROJECT/assets.sha256')\" -eq 4 ] &&
+    grep -q ' assets/total-replay\.hdv\$' '$PROJECT/assets.sha256' &&
+    grep -q ' assets/atv-boot/boot\.efi\$' '$PROJECT/assets.sha256'"
 check "git ignores build output, keys, assets and personal notes" \
     git check-ignore out/ssh/totalreplay_ed25519 out/hostkeys assets/total-replay.hdv \
         assets/atv-boot/boot.efi env/root CLAUDE.local.md

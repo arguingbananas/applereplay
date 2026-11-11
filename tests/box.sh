@@ -9,7 +9,8 @@ box '
     echo "cmdline $(cat /proc/cmdline)"
     echo "nouveau $(grep -c "^nouveau " /proc/modules)"
     echo "fb $(cat /proc/fb)"
-    for s in applereplay-fb-wc applereplay-hdmi-audio ssh; do echo "svc $s $(systemctl is-active $s)"; done
+    for s in applereplay-fb-wc applereplay-hdmi-audio ssh nftables; do echo "svc $s $(systemctl is-active $s)"; done
+    echo "firewall $(sudo nft list chain inet filter input 2>/dev/null | grep -c "policy drop")"
     echo "failed $(systemctl --failed --no-legend | wc -l)"
     echo "mtrr $(sudo grep -c write-combining /proc/mtrr)"
     echo "stream $(head -1 /proc/asound/card0/pcm3p/sub0/status)"
@@ -28,6 +29,8 @@ check "nouveau is blacklisted and not loaded; X has the firmware framebuffer" sh
 check "its services are running and none have failed" sh -c "
     grep -qx 'svc applereplay-fb-wc active' '$B' && grep -qx 'svc applereplay-hdmi-audio active' '$B' &&
     grep -qx 'svc ssh active' '$B' && grep -qx 'failed 0' '$B'"
+check "the firewall is loaded and drops by default" sh -c "
+    grep -qx 'svc nftables active' '$B' && grep -qx 'firewall 1' '$B'"
 check "the framebuffer is write-combining" grep -q '^mtrr [1-9]' "$B"
 check "linapple is running with X's shadow framebuffer off" sh -c "
     grep -qx 'linapple 1' '$B' && grep -q '^xshadow [1-9]' '$B'"
