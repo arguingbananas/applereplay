@@ -104,14 +104,14 @@ some boot text, then Total Replay.
 - **Size:** the picture is 980x672, leaving a black border for TVs that
   overscan. It was tuned on a 720p TV that crops about 4%.
 
-`applereplay.md` has the full engineering notes: what was tried, what was
+`docs/NOTES.md` has the full engineering notes: what was tried, what was
 measured and why things are the way they are.
 
 ## Working on this with Claude Code
 
 The project was built with [Claude Code](https://claude.com/claude-code), and
 it's set up for you to carry on the same way. Open the repository in Claude
-Code and it reads `CLAUDE.md`, which loads `applereplay.md`: the hardware
+Code and it reads `CLAUDE.md`, which loads `docs/NOTES.md`: the hardware
 facts, every fix and measurement, the gotchas, and the list of what's next.
 Put anything about your own setup (your build machine, your TV, the box's
 address) in `CLAUDE.local.md`; Claude Code loads it too, and git ignores it.
@@ -128,7 +128,7 @@ applereplay stands on these projects:
   DistroHopper39B, which make Linux on the Apple TV possible.
 - [Debian](https://www.debian.org), still shipping a 32-bit kernel.
 
-Our fixes to these projects are offered back upstream; `applereplay.md` lists
+Our fixes to these projects are offered back upstream; `docs/NOTES.md` lists
 them.
 
 ## License
