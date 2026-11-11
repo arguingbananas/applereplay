@@ -53,6 +53,11 @@ check "logo/BootLogo.png is what logo/make-logo.py draws: 640x360, 8-bit RGB, no
     [ \"\$(od -A n -t u1 -j 16 -N 13 '$PROJECT/logo/BootLogo.png' | tr -s ' ')\" = ' 0 0 2 128 0 0 1 104 8 2 0 0 0' ]"
 check "the overlay has no empty directories (git drops them, so a clone would lack them)" \
     sh -c "[ -z \"\$(find '$PROJECT/overlay' -type d -empty)\" ]"
+# The image gets each overlay file with the mode it has here.
+check "every script in the overlay is executable" sh -c "
+    for f in \$(grep -rl '^#!/bin/sh' '$PROJECT/overlay'); do
+        [ -x \"\$f\" ] || { echo \"not executable: \$f\"; exit 1; }
+    done"
 # Which files they are, not whether yours match: build.sh and mkimage.sh warn about that.
 check "assets.sha256 names the four files the build takes from assets/" sh -c "
     [ \"\$(grep -cE '^[0-9a-f]{64}  assets/' '$PROJECT/assets.sha256')\" -eq 4 ] &&
