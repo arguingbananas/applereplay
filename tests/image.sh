@@ -10,7 +10,7 @@ mkdir -p "$T/root"
 tar -x -f "$PROJECT/out/rootfs.tar" -C "$T/root" --wildcards \
     ./etc/hostname ./etc/asound.conf ./etc/X11 ./etc/totalreplay \
     ./etc/ssh/sshd_config.d ./etc/systemd/system ./etc/modprobe.d ./etc/nftables.conf \
-    './home/apple/.ssh/authorized_keys' './usr/local/bin/*' './usr/local/sbin/*' \
+    './home/apple/.ssh/authorized_keys' './usr/local/bin/*' './usr/local/sbin/*' './usr/local/lib/totalreplay/*' \
     ./usr/bin/hda-verb './boot/vmlinuz-*' 2>/dev/null
 R=$T/root
 
@@ -26,7 +26,9 @@ check "the hostname is applereplay" grep -qx applereplay etc/hostname
 check "X uses fbdev with no shadow framebuffer, and no nouveau config" sh -c '
     grep -q "Option \"ShadowFB\" \"false\"" etc/X11/xorg.conf.d/20-fbdev.conf &&
     ! [ -e etc/X11/xorg.conf.d/20-nouveau.conf ]'
-check "linapple is windowed at 1.75x" sh -c '
+check "linapple is windowed, at 1.75x unless the session finds a better fit for the screen" sh -c '
+    [ -x usr/local/lib/totalreplay/screen-factor ] &&
+    grep -q "^factor=.*/usr/local/lib/totalreplay/screen-factor" usr/local/lib/totalreplay/xsession &&
     grep -qx "Screen factor = 1.75" etc/totalreplay/linapple.conf &&
     grep -qx "Fullscreen = 0" etc/totalreplay/linapple.conf'
 check "HDMI (card 0 device 3) is the default sound output" \

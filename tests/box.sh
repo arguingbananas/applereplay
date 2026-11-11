@@ -18,6 +18,9 @@ box '
     echo "chans $(sudo hda-verb /dev/snd/hwC0D1 0x02 0xf2d 0 2>/dev/null | sed -n "s/value = //p")"
     echo "xshadow $(grep -c "\"ShadowFB\" \"false\"" /var/log/Xorg.0.log)"
     echo "linapple $(pgrep -x linapple-sdl2 | wc -l)"
+    echo "fbsize $(cat /sys/class/graphics/fb0/virtual_size)"
+    echo "factor $(/usr/local/lib/totalreplay/screen-factor 2>/dev/null)"
+    echo "window $(sudo journalctl -b -t linapple -o cat | sed -n "s/^Screen size is //p" | tail -1)"
 ' > "$SCRATCH/box.txt" 2>&1
 B=$SCRATCH/box.txt
 has() { grep -qx "$1" "$B"; }
@@ -34,6 +37,13 @@ check "the firewall is loaded and drops by default" sh -c "
 check "the framebuffer is write-combining" grep -q '^mtrr [1-9]' "$B"
 check "linapple is running with X's shadow framebuffer off" sh -c "
     grep -qx 'linapple 1' '$B' && grep -q '^xshadow [1-9]' '$B'"
+# The repo's screen-factor says what this screen should get; the box's own copy
+# must agree, and linapple's window must be that size.
+fbsize=$(sed -n 's/^fbsize //p' "$B")
+want=$(sh "$PROJECT/overlay/usr/local/lib/totalreplay/screen-factor" "${fbsize%%,*}" "${fbsize##*,}")
+window=$(awk -v f="$want" 'BEGIN { printf "%dx%d", 560 * f, 384 * f }')
+check "the picture is fitted to the screen ($fbsize: factor $want, window $window)" sh -c "
+    grep -qx 'factor $want' '$B' && grep -qx 'window $window' '$B'"
 check "HDMI audio is streaming with digital out on, in stereo" sh -c "
     grep -qx 'stream state: RUNNING' '$B' && grep -qx 'dig1 0x1' '$B' && grep -qx 'chans 0x1' '$B'"
 

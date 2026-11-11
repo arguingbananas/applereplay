@@ -1,0 +1,57 @@
+#!/bin/sh
+# Print the "Screen factor" linapple should use on this screen: how many times
+# the Apple II's 560x384 picture is enlarged.
+#   screen-factor            for the firmware's framebuffer, or the override
+#   screen-factor W H        for a W x H screen (what the tests use)
+#
+# The firmware picks the screen mode, and nothing here may change it (see
+# "Display rules" in docs/NOTES.md), so the picture is fitted to the screen:
+# the largest factor that leaves a margin of 6.5% of the height and of the
+# width, because TVs commonly cut 3-5% off the edges (overscan) and many have
+# no setting to stop it. Factors go in steps of 1/8: then at most 8 Apple II
+# rows scale to a whole number of screen rows, which linapple's
+# changed-rows drawing relies on. 1280x720 gives 1.75 (980x672).
+#
+# A TV that shows the whole picture can have more: put a factor in
+# /etc/totalreplay/screen-factor (1.875 fills 720 lines exactly).
+set -eu
+
+OVERRIDE=${SCREEN_FACTOR_FILE:-/etc/totalreplay/screen-factor}
+FB=${SCREEN_FACTOR_FB:-/sys/class/graphics/fb0/virtual_size}
+
+if [ $# -eq 2 ]; then
+    w=$1 h=$2
+else
+    if [ -r "$OVERRIDE" ]; then
+        f=$(head -n 1 "$OVERRIDE" | tr -d ' \t\r')
+        # linapple accepts 0.25 to 8; anything else here is a mistake.
+        case $f in
+        '' | *[!0-9.]* | *.*.* | .*) echo "screen-factor: ignoring $OVERRIDE: '$f' is not a number" >&2 ;;
+        *)
+            if [ "${f%%.*}" -ge 1 ] && [ "${f%%.*}" -lt 8 ]; then echo "$f"; exit 0; fi
+            echo "screen-factor: ignoring $OVERRIDE: $f is not between 1 and 8" >&2
+            ;;
+        esac
+    fi
+    # "1280,720"
+    size=$(cat "$FB" 2>/dev/null || true)
+    w=${size%%,*} h=${size##*,}
+fi
+case "$w$h" in '' | *[!0-9]*) w=1280 h=720 ;; esac
+
+# Eighths of a factor that fit the height and the width, less the margin.
+by_height=$((h * 935 * 8 / (384 * 1000)))
+by_width=$((w * 935 * 8 / (560 * 1000)))
+k=$by_height
+[ "$by_width" -lt "$k" ] && k=$by_width
+# Never smaller than the Apple II's own size, even if a small screen crops it.
+[ "$k" -lt 8 ] && k=8
+[ "$k" -gt 64 ] && k=64
+
+frac=$((k % 8 * 125))
+if [ $frac -eq 0 ]; then
+    echo "$((k / 8))"
+else
+    # 1.750 -> 1.75
+    printf '%d.%03d\n' $((k / 8)) $frac | sed 's/0*$//'
+fi

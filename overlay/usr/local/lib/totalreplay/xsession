@@ -2,8 +2,9 @@
 # The whole X session: no window manager, just linapple filling the screen.
 xset s off -dpms s noblank
 
-# X runs on the firmware's 1280x720 framebuffer (fbdev). linapple's window is
-# 980x672 and, with no window manager, lands centered.
+# X runs on the framebuffer the firmware set up (fbdev), usually 1280x720.
+# linapple's window is sized to fit it below; with no window manager it lands
+# centered.
 
 # HDMI audio: ALSA starts with the S/PDIF switches off. IEC958,16 belongs to
 # the HDMI codec (/etc/asound.conf makes it the default output).
@@ -14,12 +15,25 @@ amixer -q -c 0 set IEC958 on || true
 mkdir -p "$HOME/.config/linapple"
 cp /etc/totalreplay/linapple.conf "$HOME/.config/linapple/linapple.conf"
 
+# Fit the picture to this screen, leaving a margin for TVs that crop the edges
+# (980x672 on 1280x720). If that fails, the config's own factor stands.
+err=$HOME/.config/linapple/screen-factor.err
+factor=$(/usr/local/lib/totalreplay/screen-factor 2>"$err") || factor=
+# Its complaints (a bad override file) go to the journal.
+[ -s "$err" ] && systemd-cat -t screen-factor < "$err"
+if [ -n "$factor" ]; then
+    sed -i "s/^Screen factor = .*/Screen factor = $factor/" "$HOME/.config/linapple/linapple.conf"
+    echo "screen $(cat /sys/class/graphics/fb0/virtual_size 2>/dev/null), factor $factor" |
+        systemd-cat -t screen-factor
+fi
+
 # Keep SDL off OpenGL; there is none without nouveau (and Mesa's nouveau driver
 # segfaults on the G72). Without the second variable SDL2 tries to push its
 # software framebuffer through GL.
 export SDL_RENDER_DRIVER=software SDL_FRAMEBUFFER_ACCELERATION=0
 
-exec systemd-cat -t linapple /usr/local/bin/linapple-sdl2 \
+# stdbuf: line by line, or its messages reach the journal only when it exits.
+exec systemd-cat -t linapple stdbuf -oL /usr/local/bin/linapple-sdl2 \
     --config "$HOME/.config/linapple/linapple.conf" \
     --autoboot \
     --hd1 /var/games/apple2/total-replay.hdv

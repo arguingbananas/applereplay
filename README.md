@@ -122,6 +122,12 @@ logo, some boot text, then Total Replay.
   rebuild now and then, or run `sudo apt update && sudo apt upgrade` on it;
   `env/vuln-check` tells you when Debian has fixes your image lacks.
   [SECURITY.md](SECURITY.md) has the details and how to report a problem.
+- **A bigger or smaller picture:** if your TV shows the whole picture and you
+  want less border, or it crops more than most, put a zoom factor in
+  `/etc/totalreplay/screen-factor` (for example
+  `echo 1.875 | sudo tee /etc/totalreplay/screen-factor` fills 720 lines) and
+  quit the emulator with F12 to restart it. Delete the file to go back to the
+  automatic size.
 - **A shell instead of the game:** `sudo touch /etc/totalreplay/no-kiosk` and
   reboot (remove the file to go back).
 - **Speed check:** `sudo fps` prints linapple's frames per second (60 is full
@@ -147,8 +153,10 @@ logo, some boot text, then Total Replay.
 - **Speed:** three patches in `patches/` let linapple build on 32-bit, scale
   without per-pixel division, and redraw only the rows that changed. On the
   Apple TV's 1 GHz CPU that's 60 fps with about half the CPU free.
-- **Size:** the picture is 980x672, leaving a black border for TVs that
-  overscan. It was tuned on a 720p TV that crops about 4%.
+- **Size:** the picture is fitted to the screen the Apple TV's firmware sets
+  up, leaving a black border of about 7% because many TVs crop the edges
+  (overscan): 980x672 on the usual 1280x720. Only that size has been tried on
+  a real TV.
 
 `docs/NOTES.md` has the full engineering notes: what was tried, what was
 measured and why things are the way they are.

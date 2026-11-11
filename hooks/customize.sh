@@ -56,7 +56,9 @@ for bin in /usr/local/bin/linapple-*; do
 done
 # sudo fps: linapple's frame rate and CPU use, measured without perf.
 install -m 755 "$STAGE/fps" /usr/local/bin/fps
-# Windowed at 1.75x (980x672) on the firmware's 1280x720 screen, leaving 24
+# The default when the session can't work out a size for the screen itself
+# (overlay's screen-factor does that at startup, and gives the same on 720
+# lines). Windowed at 1.75x (980x672) on the firmware's 1280x720 screen, leaving 24
 # black lines above and below: many TVs overscan 720p, and the one this was
 # tuned on has no setting to stop it. Fullscreen would try to switch modes,
 # which the firmware framebuffer can't.
