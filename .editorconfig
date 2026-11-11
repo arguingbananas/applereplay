@@ -16,6 +16,6 @@ trim_trailing_whitespace = false
 indent_style = unset
 indent_size = unset
 
-[*.{asc,efi,hdv}]
+[*.{asc,efi,hdv,png}]
 trim_trailing_whitespace = false
 insert_final_newline = unset

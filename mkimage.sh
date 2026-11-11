@@ -44,6 +44,8 @@ cp -r "$HERE/src/atv-linux-loader" "$OUT/loader"
 mv "$OUT/loader/mach_kernel" "$OUT/mach_kernel"
 rm -rf "$OUT/loader"
 
+# Boot Logo: boot.efi shows logo/BootLogo.png (drawn by logo/make-logo.py)
+# instead of its grey Apple logo, centred on the Background Color (0 = black).
 cat > "$OUT/com.apple.Boot.plist" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -51,6 +53,8 @@ cat > "$OUT/com.apple.Boot.plist" <<EOF
 <dict>
     <key>Background Color</key>
     <integer>0</integer>
+    <key>Boot Logo</key>
+    <string>BootLogo.png</string>
     <key>Kernel</key>
     <string>mach_kernel</string>
     <key>Kernel Flags</key>
@@ -66,7 +70,7 @@ rm -f "$OUT/totalreplay.img" "$OUT/totalreplay.bmap" "$OUT/boot.fat" "$OUT/root.
 
     mkfs.vfat -n BOOT -C boot.fat $((BOOT_SIZE_MIB * 1024)) >/dev/null
     mcopy -s -i boot.fat /work/assets/atv-boot/boot.efi /work/assets/atv-boot/System \
-        mach_kernel com.apple.Boot.plist ::/
+        mach_kernel com.apple.Boot.plist /work/logo/BootLogo.png ::/
 
     mke2fs -q -t ext4 -L debian-root -U $ROOT_FSUUID -d rootfs.tar root.ext4 ${ROOT_SIZE_MIB}M
 

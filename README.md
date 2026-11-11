@@ -1,5 +1,7 @@
 # applereplay
 
+![applereplay's boot logo: pixel art in Apple II colours](logo/BootLogo.png)
+
 What if a 2006 Apple TV could play the Apple II games of the 1980s, with tools
 from 2026?¹
 
@@ -101,8 +103,8 @@ sudo bmaptool copy out/totalreplay.img /dev/sdX
 sudo sgdisk -e /dev/sdX
 ```
 
-This erases the stick. Put it in the Apple TV and power on: the Apple logo,
-some boot text, then Total Replay.
+This erases the stick. Put it in the Apple TV and power on: the applereplay
+logo, some boot text, then Total Replay.
 
 ## Using the box
 

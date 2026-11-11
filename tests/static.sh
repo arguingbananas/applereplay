@@ -47,6 +47,10 @@ else
     echo "  skip  patch checks (no out/src/linapple; run ./build.sh)"
 fi
 
+# boot.efi is known to show an 8-bit RGB PNG of 640x360; nothing else was tried.
+check "logo/BootLogo.png is what logo/make-logo.py draws: 640x360, 8-bit RGB, not interlaced" sh -c "
+    python3 '$PROJECT/logo/make-logo.py' | cmp -s - '$PROJECT/logo/BootLogo.png' &&
+    [ \"\$(od -A n -t u1 -j 16 -N 13 '$PROJECT/logo/BootLogo.png' | tr -s ' ')\" = ' 0 0 2 128 0 0 1 104 8 2 0 0 0' ]"
 check "the overlay has no empty directories (git drops them, so a clone would lack them)" \
     sh -c "[ -z \"\$(find '$PROJECT/overlay' -type d -empty)\" ]"
 # Which files they are, not whether yours match: build.sh and mkimage.sh warn about that.

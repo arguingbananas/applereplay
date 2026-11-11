@@ -85,7 +85,7 @@ if [ -f "$I" ] && [ -x "$PROJECT/env/root/bin/sh" ]; then
         '$PROJECT/env/run' sgdisk -i 2 /work/out/totalreplay.img | grep -qi 'unique GUID: $root_uuid'"
     check "the boot partition holds boot.efi, mach_kernel, the plist and Dummy.kext" sh -c "
         '$PROJECT/env/run' mdir -b -i /work/out/totalreplay.img@@1M ::/ > '$T/boot.txt' &&
-        for f in boot.efi mach_kernel com.apple.Boot.plist System; do
+        for f in boot.efi mach_kernel com.apple.Boot.plist BootLogo.png System; do
             grep -q \"/\$f\" '$T/boot.txt' || { echo \"missing \$f\"; exit 1; }
         done &&
         '$PROJECT/env/run' mdir -b -i /work/out/totalreplay.img@@1M ::/System/Library/Extensions |
@@ -95,6 +95,10 @@ if [ -f "$I" ] && [ -x "$PROJECT/env/root/bin/sh" ]; then
             cmp -s - '$P' &&
         '$PROJECT/env/run' sh -c 'mcopy -n -i /work/out/totalreplay.img@@1M ::/mach_kernel /tmp/mk && cat /tmp/mk' |
             cmp -s - '$PROJECT/out/mach_kernel'"
+    check "the boot partition's logo is logo/BootLogo.png, and the plist names it" sh -c "
+        '$PROJECT/env/run' sh -c 'mcopy -n -i /work/out/totalreplay.img@@1M ::/BootLogo.png /tmp/l && cat /tmp/l' |
+            cmp -s - '$PROJECT/logo/BootLogo.png' &&
+        grep -A1 '<key>Boot Logo</key>' '$P' | grep -q '<string>BootLogo.png</string>'"
     check "the bmap matches the image" sh -c "
         grep -q \"<ImageSize> \$(stat -c %s '$I') </ImageSize>\" '$PROJECT/out/totalreplay.bmap'"
 else
