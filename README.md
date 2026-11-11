@@ -27,12 +27,14 @@ stick needs root.
   keyboard.
 - A USB hub, because the Apple TV has a single USB port and it has to take
   both the stick and the keyboard. A powered hub (one with its own power
-  supply) is strongly recommended: the port has little power to share. Any
-  cheap USB 2.0 hub will do; the port is USB 2.0 itself.
+  supply) is strongly recommended: under USB's rules an unpowered hub may
+  pass only 100 mA to each device, and a USB stick can ask for more (the one
+  used here asks for 300 mA). An unpowered hub hasn't been tried. A USB 2.0
+  hub is enough, since the Apple TV's port is USB 2.0.
 - A USB stick of 8 GB or more. The image is 7.0 GB whatever it contains (a
   0.5 GB boot partition and a 6 GB system partition, about a fifth of it
-  used); the rest of the stick is left alone. USB 2.0 and 3.0 sticks both
-  work.
+  used); the rest of the stick is left alone. A USB 3.0 stick works, at
+  USB 2.0 speed.
 
   Tried and working together: a powered USB 2.0 hub, a USB 3.0 stick and an
   Apple USB keyboard from a 2006 iMac.
