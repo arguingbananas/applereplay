@@ -16,3 +16,6 @@
 
 # Personal notes for Claude Code about this particular setup.
 /CLAUDE.local.md
+
+# Claude Code session state (worktrees, local settings).
+/.claude/
