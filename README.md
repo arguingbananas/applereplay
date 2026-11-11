@@ -18,8 +18,8 @@ stick needs root.
 ## What you need
 
 - An original Apple TV: the first generation, **model A1218**, sold from 2007
-  (the model number is on the underside). It is the silver one, about 20 cm
-  square, with an Intel processor and a hard disk inside. **No later Apple TV
+  (the model number is on the underside). It is the silver one, about 8 inches
+  (20 cm) square, with an Intel processor and a hard disk inside. **No later Apple TV
   will work:** the small black boxes that followed (second generation
   onwards, including Apple TV HD and 4K) are different, ARM-based machines
   that can't run this at all.
