@@ -7,8 +7,12 @@ scripts=$(git ls-files | grep -v '^src/' | while read -r f; do
     [ -f "$f" ] && head -c 20 "$f" | grep -q '^#!/bin/sh' && echo "$f"; done)
 check "the shell scripts parse ($(echo $scripts | wc -w) of them)" sh -c '
     for f; do sh -n "$f" || exit 1; done' sh $scripts
-if command -v shellcheck >/dev/null; then
-    check "shellcheck finds no warnings" shellcheck -S warning $scripts
+# Prefer the build environment's shellcheck: newer versions add warnings, so
+# everyone should check with the same one.
+if [ -x env/root/usr/bin/shellcheck ]; then
+    check "shellcheck (env) finds no warnings" env/run shellcheck -S warning $scripts
+elif command -v shellcheck >/dev/null; then
+    check "shellcheck (host) finds no warnings" shellcheck -S warning $scripts
 else
     echo "  skip  shellcheck (not installed)"
 fi
