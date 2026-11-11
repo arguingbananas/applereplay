@@ -64,7 +64,7 @@ init)
     ;;
 build)
     [ -d "$SRC/src" ] || die "no linapple source in $SRC, run ./build.sh first"
-    [ ! "$TARBALL" -nt "$ROOT/.devroot-from" ] ||
+    [ -z "$(find "$TARBALL" -newer "$ROOT/.devroot-from" 2>/dev/null)" ] ||
         echo "env/devroot: $TARBALL is newer than the devroot; consider env/devroot init" >&2
     # The same configuration as hooks/customize.sh.
     run sh -euc "

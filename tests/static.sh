@@ -8,7 +8,7 @@ scripts=$(git ls-files | grep -v '^src/' | while read -r f; do
 check "the shell scripts parse ($(echo $scripts | wc -w) of them)" sh -c '
     for f; do sh -n "$f" || exit 1; done' sh $scripts
 if command -v shellcheck >/dev/null; then
-    check "shellcheck finds no errors" shellcheck -S error $scripts
+    check "shellcheck finds no warnings" shellcheck -S warning $scripts
 else
     echo "  skip  shellcheck (not installed)"
 fi

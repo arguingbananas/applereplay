@@ -7,7 +7,12 @@ TESTS=$(cd "$(dirname "$0")" && pwd)
 export TESTS
 mkdir -p "$TESTS/../out/test"
 
-[ $# -gt 0 ] || set -- $(cd "$TESTS" && ls *.sh | grep -v '^lib\.sh$' | sed 's/\.sh$//')
+if [ $# -eq 0 ]; then
+    for f in "$TESTS"/*.sh; do
+        name=$(basename "$f" .sh)
+        [ "$name" = lib ] || set -- "$@" "$name"
+    done
+fi
 status=0
 for name; do
     echo "$name"
