@@ -5,8 +5,8 @@
 What if a 2006 Apple TV could play the Apple II games of the 1980s, with tools
 from 2026?¹
 
-applereplay turns an original (first generation) Apple TV into an Apple II
-games console. It boots Debian from a USB stick straight into
+applereplay turns an original Apple TV (first generation, model A1218) into an
+Apple II games console. It boots Debian from a USB stick straight into
 [linapple](https://github.com/linappleii/linapple), an Apple II emulator,
 running [Total Replay](https://github.com/a2-4am/4cade), a collection of
 hundreds of Apple II games behind one menu. Plug in a USB keyboard and play,
@@ -17,8 +17,14 @@ stick needs root.
 
 ## What you need
 
-- An original Apple TV (2007, 32-bit EFI) on a TV over HDMI, wired Ethernet
-  (for SSH; optional for playing) and a USB keyboard.
+- An original Apple TV: the first generation, **model A1218**, sold from 2007
+  (the model number is on the underside). It is the silver one, about 20 cm
+  square, with an Intel processor and a hard disk inside. **No later Apple TV
+  will work:** the small black boxes that followed (second generation
+  onwards, including Apple TV HD and 4K) are different, ARM-based machines
+  that can't run this at all.
+- A TV with HDMI, wired Ethernet (for SSH; optional for playing) and a USB
+  keyboard.
 - A USB stick of 8 GB or more.
 - A Linux PC (x86_64) with `mmdebstrap`, `bubblewrap`, `uidmap` and `git`, and
   unprivileged user namespaces enabled. Built and tested on Linux Mint 22

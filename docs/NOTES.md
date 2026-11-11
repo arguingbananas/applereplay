@@ -5,7 +5,7 @@ file). Anything about one particular build host, TV or account belongs in
 CLAUDE.local.md, which is gitignored.
 
 ## Goal
-Original Apple TV (32-bit EFI, Intel ~1GHz, NVIDIA G72 / GeForce Go 7300) boots Debian 12 (bookworm, i386, Debian kernel `linux-image-686-pae`, currently 6.1.0-54 = upstream 6.1.190) from a USB flash drive via `atv-linux-loader` (`boot.efi` -> fake `mach_kernel` containing kernel+initrd) straight into linapple running Total Replay.
+Original Apple TV (first generation, model A1218, 2007: 32-bit EFI, Intel ~1GHz, NVIDIA G72 / GeForce Go 7300; the only Apple TV this can run on, since every later one is an ARM machine, not a PC) boots Debian 12 (bookworm, i386, Debian kernel `linux-image-686-pae`, currently 6.1.0-54 = upstream 6.1.190) from a USB flash drive via `atv-linux-loader` (`boot.efi` -> fake `mach_kernel` containing kernel+initrd) straight into linapple running Total Replay.
 
 ## Making a change
 - Work on a branch, not straight on main. To build and test in a second working tree (`git worktree`), it needs its own out/ (copy out/ssh and out/hostkeys from the first, or the box won't know your key), a copy of assets/, `git submodule update --init`, and env/root (a symlink to the first tree's works). Symlinking out/ or assets/ doesn't work: env/run only sees the tree it's in.
