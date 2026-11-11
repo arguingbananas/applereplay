@@ -1,0 +1,11 @@
+#!/bin/sh
+# Started from apple's ~/.bash_profile on tty1. Touch /etc/totalreplay/no-kiosk
+# to get a plain shell instead (e.g. over SSH, while testing by hand).
+
+# Show the address for a few seconds so the box can be found without a keyboard.
+i=0
+while [ $i -lt 10 ] && [ -z "$(hostname -I)" ]; do sleep 1; i=$((i + 1)); done
+echo "$(hostname): IP address $(hostname -I)"
+sleep 3
+
+exec xinit /usr/local/lib/totalreplay/xsession -- :0 vt1 -keeptty -nolisten tcp -nocursor

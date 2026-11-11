@@ -1,0 +1,4 @@
+# <file system>     <mount point>  <type>  <options>                  <dump> <pass>
+LABEL=debian-root   /              ext4    rw,noatime,errors=remount-ro  0      1
+# Apple TV boot partition (boot.efi, mach_kernel). Mount by hand when needed.
+PARTLABEL=boot      /boot/atv      vfat    noauto,nofail,umask=022       0      0

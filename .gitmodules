@@ -1,0 +1,3 @@
+[submodule "src/atv-linux-loader"]
+	path = src/atv-linux-loader
+	url = https://github.com/DistroHopper39B/atv-linux-loader

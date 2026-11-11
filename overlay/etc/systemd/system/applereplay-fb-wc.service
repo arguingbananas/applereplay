@@ -1,0 +1,11 @@
+[Unit]
+Description=Make the framebuffer write-combining
+Before=getty@tty1.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/applereplay-fb-wc
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

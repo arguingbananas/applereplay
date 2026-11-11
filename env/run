@@ -1,0 +1,25 @@
+#!/bin/sh
+# Run a command inside the build toolchain, with this project mounted at /work.
+#   env/run make -C /work/...      env/run bash   (interactive shell)
+set -eu
+
+ENV=$(cd "$(dirname "$0")" && pwd)
+PROJECT=$(dirname "$ENV")
+[ -x "$ENV/root/bin/sh" ] || { echo "env/run: no toolchain yet, run env/bootstrap.sh" >&2; exit 1; }
+[ $# -gt 0 ] || set -- bash
+
+exec bwrap \
+    --bind "$ENV/root" / \
+    --dev /dev \
+    --proc /proc \
+    --tmpfs /tmp \
+    --ro-bind /etc/resolv.conf /etc/resolv.conf \
+    --bind "$PROJECT" /work \
+    --unshare-user --uid 0 --gid 0 \
+    --unshare-pid --die-with-parent \
+    --chdir /work \
+    --clearenv \
+    --setenv HOME /root \
+    --setenv TERM "${TERM:-xterm}" \
+    --setenv PATH /opt/cross/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin \
+    "$@"

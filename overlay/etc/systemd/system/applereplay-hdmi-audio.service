@@ -1,0 +1,9 @@
+[Unit]
+Description=Turn on HDMI audio whenever a stream starts
+
+[Service]
+ExecStart=/usr/local/sbin/applereplay-hdmi-audio
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

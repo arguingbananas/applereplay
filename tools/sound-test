@@ -1,0 +1,12 @@
+#!/bin/sh
+# Stereo test over HDMI, run on the box while someone listens: /tmp/sound-test.
+# A voice says "Front left" or "Front right" from that speaker only, and each
+# step is printed as it plays: 1 left, 2 right, 3 left, 4 right.
+# The kiosk keeps running; "default" is HDMI, shared with linapple.
+for n in 1 2 3 4; do
+    if [ $((n % 2)) = 1 ]; then side=Left ch=1; else side=Right ch=2; fi
+    echo "$n: $side channel (you should hear \"Front $side\" from the $side speaker)"
+    speaker-test -D default -c 2 -t wav -s $ch >/dev/null 2>&1
+    sleep 1
+done
+echo "Done."

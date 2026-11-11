@@ -1,0 +1,12 @@
+#!/bin/sh
+# Make the firmware framebuffer (efifb) write-combining. This CPU has no usable
+# PAT, so without an MTRR the video memory is uncached and Xorg spent 82% of
+# the CPU copying frames into it (11 fps instead of 60).
+set -eu
+range=$(sed -n 's/^ *\([0-9a-f]*\)-\([0-9a-f]*\) : efifb$/\1 \2/p' /proc/iomem)
+[ -n "$range" ] || { echo "no efifb in /proc/iomem" >&2; exit 1; }
+start=$((0x${range% *})) end=$((0x${range#* }))
+# An MTRR is a power-of-two size, aligned to its size.
+size=4096
+while [ $(( (start & ~(size - 1)) + size )) -le "$end" ]; do size=$((size * 2)); done
+printf 'base=0x%x size=0x%x type=write-combining\n' $((start & ~(size - 1))) $size > /proc/mtrr

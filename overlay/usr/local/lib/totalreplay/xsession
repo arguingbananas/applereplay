@@ -1,0 +1,25 @@
+#!/bin/sh
+# The whole X session: no window manager, just linapple filling the screen.
+xset s off -dpms s noblank
+
+# X runs on the firmware's 1280x720 framebuffer (fbdev). linapple's window is
+# 980x672 and, with no window manager, lands centered.
+
+# HDMI audio: ALSA starts with the S/PDIF switches off. IEC958,16 belongs to
+# the HDMI codec (/etc/asound.conf makes it the default output).
+amixer -q -c 0 set IEC958,16 on || true
+amixer -q -c 0 set IEC958 on || true
+
+# linapple writes its config back on exit, so start from a known copy each time.
+mkdir -p "$HOME/.config/linapple"
+cp /etc/totalreplay/linapple.conf "$HOME/.config/linapple/linapple.conf"
+
+# Keep SDL off OpenGL; there is none without nouveau (and Mesa's nouveau driver
+# segfaults on the G72). Without the second variable SDL2 tries to push its
+# software framebuffer through GL.
+export SDL_RENDER_DRIVER=software SDL_FRAMEBUFFER_ACCELERATION=0
+
+exec systemd-cat -t linapple /usr/local/bin/linapple-sdl2 \
+    --config "$HOME/.config/linapple/linapple.conf" \
+    --autoboot \
+    --hd1 /var/games/apple2/total-replay.hdv

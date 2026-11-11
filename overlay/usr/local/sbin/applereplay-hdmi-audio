@@ -1,0 +1,21 @@
+#!/bin/sh
+# Turn on HDMI audio each time a stream starts on it (card 0 device 3).
+# The SiI1390 never reports a TV as present, so Linux treats its pin as unbound
+# and skips the setup it would normally do: the converter stays mono with its
+# digital output off, and the TV hears nothing. Kernel 6.1 has no switch for
+# this (it needs a valid ELD), so set the codec's registers directly.
+STATUS=/proc/asound/card0/pcm3p/sub0/status
+CODEC=/dev/snd/hwC0D1
+was_running=no
+while :; do
+    running=no
+    if read -r first _ < "$STATUS" 2>/dev/null && [ "$first" = state: ]; then
+        running=yes
+    fi
+    if [ $running = yes ] && [ $was_running = no ]; then
+        hda-verb $CODEC 0x02 SET_DIGI_CONVERT_1 0x01 >/dev/null    # digital out on
+        hda-verb $CODEC 0x02 0x72d 0x01 >/dev/null    # converter channel count: 2
+    fi
+    was_running=$running
+    sleep 1
+done

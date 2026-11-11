@@ -1,0 +1,50 @@
+#!/bin/sh
+# Frame rate and CPU use of the running linapple, without perf:
+#   sudo fps [seconds]      (default 10)
+# Counts calls to draw_frame_window with a uprobe through tracefs. linapple
+# draws one frame per emulated frame, so 60 fps means full speed. It only
+# observes; the game keeps running. The rate depends on the scene: the more of
+# the screen changes each frame, the more there is to scale and copy.
+set -eu
+secs=${1:-10}
+T=/sys/kernel/tracing
+PROBE=applereplay_fps/frame
+
+[ "$(id -u)" = 0 ] || { echo "fps: run as root (sudo fps)" >&2; exit 1; }
+pid=$(pgrep -x linapple-sdl2 | head -1) || { echo "fps: linapple-sdl2 isn't running" >&2; exit 1; }
+bin=$(readlink /proc/$pid/exe)
+command -v nm >/dev/null && command -v readelf >/dev/null ||
+    { echo "fps: needs nm and readelf (binutils)" >&2; exit 1; }
+
+# A uprobe takes a file offset: the symbol's address, moved from the
+# executable segment's address to its place in the file.
+sym=$(nm -C "$bin" | sed -n 's/^\([0-9a-f]*\) T draw_frame_window()$/\1/p' | head -1)
+[ -n "$sym" ] || { echo "fps: no draw_frame_window symbol in $bin" >&2; exit 1; }
+seg=$(readelf -lW "$bin" | awk '$1 == "LOAD" && / E / {print $3, $2; exit}')
+[ -n "$seg" ] || { echo "fps: no executable segment in $bin" >&2; exit 1; }
+off=$(printf '0x%x' $((0x$sym - ${seg% *} + ${seg#* })))
+
+cleanup() {
+    { echo 0 > $T/events/$PROBE/enable; } 2>/dev/null || true
+    { echo "-:$PROBE" >> $T/uprobe_events; } 2>/dev/null || true
+}
+cleanup
+trap cleanup EXIT INT TERM
+echo "p:$PROBE $bin:$off" >> $T/uprobe_events
+
+# CPU: whole system from /proc/stat, linapple and Xorg from their own stat.
+cpu() { awk '/^cpu / {print $2+$3+$4+$5+$6+$7+$8, $5+$6}' /proc/stat; }
+ticks() { awk '{print $14+$15}' /proc/$1/stat 2>/dev/null || echo 0; }
+xpid=$(pgrep -x Xorg | head -1 || true)
+set -- $(cpu); total0=$1 idle0=$2
+app0=$(ticks $pid); x0=$( [ -n "$xpid" ] && ticks $xpid || echo 0)
+
+echo 1 > $T/events/$PROBE/enable
+frames=$(timeout "$secs" cat $T/trace_pipe | grep -c 'frame:' || true)
+echo 0 > $T/events/$PROBE/enable
+
+set -- $(cpu); total=$(($1 - total0)) idle=$(($2 - idle0))
+app=$(($(ticks $pid) - app0)); x=$(( $( [ -n "$xpid" ] && ticks $xpid || echo 0) - x0))
+[ "$total" -gt 0 ] || total=1
+echo "$frames frames in ${secs} s: $(awk "BEGIN {printf \"%.1f\", $frames / $secs}") fps (60 = full speed)"
+echo "CPU: $((100 * idle / total))% idle, linapple $((100 * app / total))%, Xorg $((100 * x / total))%"

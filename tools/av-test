@@ -1,0 +1,26 @@
+#!/bin/sh
+# Picture and sound test for the Apple TV, run on the box while someone watches
+# and listens: sudo /tmp/av-test. Stops the kiosk, then restarts it.
+#   Picture, 5 s each: 1 black, 2 white, 3 red, 4 green, 5 blue, 6 grey.
+#   Sound, 5 s each, with the screen colour as the cue:
+#     red = analog (device 0), green = S/PDIF (device 1), blue = HDMI (device 3).
+set -u
+touch /etc/totalreplay/no-kiosk
+pkill -x linapple-sdl2; sleep 3; pkill -x Xorg; sleep 2
+
+cat > /tmp/av-session <<'INNER'
+#!/bin/sh
+show() { convert -size 1280x720 "xc:$1" /tmp/av.png; display -window root /tmp/av.png; }
+for c in black white red green blue gray50; do show $c; sleep 5; done
+amixer -q -c 0 set IEC958 on; amixer -q -c 0 set IEC958,16 on
+for pair in red:0 green:1 blue:3; do
+  show ${pair%%:*}
+  timeout 5 speaker-test -q -D plughw:0,${pair#*:} -c 2 -t sine -f 440 >/dev/null 2>&1
+done
+show black; sleep 1
+INNER
+chmod +x /tmp/av-session
+xinit /tmp/av-session -- :0 vt1 -nolisten tcp -nocursor >/tmp/av-test.log 2>&1
+
+rm -f /etc/totalreplay/no-kiosk
+systemctl restart getty@tty1
