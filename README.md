@@ -110,6 +110,11 @@ logo, some boot text, then Total Replay.
 
 - **Play:** type to search Total Replay's menu, Return to start a game, `?` for
   help.
+- **Leave a game:** Ctrl+F10 (the Apple II's Ctrl-Reset) goes back to Total
+  Replay's menu. If a game ignores it, Ctrl+F2 restarts the Apple II, and F12
+  quits the emulator, which starts again at the menu. F1 lists every emulator
+  key, and Pause pauses. Mind F10 and F11 on their own: they load and save a
+  snapshot.
 - **SSH:** `ssh -i out/ssh/totalreplay_ed25519 apple@applereplay.local`. User
   `apple` has passwordless sudo, so the key is as good as root: keep it safe.
 - **Security:** the box is meant for a home network. A firewall lets in only
