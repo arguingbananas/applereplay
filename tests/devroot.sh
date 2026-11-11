@@ -41,14 +41,14 @@ check "an unknown command fails and prints the usage" sh -c "
     ! $D frobnicate 2>'$T/err.log' && grep -q 'env/devroot init' '$T/err.log'"
 
 if [ "${TEST_BOX:-}" = 1 ]; then
-    KEY=$PROJECT/out/ssh/totalreplay_ed25519
-    check "install puts the binary on the box and the kiosk comes back" sh -c "
-        $D install >/dev/null &&
-        sleep 20 &&
-        ssh -i '$KEY' -o BatchMode=yes apple@applereplay.local \
-            'sha256sum /usr/local/bin/linapple-sdl2; pgrep -x linapple-sdl2' > '$T/box.log' &&
-        grep -q \"\$(sha256sum < '$T/build/linapple' | cut -d' ' -f1)\" '$T/box.log' &&
-        [ \$(wc -l < '$T/box.log') -ge 2 ]"
+    if check "the Apple TV answers over SSH ($BOX_HOST)" box true; then
+        { $D install "$BOX_HOST" && sleep 20 &&
+            box 'sha256sum /usr/local/bin/linapple-sdl2; pgrep -x linapple-sdl2'
+        } > "$T/box.log" 2>&1
+        check "install puts the binary on the box and the kiosk comes back" sh -c "
+            grep -q \"\$(sha256sum < '$T/build/linapple' | cut -d' ' -f1)\" '$T/box.log' &&
+            grep -qE '^[0-9]+\$' '$T/box.log' || { cat '$T/box.log'; exit 1; }"
+    fi
 else
     echo "  skip  install on the box (set TEST_BOX=1)"
 fi

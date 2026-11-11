@@ -1,11 +1,9 @@
 # Health of the running Apple TV, over SSH. Only with TEST_BOX=1; it only
 # reads (plus ~20 s of `sudo fps`), so a game in progress keeps running.
 [ "${TEST_BOX:-}" = 1 ] || skip "the Apple TV (set TEST_BOX=1)"
-HOST=${TEST_HOST:-apple@applereplay.local}
-KEY=$PROJECT/out/ssh/totalreplay_ed25519
-box() { ssh -i "$KEY" -o BatchMode=yes -o ConnectTimeout=10 "$HOST" "$@"; }
 
-box true 2>/dev/null || skip "can't reach $HOST"
+# TEST_BOX=1 asks for the box, so an unreachable one is a failure, not a skip.
+check "the Apple TV answers over SSH ($BOX_HOST)" box true || exit 1
 box '
     echo "host $(hostname)"
     echo "cmdline $(cat /proc/cmdline)"

@@ -81,9 +81,12 @@ install)
     bin=$BUILD/linapple
     [ -x "$bin" ] || die "nothing built yet, run env/devroot build"
     key=$OUT/ssh/totalreplay_ed25519
-    scp -q -i "$key" "$bin" "$host:/tmp/linapple-sdl2"
+    # Fail in seconds, not minutes, if the box is off or stops answering.
+    # Unquoted where used: it's several options.
+    opts="-o ConnectTimeout=10 -o ServerAliveInterval=5 -o ServerAliveCountMax=3"
+    scp -q -i "$key" $opts "$bin" "$host:/tmp/linapple-sdl2"
     # Restarting linapple restarts the kiosk with the new binary.
-    ssh -i "$key" "$host" 'sudo install -m 755 /tmp/linapple-sdl2 /usr/local/bin/linapple-sdl2 &&
+    ssh -i "$key" $opts "$host" 'sudo install -m 755 /tmp/linapple-sdl2 /usr/local/bin/linapple-sdl2 &&
         rm /tmp/linapple-sdl2 && { pkill -x linapple-sdl2 || true; }'
     echo "Installed on $host; the kiosk is restarting"
     ;;
