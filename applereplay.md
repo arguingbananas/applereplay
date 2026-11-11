@@ -7,6 +7,27 @@ CLAUDE.local.md, which is gitignored.
 ## Goal
 Original Apple TV (32-bit EFI, Intel ~1GHz, NVIDIA G72 / GeForce Go 7300) boots Debian 12 (bookworm, i386, Debian kernel `linux-image-686-pae`, currently 6.1.0-54 = upstream 6.1.190) from a USB flash drive via `atv-linux-loader` (`boot.efi` -> fake `mach_kernel` containing kernel+initrd) straight into linapple running Total Replay.
 
+## Checklist (every task)
+Before:
+- Read this file and CLAUDE.local.md; check `git status` and `git log` for work in progress (untracked files may belong to another session: leave them alone).
+- Find out yourself what you can (code, the box over SSH, logs, `sudo fps`). Ask whoever is at the TV only about what needs their eyes or ears: colours, overscan, sound, the remote.
+- Work in a branch or worktree, never straight on main.
+
+During:
+- Keep builds rootless. Root is only for writing the stick (`bmaptool`, `sgdisk`), which the owner runs.
+- Change the image through the repo (overlay/, hooks/customize.sh, build.sh, mkimage.sh, patches/), never only by hand on the box. A fix tried on the box isn't done until it's in the repo.
+- linapple changes: edit out/src/linapple, `env/devroot build` + `install`, measure with `sudo fps`, then save the diff to patches/ before ./build.sh resets the source. Check patches with `-std=c++11`.
+- Prefer Debian packages and Debian's kernel. No nouveau, no OpenGL, no mode changes (see Display rules).
+- Nothing personal in tracked files: host names, home paths, IPs, email addresses and keys go in CLAUDE.local.md or out/. Nothing from assets/ gets committed.
+
+After:
+- Run `tests/run` (and `TEST_BOX=1 tests/run` if the box was involved); add or extend a test in tests/ for new tooling.
+- If the change affects the image: `./build.sh` (it must not report unresolved libraries) and `./mkimage.sh`; give the owner the write command.
+- Confirm on the box what can be confirmed remotely (services, `journalctl -u`, `sudo fps` at 60), and list for the owner what to check at the TV.
+- Update this file: facts learned, gotchas, status, and move finished items out of Next. Personal details go in CLAUDE.local.md. Upstream-worthy fixes go under Upstream contributions.
+- If README.md's steps changed, update it too.
+- Commit with a message that says why; no pushing or publishing until the owner says so.
+
 ## Hardware and image facts
 - Image layout from mkimage.sh: GPT, p1 = 511M FAT `BOOT` (PARTLABEL `boot`, type Apple TV recovery) with boot.efi, mach_kernel, com.apple.Boot.plist, System/Library/Extensions/Dummy.kext; p2 = 6G ext4 `debian-root` (PARTUUID b632a136-1138-4ea8-9ead-c8891c82dcac). The rest of the stick is unused for now.
 - Boot partition GPT type must be "Apple TV recovery" `5265636f-7665-11aa-aa11-00306543ecac` (GParted's `atvrecv` flag); root is a normal Linux filesystem partition.
