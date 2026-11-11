@@ -1,11 +1,15 @@
 #!/bin/sh
 # Frame rate and CPU use of the running linapple, without perf:
-#   sudo fps [seconds]      (default 10)
+#   sudo fps [-s] [seconds]      (default 10; -s also lists every second)
 # Counts calls to draw_frame_window with a uprobe through tracefs. linapple
 # draws one frame per emulated frame, so 60 fps means full speed. It only
 # observes; the game keeps running. The rate depends on the scene: the more of
-# the screen changes each frame, the more there is to scale and copy.
+# the screen changes each frame, the more there is to scale and copy. The
+# per-second line tells a brief dip (low "lowest", normal median) from a box
+# that is slow throughout (low median).
 set -eu
+list=
+if [ "${1:-}" = -s ]; then list=1; shift; fi
 secs=${1:-10}
 T=/sys/kernel/tracing
 PROBE=applereplay_fps/frame
@@ -41,7 +45,25 @@ set -- $(cpu); total0=$1 idle0=$2
 app0=$(ticks $pid); x0=$( [ -n "$xpid" ] && ticks $xpid || echo 0)
 
 echo 1 > $T/events/$PROBE/enable
-frames=$(timeout "$secs" cat $T/trace_pipe | grep -c 'frame:' || true)
+# Each trace line carries a timestamp ("1234.567890: frame:"). Count frames
+# per whole second; the first and last seconds are partial and left out.
+stats=$(timeout "$secs" cat $T/trace_pipe | awk '/frame:/ {
+    total++
+    for (i = 1; i <= NF; i++) if ($i ~ /^[0-9]+\.[0-9]+:$/) { s = int($i); break }
+    if (!seen) { first = s; seen = 1 }
+    n[s - first]++; last = s - first
+} END {
+    for (i = 1; i < last; i++) { v[++c] = n[i] + 0; all = all " " v[c] }
+    for (i = 2; i <= c; i++) {
+        x = v[i]
+        for (j = i - 1; j >= 1 && v[j] > x; j--) v[j + 1] = v[j]
+        v[j + 1] = x
+    }
+    print total + 0, c + 0, v[int((c + 1) / 2)] + 0, v[1] + 0
+    print all
+}')
+# shellcheck disable=SC2046 # split the four numbers
+set -- $(echo "$stats" | sed -n 1p); frames=$1 whole=$2 median=$3 lowest=$4
 echo 0 > $T/events/$PROBE/enable
 
 # shellcheck disable=SC2046
@@ -49,4 +71,6 @@ set -- $(cpu); total=$(($1 - total0)) idle=$(($2 - idle0))
 app=$(($(ticks $pid) - app0)); x=$(( $( [ -n "$xpid" ] && ticks $xpid || echo 0) - x0))
 [ "$total" -gt 0 ] || total=1
 echo "$frames frames in ${secs} s: $(awk "BEGIN {printf \"%.1f\", $frames / $secs}") fps (60 = full speed)"
+[ "$whole" -eq 0 ] || echo "Per second: median $median, lowest $lowest (over $whole whole seconds)"
+[ -z "$list" ] || echo "Seconds:$(echo "$stats" | sed -n 2p)"
 echo "CPU: $((100 * idle / total))% idle, linapple $((100 * app / total))%, Xorg $((100 * x / total))%"

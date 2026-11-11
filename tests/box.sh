@@ -34,9 +34,14 @@ check "linapple is running with X's shadow framebuffer off" sh -c "
 check "HDMI audio is streaming with digital out on, in stereo" sh -c "
     grep -qx 'stream state: RUNNING' '$B' && grep -qx 'dig1 0x1' '$B' && grep -qx 'chans 0x1' '$B'"
 
-# 55, not 60: full-screen transitions in Total Replay's attract mode (a title
-# screen drawn in across the whole screen) run at 56-57 fps; see docs/NOTES.md.
-# Every regression seen so far was far lower (11, 38, 52-54 fps).
-box 'sudo fps 20' > "$SCRATCH/fps.txt" 2>&1
-check "linapple runs at 55 fps or more over 20 s ($(sed -n 's/.*: \([0-9.]*\) fps.*/\1/p' "$SCRATCH/fps.txt") fps)" \
-    awk '/fps/ { if ($6 + 0 >= 55) ok = 1 } END { exit !ok }' "$SCRATCH/fps.txt"
+# Judged by the median second, not the mean: Total Replay's attract mode has
+# brief dips (full-screen transitions at 56-57 fps, disk loads, and one mean
+# of 53.2 over 20 s that is still unexplained; see docs/NOTES.md), while the
+# regressions seen so far lasted: 11 and 38 fps all the time, 52-54 through
+# minutes of attract mode. A dip shorter than 15 s can't move the median. The lowest
+# second is shown so a dip stays visible; the counts stay in out/test/fps.txt.
+box 'sudo fps -s 30' > "$SCRATCH/fps.txt" 2>&1
+median=$(sed -n 's/^Per second: median \([0-9]*\), lowest \([0-9]*\) .*/\1/p' "$SCRATCH/fps.txt")
+lowest=$(sed -n 's/^Per second: median \([0-9]*\), lowest \([0-9]*\) .*/\2/p' "$SCRATCH/fps.txt")
+check "linapple's median second over 30 s has 58 frames or more (median ${median:-?}, lowest ${lowest:-?})" \
+    sh -c "[ '${median:-0}' -ge 58 ] || { cat '$SCRATCH/fps.txt'; exit 1; }"
