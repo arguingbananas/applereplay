@@ -25,7 +25,17 @@ stick needs root.
   that can't run this at all.
 - A TV with HDMI, wired Ethernet (for SSH; optional for playing) and a USB
   keyboard.
-- A USB stick of 8 GB or more.
+- A USB hub, because the Apple TV has a single USB port and it has to take
+  both the stick and the keyboard. A powered hub (one with its own power
+  supply) is strongly recommended: the port has little power to share. Any
+  cheap USB 2.0 hub will do; the port is USB 2.0 itself.
+- A USB stick of 8 GB or more. The image is 7.0 GB whatever it contains (a
+  0.5 GB boot partition and a 6 GB system partition, about a fifth of it
+  used); the rest of the stick is left alone. USB 2.0 and 3.0 sticks both
+  work.
+
+  Tried and working together: a powered USB 2.0 hub, a USB 3.0 stick and an
+  Apple USB keyboard from a 2006 iMac.
 - A Linux PC (x86_64) with `mmdebstrap`, `bubblewrap`, `uidmap` and `git`, and
   unprivileged user namespaces enabled. Built and tested on Linux Mint 22
   (Ubuntu 24.04 based); other distributions should work but are untested.
