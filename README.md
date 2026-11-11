@@ -46,7 +46,7 @@ git clone --recurse-submodules <this repository>
 cd applereplay
 env/bootstrap.sh         # once: a Debian toolchain in env/root (~1 GB)
 env/build-cctools.sh     # once: Apple's linker, needed for the boot loader
-./build.sh               # ~5 min: out/rootfs.tar, kernel and initramfs
+./build.sh               # 3-5 min: out/rootfs.tar, kernel and initramfs
 ./mkimage.sh             # out/totalreplay.img, ready to write
 ```
 

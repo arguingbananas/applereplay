@@ -46,6 +46,15 @@ git -C "$OUT/src/linapple" reset -q --hard
 git -C "$OUT/src/linapple" clean -qfdx
 for p in "$HERE"/patches/linapple-*.patch; do git -C "$OUT/src/linapple" apply "$p"; done
 
+# mmdebstrap unpacks the whole system under $TMPDIR. On a disk dpkg syncs every
+# file; in RAM the build takes half the time (156 s against 309 s on an SSD).
+# So use /dev/shm when it has room, unless TMPDIR is already set. The peak is
+# about 3 GB.
+if [ -z "${TMPDIR:-}" ] && [ "$(df --output=fstype /dev/shm 2>/dev/null | tail -1)" = tmpfs ] &&
+    [ "$(df --output=avail -BG /dev/shm | tail -1 | tr -dc 0-9)" -ge 6 ]; then
+    export TMPDIR=/dev/shm
+fi
+
 # mmdebstrap's namespace root may not be able to enter your home directory
 # (mode 750 is common), so apt gets the Debian keys from a world-readable copy.
 # Project files go in through the sync-in/upload hooks, which run as us.
