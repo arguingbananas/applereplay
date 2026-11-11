@@ -1,0 +1,98 @@
+#!/bin/sh
+# Build linapple for the box on the build host: a copy of the box's own system
+# (out/rootfs.tar: Debian 12, i386) that x86_64 CPUs run natively.
+#   env/devroot init             unpack out/rootfs.tar (again after ./build.sh)
+#   env/devroot build            build linapple-sdl2 from out/src/linapple
+#   env/devroot install [host]   copy it to the box and restart the kiosk
+#   env/devroot run [cmd...]     run a command inside (default: bash)
+# Edits go in out/src/linapple. ./build.sh resets that tree to upstream plus
+# patches/, so save changes as a patch (git -C out/src/linapple diff) first.
+set -eu
+
+ENV=$(cd "$(dirname "$0")" && pwd)
+PROJECT=$(dirname "$ENV")
+OUT=$PROJECT/out
+# Overridable so tests can work in a scratch directory.
+ROOT=${DEVROOT:-$OUT/devroot}
+BUILD=${DEVROOT_BUILD:-$OUT/devbuild/sdl2}
+SRC=${DEVROOT_SRC:-$OUT/src/linapple}
+TARBALL=${DEVROOT_TARBALL:-$OUT/rootfs.tar}
+# Inside, the same paths as the image build, so the binary matches the image's.
+IN_SRC=/usr/local/src/linapple
+IN_BUILD=$IN_SRC/build-sdl2
+
+die() { echo "env/devroot: $*" >&2; exit 1; }
+
+# Run a command inside: we appear as root, files stay ours, and uname says
+# i686 like the box.
+run() {
+    [ -x "$ROOT/usr/bin/setarch" ] || die "no devroot yet, run env/devroot init"
+    mkdir -p "$BUILD"
+    bwrap \
+        --bind "$ROOT" / \
+        --dev /dev \
+        --proc /proc \
+        --tmpfs /tmp \
+        --bind "$SRC" "$IN_SRC" \
+        --bind "$BUILD" "$IN_BUILD" \
+        --unshare-user --uid 0 --gid 0 \
+        --unshare-pid --unshare-net --die-with-parent \
+        --chdir "$IN_SRC" \
+        --clearenv \
+        --setenv HOME /root \
+        --setenv TERM "${TERM:-xterm}" \
+        --setenv PATH /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin \
+        /usr/bin/setarch i686 "$@"
+}
+
+cmd=${1:-}
+[ $# -gt 0 ] && shift
+case $cmd in
+init)
+    [ -f "$TARBALL" ] || die "no $TARBALL, run ./build.sh first"
+    # rm -rf only a directory that is itself named devroot*, wherever it is.
+    case "$(basename "$ROOT")" in devroot*) rm -rf "$ROOT" ;; *) die "refusing to delete $ROOT" ;; esac
+    rm -rf "$BUILD"
+    mkdir -p "$ROOT"
+    # Extracting as a normal user makes every file ours; run() maps us to root.
+    tar -x -f "$TARBALL" -C "$ROOT" --exclude='./dev/*'
+    # The image's own linapple build tree would shadow ours; it's rebuilt in $BUILD.
+    rm -rf "$ROOT$IN_SRC"
+    mkdir -p "$ROOT$IN_SRC"
+    touch -r "$TARBALL" "$ROOT/.devroot-from"
+    echo "devroot ready in $ROOT. Next: env/devroot build"
+    ;;
+build)
+    [ -d "$SRC/src" ] || die "no linapple source in $SRC, run ./build.sh first"
+    [ ! "$TARBALL" -nt "$ROOT/.devroot-from" ] ||
+        echo "env/devroot: $TARBALL is newer than the devroot; consider env/devroot init" >&2
+    # The same configuration as hooks/customize.sh.
+    run sh -euc "
+        [ -f $IN_BUILD/CMakeCache.txt ] ||
+            cmake -S . -B $IN_BUILD -DFRONTEND=sdl2 -DBUILD_TESTING=OFF \
+                -DCMAKE_BUILD_TYPE=Release -DENABLE_STRICT_WARNINGS=OFF >/dev/null
+        cmake --build $IN_BUILD -j$(nproc)
+        if ldd $IN_BUILD/linapple | grep 'not found'; then exit 1; fi
+    "
+    echo "Built $BUILD/linapple"
+    ;;
+install)
+    host=${1:-apple@applereplay.local}
+    bin=$BUILD/linapple
+    [ -x "$bin" ] || die "nothing built yet, run env/devroot build"
+    key=$OUT/ssh/totalreplay_ed25519
+    scp -q -i "$key" "$bin" "$host:/tmp/linapple-sdl2"
+    # Restarting linapple restarts the kiosk with the new binary.
+    ssh -i "$key" "$host" 'sudo install -m 755 /tmp/linapple-sdl2 /usr/local/bin/linapple-sdl2 &&
+        rm /tmp/linapple-sdl2 && { pkill -x linapple-sdl2 || true; }'
+    echo "Installed on $host; the kiosk is restarting"
+    ;;
+run)
+    [ $# -gt 0 ] || set -- bash
+    run "$@"
+    ;;
+*)
+    sed -n '2,9s/^# \{0,1\}//p' "$0" >&2
+    exit 1
+    ;;
+esac

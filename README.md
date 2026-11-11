@@ -50,6 +50,11 @@ env/build-cctools.sh     # once: Apple's linker, needed for the boot loader
 ./mkimage.sh             # out/totalreplay.img, ready to write
 ```
 
+To change linapple, edit `out/src/linapple` and use `env/devroot build` and
+`env/devroot install`: it builds inside a copy of the box's own system on your
+PC, in seconds, and puts the result on the box. `tests/run` runs the test
+suite.
+
 `build.sh` makes an SSH key for you in `out/ssh/` and the box's host keys in
 `out/hostkeys/`; both survive rebuilds. Keep `out/` private.
 

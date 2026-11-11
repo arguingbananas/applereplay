@@ -1,0 +1,17 @@
+#!/bin/sh
+# Run the test suite: tests/run [name...]   (e.g. tests/run devroot)
+# Each tests/NAME.sh runs in its own shell. Tests that need the Apple TV only
+# run with TEST_BOX=1 (and the box reachable as applereplay.local).
+set -u
+TESTS=$(cd "$(dirname "$0")" && pwd)
+export TESTS
+mkdir -p "$TESTS/../out/test"
+
+[ $# -gt 0 ] || set -- $(cd "$TESTS" && ls *.sh | grep -v '^lib\.sh$' | sed 's/\.sh$//')
+status=0
+for name; do
+    echo "$name"
+    sh -c '. "$1"; . "$2"; finish' "$name" "$TESTS/lib.sh" "$TESTS/$name.sh" || status=1
+done
+[ $status -eq 0 ] && echo "All tests passed." || echo "Some tests FAILED."
+exit $status
