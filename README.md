@@ -53,7 +53,7 @@ Total Replay is fine, a damaged download is not. To check by hand:
 ## Build
 
 ```
-git clone --recurse-submodules <this repository>
+git clone --recurse-submodules https://github.com/arguingbananas/applereplay
 cd applereplay
 env/bootstrap.sh         # once: a Debian toolchain in env/root (~1 GB)
 env/build-cctools.sh     # once: Apple's linker, needed for the boot loader
@@ -174,7 +174,7 @@ applereplay stands on these projects:
   DistroHopper39B, which make Linux on the Apple TV possible.
 - [Debian](https://www.debian.org), still shipping a 32-bit kernel.
 
-Our fixes to these projects are offered back upstream; `docs/NOTES.md` lists
+Our fixes to these projects are meant to go back upstream; `docs/NOTES.md` lists
 them.
 
 ## License
