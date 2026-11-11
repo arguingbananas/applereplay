@@ -46,7 +46,7 @@ fi
 check "git ignores build output, keys, assets and personal notes" \
     git check-ignore out/ssh/totalreplay_ed25519 out/hostkeys assets/total-replay.hdv \
         assets/atv-boot/boot.efi env/root CLAUDE.local.md
-check "no private keys are tracked" sh -c "! git grep -l 'PRIVATE KEY' -- . ':!env/keyring'"
+check "no private keys are tracked" sh -c "! git grep -l 'PRIVATE KEY' -- . ':!env/keyring' ':!tests/static.sh'"
 # Paths on the box (/home/apple) are fine; anyone else's home, a private IP
 # or a personal email address is not.
 private_ip='\b(10|192\.168|172\.(1[6-9]|2[0-9]|3[01]))\.[0-9]+\.[0-9]+\b'

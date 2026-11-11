@@ -37,7 +37,7 @@ check "HDMI audio is streaming with digital out on, in stereo" sh -c "
     grep -qx 'stream state: RUNNING' '$B' && grep -qx 'dig1 0x1' '$B' && grep -qx 'chans 0x1' '$B'"
 
 # 55, not 60: full-screen transitions in Total Replay's attract mode (a title
-# screen drawn in across the whole screen) run at 56-57 fps; see applereplay.md.
+# screen drawn in across the whole screen) run at 56-57 fps; see docs/NOTES.md.
 # Every regression seen so far was far lower (11, 38, 52-54 fps).
 box 'sudo fps 20' > "$SCRATCH/fps.txt" 2>&1
 check "linapple runs at 55 fps or more over 20 s ($(sed -n 's/.*: \([0-9.]*\) fps.*/\1/p' "$SCRATCH/fps.txt") fps)" \
