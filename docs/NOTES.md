@@ -7,6 +7,16 @@ CLAUDE.local.md, which is gitignored.
 ## Goal
 Original Apple TV (32-bit EFI, Intel ~1GHz, NVIDIA G72 / GeForce Go 7300) boots Debian 12 (bookworm, i386, Debian kernel `linux-image-686-pae`, currently 6.1.0-54 = upstream 6.1.190) from a USB flash drive via `atv-linux-loader` (`boot.efi` -> fake `mach_kernel` containing kernel+initrd) straight into linapple running Total Replay.
 
+## Making a change
+- Work on a branch, not straight on main.
+- Builds stay rootless. Root is only for writing the stick (`bmaptool`, `sgdisk`).
+- Change the image through the repo (overlay/, hooks/customize.sh, build.sh, mkimage.sh, patches/), never only by hand on the box. A fix tried on the box isn't done until it's in the repo.
+- linapple changes: edit out/src/linapple, `env/devroot build` + `install`, measure with `sudo fps`, then save the diff to patches/ before ./build.sh resets the source. Check patches with `-std=c++11`.
+- Prefer Debian packages and Debian's kernel. No nouveau, no OpenGL, no mode changes (see Display rules).
+- Nothing personal in tracked files: host names, home paths, IPs, email addresses and keys go in CLAUDE.local.md or out/. Nothing from assets/ gets committed.
+- Before committing: `tests/run` (plus `TEST_BOX=1 tests/run` if the box was involved), and a test in tests/ for new tooling. If the image changed: `./build.sh` (it must not report unresolved libraries) and `./mkimage.sh`, then check on the box (services, `journalctl -u`, `sudo fps` at 60) and at the TV for picture and sound.
+- Keep these notes current: facts learned, gotchas, status; move finished items out of Next; fixes worth sending upstream go under Upstream contributions. Update README.md if its steps changed.
+
 ## Hardware and image facts
 - Image layout from mkimage.sh: GPT, p1 = 511M FAT `BOOT` (PARTLABEL `boot`, type Apple TV recovery) with boot.efi, mach_kernel, com.apple.Boot.plist, System/Library/Extensions/Dummy.kext; p2 = 6G ext4 `debian-root` (PARTUUID b632a136-1138-4ea8-9ead-c8891c82dcac). The rest of the stick is unused for now.
 - Boot partition GPT type must be "Apple TV recovery" `5265636f-7665-11aa-aa11-00306543ecac` (GParted's `atvrecv` flag); root is a normal Linux filesystem partition.
