@@ -36,8 +36,11 @@ stick needs root.
   used); the rest of the stick is left alone. A USB 3.0 stick works, at
   USB 2.0 speed.
 
-  Tried and working together: a powered USB 2.0 hub, a USB 3.0 stick and an
-  Apple USB keyboard from a 2006 iMac.
+  Tried and working together: a powered USB 2.0 hub, a USB 3.0 stick, an
+  Apple USB keyboard from a 2006 iMac and a wired Xbox 360 controller.
+- Optional: a wired Xbox 360 controller on the hub, for games that used the
+  Apple II's joystick. It is the only kind tried; other USB controllers that
+  Linux supports may work too. You still need the keyboard for the menu.
 - A Linux PC (x86_64) with `mmdebstrap`, `bubblewrap`, `uidmap` and `git`, and
   unprivileged user namespaces enabled. Built and tested on Linux Mint 22
   (Ubuntu 24.04 based); other distributions should work but are untested.
@@ -133,6 +136,12 @@ logo, some boot text, then Total Replay.
   quits the emulator, which starts again at the menu. F1 lists every emulator
   key, and Pause pauses. Mind F10 and F11 on their own: they load and save a
   snapshot.
+- **Joystick:** with a game controller plugged in when the emulator starts,
+  its left stick is the Apple II's joystick and its first two buttons (A and
+  B on an Xbox pad) are the Apple II's two. The d-pad does nothing. With no
+  controller, the numeric keypad is the joystick: 1-9 for directions, 0 and
+  `.` for the buttons. If you plug a controller in later, press F12 to
+  restart the emulator.
 - **SSH:** `ssh -i out/ssh/totalreplay_ed25519 apple@applereplay.local`. User
   `apple` has passwordless sudo, so the key is as good as root: keep it safe.
 - **Security:** the box is meant for a home network. A firewall lets in only
