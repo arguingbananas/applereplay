@@ -27,6 +27,19 @@ if [ -n "$factor" ]; then
         systemd-cat -t screen-factor
 fi
 
+# A game controller plugged in when the emulator starts becomes the Apple II's
+# joystick: its first stick, and its first two buttons (A and B on an Xbox
+# pad). Without one the numeric keypad stays the joystick, as the config says.
+# linapple can't be left on "controller" always: with none present it falls
+# back to the mouse, not the keypad.
+for js in /dev/input/js*; do
+    [ -e "$js" ] || continue
+    sed -i 's/^Joystick 0 = .*/Joystick 0 = 1/' "$HOME/.config/linapple/linapple.conf"
+    echo "controller $(cat "/sys/class/input/${js##*/}/device/name" 2>/dev/null) is the joystick" |
+        systemd-cat -t joystick
+    break
+done
+
 # Keep SDL off OpenGL; there is none without nouveau (and Mesa's nouveau driver
 # segfaults on the G72). Without the second variable SDL2 tries to push its
 # software framebuffer through GL.

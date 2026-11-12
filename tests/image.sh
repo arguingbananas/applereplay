@@ -31,6 +31,10 @@ check "linapple is windowed, at 1.75x unless the session finds a better fit for 
     grep -q "^factor=.*/usr/local/lib/totalreplay/screen-factor" usr/local/lib/totalreplay/xsession &&
     grep -qx "Screen factor = 1.75" etc/totalreplay/linapple.conf &&
     grep -qx "Fullscreen = 0" etc/totalreplay/linapple.conf'
+check "the keypad is the joystick by default, and the session hands it to a controller if one is plugged in" sh -c '
+    grep -qx "Joystick 0 = 2" etc/totalreplay/linapple.conf &&
+    grep -q "^for js in /dev/input/js\*; do" usr/local/lib/totalreplay/xsession &&
+    grep -q "s/^Joystick 0 = .\*/Joystick 0 = 1/" usr/local/lib/totalreplay/xsession'
 check "HDMI (card 0 device 3) is the default sound output" \
     grep -qx 'defaults.pcm.device 3' etc/asound.conf
 check "the box's services are enabled" sh -c '
