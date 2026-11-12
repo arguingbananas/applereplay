@@ -1,0 +1,87 @@
+diff --git a/src/frontends/common/sdl/JoystickFrontend.cpp b/src/frontends/common/sdl/JoystickFrontend.cpp
+index 76c31b2..68e3aa4 100644
+--- a/src/frontends/common/sdl/JoystickFrontend.cpp
++++ b/src/frontends/common/sdl/JoystickFrontend.cpp
+@@ -438,6 +438,19 @@ static auto poll_gamepad(size_t joy_num, SDL_Joystick* joystick) -> void {
+   if (joy_num == 0) {
+     square_stick(x, y);
+   }
++  // A d-pad overrides the stick with full travel, as a digital stick would:
++  // many Apple II games only ask "left of centre or right of it".
++  const uint8_t hat = sdl_compat_get_joystick_hat(joystick, 0);
++  if ((hat & 8U) != 0) {
++    x = pdl_min;
++  } else if ((hat & 2U) != 0) {
++    x = pdl_max;
++  }
++  if ((hat & 1U) != 0) {
++    y = pdl_min;
++  } else if ((hat & 4U) != 0) {
++    y = pdl_max;
++  }
+   send_axis(static_cast<uint8_t>(joy_num), 0, x);
+   send_axis(static_cast<uint8_t>(joy_num), 1, y);
+ }
+diff --git a/src/frontends/sdl1/SdlBackend.h b/src/frontends/sdl1/SdlBackend.h
+index 21a0dbc..bdaad6e 100644
+--- a/src/frontends/sdl1/SdlBackend.h
++++ b/src/frontends/sdl1/SdlBackend.h
+@@ -80,6 +80,16 @@ inline auto sdl_compat_get_joystick_axis(SDL_Joystick* joy, int axis)
+   return SDL_JoystickGetAxis(joy, axis);
+ }
+ 
++// A hat (a pad's d-pad) as SDL's bit mask: up 1, right 2, down 4, left 8.
++// A pad without that hat reads as centred.
++inline auto sdl_compat_get_joystick_hat(SDL_Joystick* joy, int hat)
++    -> uint8_t {
++  if (joy == nullptr) {
++    return 0;
++  }
++  return SDL_JoystickGetHat(joy, hat);
++}
++
+ inline auto sdl_compat_lock_surface(SDL_Surface* s) -> bool {
+   if (s == nullptr) {
+     return false;
+diff --git a/src/frontends/sdl2/SdlBackend.h b/src/frontends/sdl2/SdlBackend.h
+index d46ce74..64f1ccf 100644
+--- a/src/frontends/sdl2/SdlBackend.h
++++ b/src/frontends/sdl2/SdlBackend.h
+@@ -67,6 +67,16 @@ inline auto sdl_compat_get_joystick_axis(SDL_Joystick* joy, int axis)
+   return SDL_JoystickGetAxis(joy, axis);
+ }
+ 
++// A hat (a pad's d-pad) as SDL's bit mask: up 1, right 2, down 4, left 8.
++// A pad without that hat reads as centred.
++inline auto sdl_compat_get_joystick_hat(SDL_Joystick* joy, int hat)
++    -> uint8_t {
++  if (joy == nullptr) {
++    return 0;
++  }
++  return SDL_JoystickGetHat(joy, hat);
++}
++
+ inline auto sdl_compat_lock_surface(SDL_Surface* s) -> bool {
+   if (s == nullptr) {
+     return false;
+diff --git a/src/frontends/sdl3/SdlBackend.h b/src/frontends/sdl3/SdlBackend.h
+index 4687ea5..ba67a82 100644
+--- a/src/frontends/sdl3/SdlBackend.h
++++ b/src/frontends/sdl3/SdlBackend.h
+@@ -95,6 +95,16 @@ inline auto sdl_compat_get_joystick_axis(SDL_Joystick* joy, int axis)
+   return SDL_GetJoystickAxis(joy, axis);
+ }
+ 
++// A hat (a pad's d-pad) as SDL's bit mask: up 1, right 2, down 4, left 8.
++// A pad without that hat reads as centred.
++inline auto sdl_compat_get_joystick_hat(SDL_Joystick* joy, int hat)
++    -> uint8_t {
++  if (joy == nullptr) {
++    return 0;
++  }
++  return SDL_GetJoystickHat(joy, hat);
++}
++
+ inline auto sdl_compat_lock_surface(SDL_Surface* s) -> bool {
+   if (s == nullptr) {
+     return false;

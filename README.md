@@ -138,10 +138,11 @@ logo, some boot text, then Total Replay.
   snapshot.
 - **Joystick:** with a game controller plugged in when the emulator starts,
   its left stick is the Apple II's joystick and its first two buttons (A and
-  B on an Xbox pad) are the Apple II's two. The d-pad does nothing. With no
-  controller, the numeric keypad is the joystick: 1-9 for directions, 0 and
-  `.` for the buttons. If you plug a controller in later, press F12 to
-  restart the emulator.
+  B on an Xbox pad) are the Apple II's two. The d-pad works as a stick pushed
+  all the way, which suits many games better. With no controller, the
+  numeric keypad is the joystick: 1-9 for directions, 0 and `.` for the
+  buttons. If you plug a controller in later, press F12 to restart the
+  emulator.
 - **SSH:** `ssh -i out/ssh/totalreplay_ed25519 apple@applereplay.local`. User
   `apple` has passwordless sudo, so the key is as good as root: keep it safe.
 - **Security:** the box is meant for a home network. A firewall lets in only
