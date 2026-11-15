@@ -58,6 +58,18 @@ check "every script in the overlay is executable" sh -c "
     for f in \$(grep -rl '^#!/bin/sh' '$PROJECT/overlay'); do
         [ -x \"\$f\" ] || { echo \"not executable: \$f\"; exit 1; }
     done"
+# The weekly check on GitHub reads this list; an empty or mangled one would
+# pass there for the wrong reason.
+check "docs/image-packages.status lists installed packages with versions" sh -c "
+    n=\$(grep -c '^Package: ' '$PROJECT/docs/image-packages.status') && [ \"\$n\" -gt 300 ] &&
+    [ \"\$(grep -c '^Version: ' '$PROJECT/docs/image-packages.status')\" -eq \"\$n\" ] &&
+    grep -qx 'Package: linux-image-686-pae' '$PROJECT/docs/image-packages.status'"
+check "the vulnerability report says nothing to fix for none, and lists packages and fails for some" sh -c "
+    : > '$SCRATCH/none.txt' && sh '$PROJECT/.github/vuln-report.sh' '$SCRATCH/none.txt' | grep -q '^Nothing to fix' &&
+    printf 'CVE-2024-0727 libssl3 (fixed)\nCVE-2023-5678 libssl3 (fixed)\nCVE-2024-1 zlib1g (fixed)\n' > '$SCRATCH/some.txt' &&
+    ! sh '$PROJECT/.github/vuln-report.sh' '$SCRATCH/some.txt' > '$SCRATCH/report.md' &&
+    grep -q 'fixed \*\*3\*\* vulnerabilities' '$SCRATCH/report.md' &&
+    grep -q '^| .libssl3. | 2: CVE-2023-5678, CVE-2024-0727 |' '$SCRATCH/report.md'"
 # Which files they are, not whether yours match: build.sh and mkimage.sh warn about that.
 check "assets.sha256 names the four files the build takes from assets/" sh -c "
     [ \"\$(grep -cE '^[0-9a-f]{64}  assets/' '$PROJECT/assets.sha256')\" -eq 4 ] &&

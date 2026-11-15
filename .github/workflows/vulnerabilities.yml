@@ -1,0 +1,74 @@
+# Weekly: has Debian fixed a vulnerability in a package the image contains?
+# The image itself can't be built here (it needs files that aren't in the
+# repository), so this checks the package list recorded from the last build,
+# docs/image-packages.status, the same way env/vuln-check checks a local build.
+# When there is something to fix it opens an issue, or updates the open one,
+# and the run fails; when there is nothing left it closes the issue.
+name: Vulnerability check
+
+on:
+  schedule:
+    - cron: '17 6 * * 1'    # Mondays, 06:17 UTC
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - docs/image-packages.status
+      - .github/vuln-report.sh
+      - .github/workflows/vulnerabilities.yml
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: vulnerability-check
+  cancel-in-progress: false
+
+jobs:
+  debian-packages:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      TITLE: Debian has security fixes the recorded image lacks
+      GH_TOKEN: ${{ github.token }}
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Install debsecan
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q --no-install-recommends debsecan
+
+      - name: Ask Debian's security tracker
+        id: check
+        run: |
+          status=0
+          .github/vuln-report.sh > report.md || status=$?
+          cat report.md >> "$GITHUB_STEP_SUMMARY"
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          # 2 means the check didn't run; don't touch the issue on that.
+          [ "$status" -ne 2 ]
+
+      - name: Open, update or close the issue
+        run: |
+          number=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open \
+              --search "in:title \"$TITLE\"" --json number,title \
+              --jq "map(select(.title == \"$TITLE\")) | .[0].number // empty")
+          if [ "${{ steps.check.outputs.status }}" = 1 ]; then
+              if [ -n "$number" ]; then
+                  gh issue edit "$number" --repo "$GITHUB_REPOSITORY" --body-file report.md
+              else
+                  gh issue create --repo "$GITHUB_REPOSITORY" --title "$TITLE" --body-file report.md
+              fi
+          elif [ -n "$number" ]; then
+              gh issue close "$number" --repo "$GITHUB_REPOSITORY" \
+                  --comment "The recorded image has every fix Debian has published."
+          fi
+
+      - name: Fail when there is something to fix
+        if: steps.check.outputs.status == '1'
+        run: exit 1

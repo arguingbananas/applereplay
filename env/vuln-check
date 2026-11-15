@@ -5,6 +5,10 @@
 # security tracker, with debsecan.
 #   env/vuln-check           one line per vulnerability and package
 #   env/vuln-check --all     also those with no fix yet
+#   env/vuln-check --record  save the image's package list as
+#                            docs/image-packages.status, for the weekly check
+#                            on GitHub (.github/workflows/vulnerabilities.yml);
+#                            commit it when the image is one you'll use
 # Exits 1 when there is something to fix.
 set -eu
 
@@ -13,6 +17,14 @@ OUT=$(dirname "$ENV")/out
 [ -f "$OUT/rootfs.tar" ] || { echo "env/vuln-check: no out/rootfs.tar, run ./build.sh first" >&2; exit 1; }
 only=--only-fixed
 [ "${1:-}" = --all ] && only=
+
+if [ "${1:-}" = --record ]; then
+    # Only what debsecan reads: the full status file is eight times the size.
+    tar -x -f "$OUT/rootfs.tar" -O ./var/lib/dpkg/status |
+        awk '/^(Package|Status|Architecture|Source|Version):/ || /^$/' > "$ENV/../docs/image-packages.status"
+    echo "env/vuln-check: recorded $(grep -c '^Package:' "$ENV/../docs/image-packages.status") packages in docs/image-packages.status"
+    exit 0
+fi
 
 mkdir -p "$OUT/test"
 tar -x -f "$OUT/rootfs.tar" -O ./var/lib/dpkg/status > "$OUT/test/dpkg-status"

@@ -151,7 +151,9 @@ logo, some boot text, then Total Replay.
 - **Security:** the box is meant for a home network. A firewall lets in only
   SSH, its name on the network (mDNS) and ping. It never updates itself:
   rebuild now and then, or run `sudo apt update && sudo apt upgrade` on it;
-  `env/vuln-check` tells you when Debian has fixes your image lacks.
+  `env/vuln-check` tells you when Debian has fixes your image lacks. A
+  weekly check on GitHub does the same for the project's reference build and
+  opens an issue when there is something to fix.
   [SECURITY.md](SECURITY.md) has the details and how to report a problem.
 - **A bigger or smaller picture:** if your TV shows the whole picture and you
   want less border, or it crops more than most, put a zoom factor in

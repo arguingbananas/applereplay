@@ -1,0 +1,16 @@
+# Dependabot only knows two of this project's dependencies: the boot loader
+# submodule and the actions the workflows use. It proposes updates for those.
+# The Debian packages in the image are watched by
+# .github/workflows/vulnerabilities.yml instead; linapple and cctools-port
+# are commits pinned in build.sh and env/build-cctools.sh, which nothing
+# watches automatically.
+version: 2
+updates:
+  - package-ecosystem: gitsubmodule
+    directory: /
+    schedule:
+      interval: monthly
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

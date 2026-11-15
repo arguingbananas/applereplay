@@ -1,0 +1,2807 @@
+Package: adduser
+Status: install ok installed
+Architecture: all
+Version: 3.134
+
+Package: alsa-tools
+Status: install ok installed
+Architecture: i386
+Version: 1.2.5-3
+
+Package: alsa-utils
+Status: install ok installed
+Architecture: i386
+Version: 1.2.8-1
+
+Package: apt
+Status: install ok installed
+Architecture: i386
+Version: 2.6.2
+
+Package: avahi-daemon
+Status: install ok installed
+Architecture: i386
+Source: avahi
+Version: 0.8-10+deb12u1
+
+Package: base-files
+Status: install ok installed
+Architecture: i386
+Version: 12.4+deb12u15
+
+Package: base-passwd
+Status: install ok installed
+Architecture: i386
+Version: 3.6.1
+
+Package: bash
+Status: install ok installed
+Architecture: i386
+Source: bash (5.2.15-2)
+Version: 5.2.15-2+b13
+
+Package: binutils
+Status: install ok installed
+Architecture: i386
+Version: 2.40-2
+
+Package: binutils-common
+Status: install ok installed
+Architecture: i386
+Source: binutils
+Version: 2.40-2
+
+Package: binutils-i686-linux-gnu
+Status: install ok installed
+Architecture: i386
+Source: binutils
+Version: 2.40-2
+
+Package: bsdutils
+Status: install ok installed
+Architecture: i386
+Source: util-linux (2.38.1-5+deb12u3)
+Version: 1:2.38.1-5+deb12u3
+
+Package: build-essential
+Status: install ok installed
+Architecture: i386
+Version: 12.9
+
+Package: bzip2
+Status: install ok installed
+Architecture: i386
+Source: bzip2 (1.0.8-5)
+Version: 1.0.8-5+b1
+
+Package: cmake
+Status: install ok installed
+Architecture: i386
+Version: 3.25.1-1
+
+Package: cmake-data
+Status: install ok installed
+Architecture: all
+Source: cmake
+Version: 3.25.1-1
+
+Package: coreutils
+Status: install ok installed
+Architecture: i386
+Version: 9.1-1
+
+Package: cpio
+Status: install ok installed
+Architecture: i386
+Version: 2.13+dfsg-7.1
+
+Package: cpp
+Status: install ok installed
+Architecture: i386
+Source: gcc-defaults (1.203)
+Version: 4:12.2.0-3
+
+Package: cpp-12
+Status: install ok installed
+Architecture: i386
+Source: gcc-12
+Version: 12.2.0-14+deb12u1
+
+Package: dash
+Status: install ok installed
+Architecture: i386
+Version: 0.5.12-2
+
+Package: dbus
+Status: install ok installed
+Architecture: i386
+Version: 1.14.10-1~deb12u1
+
+Package: dbus-bin
+Status: install ok installed
+Architecture: i386
+Source: dbus
+Version: 1.14.10-1~deb12u1
+
+Package: dbus-daemon
+Status: install ok installed
+Architecture: i386
+Source: dbus
+Version: 1.14.10-1~deb12u1
+
+Package: dbus-session-bus-common
+Status: install ok installed
+Architecture: all
+Source: dbus
+Version: 1.14.10-1~deb12u1
+
+Package: dbus-system-bus-common
+Status: install ok installed
+Architecture: all
+Source: dbus
+Version: 1.14.10-1~deb12u1
+
+Package: debconf
+Status: install ok installed
+Architecture: all
+Version: 1.5.82
+
+Package: debian-archive-keyring
+Status: install ok installed
+Architecture: all
+Version: 2023.3+deb12u2
+
+Package: debianutils
+Status: install ok installed
+Architecture: i386
+Version: 5.7-0.5~deb12u1
+
+Package: diffutils
+Status: install ok installed
+Architecture: i386
+Version: 1:3.8-4
+
+Package: dmsetup
+Status: install ok installed
+Architecture: i386
+Source: lvm2 (2.03.16-2)
+Version: 2:1.02.185-2
+
+Package: dpkg
+Status: install ok installed
+Architecture: i386
+Version: 1.21.23
+
+Package: dpkg-dev
+Status: install ok installed
+Architecture: all
+Source: dpkg
+Version: 1.21.23
+
+Package: e2fsprogs
+Status: install ok installed
+Architecture: i386
+Source: e2fsprogs (1.47.0-2)
+Version: 1.47.0-2+b2
+
+Package: evtest
+Status: install ok installed
+Architecture: i386
+Version: 1:1.35-1
+
+Package: findutils
+Status: install ok installed
+Architecture: i386
+Version: 4.9.0-4
+
+Package: fontconfig-config
+Status: install ok installed
+Architecture: i386
+Source: fontconfig
+Version: 2.14.1-4
+
+Package: fonts-dejavu-core
+Status: install ok installed
+Architecture: all
+Source: fonts-dejavu
+Version: 2.37-6
+
+Package: g++
+Status: install ok installed
+Architecture: i386
+Source: gcc-defaults (1.203)
+Version: 4:12.2.0-3
+
+Package: g++-12
+Status: install ok installed
+Architecture: i386
+Source: gcc-12
+Version: 12.2.0-14+deb12u1
+
+Package: gcc
+Status: install ok installed
+Architecture: i386
+Source: gcc-defaults (1.203)
+Version: 4:12.2.0-3
+
+Package: gcc-12
+Status: install ok installed
+Architecture: i386
+Version: 12.2.0-14+deb12u1
+
+Package: gcc-12-base
+Status: install ok installed
+Architecture: i386
+Source: gcc-12
+Version: 12.2.0-14+deb12u1
+
+Package: gir1.2-glib-2.0
+Status: install ok installed
+Architecture: i386
+Source: gobject-introspection
+Version: 1.74.0-3
+
+Package: gir1.2-ibus-1.0
+Status: install ok installed
+Architecture: i386
+Source: ibus
+Version: 1.5.27-5
+
+Package: gpgv
+Status: install ok installed
+Architecture: i386
+Source: gnupg2
+Version: 2.2.40-1.1+deb12u2
+
+Package: grep
+Status: install ok installed
+Architecture: i386
+Version: 3.8-5
+
+Package: gzip
+Status: install ok installed
+Architecture: i386
+Version: 1.12-1
+
+Package: hicolor-icon-theme
+Status: install ok installed
+Architecture: all
+Version: 0.17-2
+
+Package: hostname
+Status: install ok installed
+Architecture: i386
+Version: 3.23+nmu1
+
+Package: ifupdown
+Status: install ok installed
+Architecture: i386
+Version: 0.8.41
+
+Package: imagemagick
+Status: install ok installed
+Architecture: i386
+Version: 8:6.9.11.60+dfsg-1.6+deb12u15
+
+Package: imagemagick-6-common
+Status: install ok installed
+Architecture: all
+Source: imagemagick
+Version: 8:6.9.11.60+dfsg-1.6+deb12u15
+
+Package: imagemagick-6.q16
+Status: install ok installed
+Architecture: i386
+Source: imagemagick
+Version: 8:6.9.11.60+dfsg-1.6+deb12u15
+
+Package: init-system-helpers
+Status: install ok installed
+Architecture: all
+Version: 1.65.2+deb12u1
+
+Package: initramfs-tools
+Status: install ok installed
+Architecture: all
+Version: 0.142+deb12u3
+
+Package: initramfs-tools-core
+Status: install ok installed
+Architecture: all
+Source: initramfs-tools
+Version: 0.142+deb12u3
+
+Package: iproute2
+Status: install ok installed
+Architecture: i386
+Version: 6.1.0-3
+
+Package: iputils-ping
+Status: install ok installed
+Architecture: i386
+Source: iputils
+Version: 3:20221126-1+deb12u1
+
+Package: isc-dhcp-client
+Status: install ok installed
+Architecture: i386
+Source: isc-dhcp
+Version: 4.4.3-P1-2
+
+Package: keyboard-configuration
+Status: install ok installed
+Architecture: all
+Source: console-setup
+Version: 1.221
+
+Package: klibc-utils
+Status: install ok installed
+Architecture: i386
+Source: klibc
+Version: 2.0.12-1
+
+Package: kmod
+Status: install ok installed
+Architecture: i386
+Version: 30+20221128-1
+
+Package: less
+Status: install ok installed
+Architecture: i386
+Version: 590-2.1~deb12u2
+
+Package: libacl1
+Status: install ok installed
+Architecture: i386
+Source: acl
+Version: 2.3.1-3
+
+Package: libaom3
+Status: install ok installed
+Architecture: i386
+Source: aom
+Version: 3.6.0-1+deb12u3
+
+Package: libapparmor1
+Status: install ok installed
+Architecture: i386
+Source: apparmor
+Version: 3.0.8-3
+
+Package: libapt-pkg6.0
+Status: install ok installed
+Architecture: i386
+Source: apt
+Version: 2.6.2
+
+Package: libarchive13
+Status: install ok installed
+Architecture: i386
+Source: libarchive
+Version: 3.6.2-1+deb12u5
+
+Package: libargon2-1
+Status: install ok installed
+Architecture: i386
+Source: argon2
+Version: 0~20171227-0.3+deb12u1
+
+Package: libasan8
+Status: install ok installed
+Architecture: i386
+Source: gcc-12
+Version: 12.2.0-14+deb12u1
+
+Package: libasound2
+Status: install ok installed
+Architecture: i386
+Source: alsa-lib (1.2.8-1)
+Version: 1.2.8-1+b1
+
+Package: libasound2-data
+Status: install ok installed
+Architecture: all
+Source: alsa-lib
+Version: 1.2.8-1
+
+Package: libasound2-dev
+Status: install ok installed
+Architecture: i386
+Source: alsa-lib (1.2.8-1)
+Version: 1.2.8-1+b1
+
+Package: libasyncns0
+Status: install ok installed
+Architecture: i386
+Source: libasyncns (0.8-6)
+Version: 0.8-6+b3
+
+Package: libatomic1
+Status: install ok installed
+Architecture: i386
+Source: gcc-12
+Version: 12.2.0-14+deb12u1
+
+Package: libatopology2
+Status: install ok installed
+Architecture: i386
+Source: alsa-lib (1.2.8-1)
+Version: 1.2.8-1+b1
+
+Package: libattr1
+Status: install ok installed
+Architecture: i386
+Source: attr
+Version: 1:2.5.1-4
+
+Package: libaudit-common
+Status: install ok installed
+Architecture: all
+Source: audit
+Version: 1:3.0.9-1
+
+Package: libaudit1
+Status: install ok installed
+Architecture: i386
+Source: audit
+Version: 1:3.0.9-1
+
+Package: libavahi-common-data
+Status: install ok installed
+Architecture: i386
+Source: avahi
+Version: 0.8-10+deb12u1
+
+Package: libavahi-common3
+Status: install ok installed
+Architecture: i386
+Source: avahi
+Version: 0.8-10+deb12u1
+
+Package: libavahi-core7
+Status: install ok installed
+Architecture: i386
+Source: avahi
+Version: 0.8-10+deb12u1
+
+Package: libbinutils
+Status: install ok installed
+Architecture: i386
+Source: binutils
+Version: 2.40-2
+
+Package: libblkid-dev
+Status: install ok installed
+Architecture: i386
+Source: util-linux
+Version: 2.38.1-5+deb12u3
+
+Package: libblkid1
+Status: install ok installed
+Architecture: i386
+Source: util-linux
+Version: 2.38.1-5+deb12u3
+
+Package: libbpf1
+Status: install ok installed
+Architecture: i386
+Source: libbpf (1.1.2-0+deb12u1)
+Version: 1:1.1.2-0+deb12u1
+
+Package: libbrotli1
+Status: install ok installed
+Architecture: i386
+Source: brotli
+Version: 1.0.9-2+deb12u1
+
+Package: libbsd0
+Status: install ok installed
+Architecture: i386
+Source: libbsd
+Version: 0.11.7-2
+
+Package: libbz2-1.0
+Status: install ok installed
+Architecture: i386
+Source: bzip2 (1.0.8-5)
+Version: 1.0.8-5+b1
+
+Package: libc-bin
+Status: install ok installed
+Architecture: i386
+Source: glibc
+Version: 2.36-9+deb12u14
+
+Package: libc-dev-bin
+Status: install ok installed
+Architecture: i386
+Source: glibc
+Version: 2.36-9+deb12u14
+
+Package: libc6
+Status: install ok installed
+Architecture: i386
+Source: glibc
+Version: 2.36-9+deb12u14
+
+Package: libc6-dev
+Status: install ok installed
+Architecture: i386
+Source: glibc
+Version: 2.36-9+deb12u14
+
+Package: libcaca-dev
+Status: install ok installed
+Architecture: i386
+Source: libcaca
+Version: 0.99.beta20-3+deb12u1
+
+Package: libcaca0
+Status: install ok installed
+Architecture: i386
+Source: libcaca
+Version: 0.99.beta20-3+deb12u1
+
+Package: libcap-ng0
+Status: install ok installed
+Architecture: i386
+Source: libcap-ng (0.8.3-1)
+Version: 0.8.3-1+b3
+
+Package: libcap2
+Status: install ok installed
+Architecture: i386
+Source: libcap2 (1:2.66-4+deb12u3)
+Version: 1:2.66-4+deb12u3+b1
+
+Package: libcap2-bin
+Status: install ok installed
+Architecture: i386
+Source: libcap2 (1:2.66-4+deb12u3)
+Version: 1:2.66-4+deb12u3+b1
+
+Package: libcbor0.8
+Status: install ok installed
+Architecture: i386
+Source: libcbor (0.8.0-2)
+Version: 0.8.0-2+b1
+
+Package: libcc1-0
+Status: install ok installed
+Architecture: i386
+Source: gcc-12
+Version: 12.2.0-14+deb12u1
+
+Package: libcom-err2
+Status: install ok installed
+Architecture: i386
+Source: e2fsprogs (1.47.0-2)
+Version: 1.47.0-2+b2
+
+Package: libcrypt-dev
+Status: install ok installed
+Architecture: i386
+Source: libxcrypt
+Version: 1:4.4.33-2
+
+Package: libcrypt1
+Status: install ok installed
+Architecture: i386
+Source: libxcrypt
+Version: 1:4.4.33-2
+
+Package: libcryptsetup12
+Status: install ok installed
+Architecture: i386
+Source: cryptsetup
+Version: 2:2.6.1-4~deb12u2
+
+Package: libctf-nobfd0
+Status: install ok installed
+Architecture: i386
+Source: binutils
+Version: 2.40-2
+
+Package: libctf0
+Status: install ok installed
+Architecture: i386
+Source: binutils
+Version: 2.40-2
+
+Package: libcurl4
+Status: install ok installed
+Architecture: i386
+Source: curl
+Version: 7.88.1-10+deb12u15
+
+Package: libdaemon0
+Status: install ok installed
+Architecture: i386
+Source: libdaemon
+Version: 0.14-7.1
+
+Package: libdav1d6
+Status: install ok installed
+Architecture: i386
+Source: dav1d
+Version: 1.0.0-2+deb12u1
+
+Package: libdb5.3
+Status: install ok installed
+Architecture: i386
+Source: db5.3
+Version: 5.3.28+dfsg2-1
+
+Package: libdbus-1-3
+Status: install ok installed
+Architecture: i386
+Source: dbus
+Version: 1.14.10-1~deb12u1
+
+Package: libdbus-1-dev
+Status: install ok installed
+Architecture: i386
+Source: dbus
+Version: 1.14.10-1~deb12u1
+
+Package: libde265-0
+Status: install ok installed
+Architecture: i386
+Source: libde265
+Version: 1.0.11-1+deb12u3
+
+Package: libdebconfclient0
+Status: install ok installed
+Architecture: i386
+Source: cdebconf
+Version: 0.270
+
+Package: libdecor-0-0
+Status: install ok installed
+Architecture: i386
+Source: libdecor-0
+Version: 0.1.1-2
+
+Package: libdecor-0-dev
+Status: install ok installed
+Architecture: i386
+Source: libdecor-0
+Version: 0.1.1-2
+
+Package: libdeflate-dev
+Status: install ok installed
+Architecture: i386
+Source: libdeflate
+Version: 1.14-1
+
+Package: libdeflate0
+Status: install ok installed
+Architecture: i386
+Source: libdeflate
+Version: 1.14-1
+
+Package: libdevmapper1.02.1
+Status: install ok installed
+Architecture: i386
+Source: lvm2 (2.03.16-2)
+Version: 2:1.02.185-2
+
+Package: libdpkg-perl
+Status: install ok installed
+Architecture: all
+Source: dpkg
+Version: 1.21.23
+
+Package: libdrm-amdgpu1
+Status: install ok installed
+Architecture: i386
+Source: libdrm (2.4.114-1)
+Version: 2.4.114-1+b1
+
+Package: libdrm-common
+Status: install ok installed
+Architecture: all
+Source: libdrm
+Version: 2.4.114-1
+
+Package: libdrm-dev
+Status: install ok installed
+Architecture: i386
+Source: libdrm (2.4.114-1)
+Version: 2.4.114-1+b1
+
+Package: libdrm-intel1
+Status: install ok installed
+Architecture: i386
+Source: libdrm (2.4.114-1)
+Version: 2.4.114-1+b1
+
+Package: libdrm-nouveau2
+Status: install ok installed
+Architecture: i386
+Source: libdrm (2.4.114-1)
+Version: 2.4.114-1+b1
+
+Package: libdrm-radeon1
+Status: install ok installed
+Architecture: i386
+Source: libdrm (2.4.114-1)
+Version: 2.4.114-1+b1
+
+Package: libdrm-tests
+Status: install ok installed
+Architecture: i386
+Source: libdrm (2.4.114-1)
+Version: 2.4.114-1+b1
+
+Package: libdrm2
+Status: install ok installed
+Architecture: i386
+Source: libdrm (2.4.114-1)
+Version: 2.4.114-1+b1
+
+Package: libedit2
+Status: install ok installed
+Architecture: i386
+Source: libedit
+Version: 3.1-20221030-2
+
+Package: libegl-dev
+Status: install ok installed
+Architecture: i386
+Source: libglvnd
+Version: 1.6.0-1
+
+Package: libegl-mesa0
+Status: install ok installed
+Architecture: i386
+Source: mesa
+Version: 22.3.6-1+deb12u2
+
+Package: libegl1
+Status: install ok installed
+Architecture: i386
+Source: libglvnd
+Version: 1.6.0-1
+
+Package: libelf1
+Status: install ok installed
+Architecture: i386
+Source: elfutils
+Version: 0.188-2.1
+
+Package: libepoxy0
+Status: install ok installed
+Architecture: i386
+Source: libepoxy
+Version: 1.5.10-1
+
+Package: libevdev2
+Status: install ok installed
+Architecture: i386
+Source: libevdev
+Version: 1.13.0+dfsg-1
+
+Package: libexpat1
+Status: install ok installed
+Architecture: i386
+Source: expat
+Version: 2.5.0-1+deb12u5
+
+Package: libext2fs2
+Status: install ok installed
+Architecture: i386
+Source: e2fsprogs (1.47.0-2)
+Version: 1.47.0-2+b2
+
+Package: libfdisk1
+Status: install ok installed
+Architecture: i386
+Source: util-linux
+Version: 2.38.1-5+deb12u3
+
+Package: libffi-dev
+Status: install ok installed
+Architecture: i386
+Source: libffi
+Version: 3.4.4-1
+
+Package: libffi8
+Status: install ok installed
+Architecture: i386
+Source: libffi
+Version: 3.4.4-1
+
+Package: libfftw3-double3
+Status: install ok installed
+Architecture: i386
+Source: fftw3
+Version: 3.3.10-1
+
+Package: libfftw3-single3
+Status: install ok installed
+Architecture: i386
+Source: fftw3
+Version: 3.3.10-1
+
+Package: libfido2-1
+Status: install ok installed
+Architecture: i386
+Source: libfido2 (1.12.0-2)
+Version: 1.12.0-2+b1
+
+Package: libfile-find-rule-perl
+Status: install ok installed
+Architecture: all
+Version: 0.34-4~deb12u1
+
+Package: libflac12
+Status: install ok installed
+Architecture: i386
+Source: flac
+Version: 1.4.2+ds-2
+
+Package: libfontconfig1
+Status: install ok installed
+Architecture: i386
+Source: fontconfig
+Version: 2.14.1-4
+
+Package: libfontenc1
+Status: install ok installed
+Architecture: i386
+Source: libfontenc
+Version: 1:1.1.4-1
+
+Package: libfreetype6
+Status: install ok installed
+Architecture: i386
+Source: freetype
+Version: 2.12.1+dfsg-5+deb12u4
+
+Package: libgbm-dev
+Status: install ok installed
+Architecture: i386
+Source: mesa
+Version: 22.3.6-1+deb12u2
+
+Package: libgbm1
+Status: install ok installed
+Architecture: i386
+Source: mesa
+Version: 22.3.6-1+deb12u2
+
+Package: libgcc-12-dev
+Status: install ok installed
+Architecture: i386
+Source: gcc-12
+Version: 12.2.0-14+deb12u1
+
+Package: libgcc-s1
+Status: install ok installed
+Architecture: i386
+Source: gcc-12
+Version: 12.2.0-14+deb12u1
+
+Package: libgcrypt20
+Status: install ok installed
+Architecture: i386
+Version: 1.10.1-3+deb12u1
+
+Package: libgdbm-compat4
+Status: install ok installed
+Architecture: i386
+Source: gdbm
+Version: 1.23-3
+
+Package: libgdbm6
+Status: install ok installed
+Architecture: i386
+Source: gdbm
+Version: 1.23-3
+
+Package: libgirepository-1.0-1
+Status: install ok installed
+Architecture: i386
+Source: gobject-introspection
+Version: 1.74.0-3
+
+Package: libgl-dev
+Status: install ok installed
+Architecture: i386
+Source: libglvnd
+Version: 1.6.0-1
+
+Package: libgl1
+Status: install ok installed
+Architecture: i386
+Source: libglvnd
+Version: 1.6.0-1
+
+Package: libgl1-mesa-dri
+Status: install ok installed
+Architecture: i386
+Source: mesa
+Version: 22.3.6-1+deb12u2
+
+Package: libglapi-mesa
+Status: install ok installed
+Architecture: i386
+Source: mesa
+Version: 22.3.6-1+deb12u2
+
+Package: libgles-dev
+Status: install ok installed
+Architecture: i386
+Source: libglvnd
+Version: 1.6.0-1
+
+Package: libgles1
+Status: install ok installed
+Architecture: i386
+Source: libglvnd
+Version: 1.6.0-1
+
+Package: libgles2
+Status: install ok installed
+Architecture: i386
+Source: libglvnd
+Version: 1.6.0-1
+
+Package: libglib2.0-0
+Status: install ok installed
+Architecture: i386
+Source: glib2.0
+Version: 2.74.6-2+deb12u9
+
+Package: libglib2.0-bin
+Status: install ok installed
+Architecture: i386
+Source: glib2.0
+Version: 2.74.6-2+deb12u9
+
+Package: libglib2.0-data
+Status: install ok installed
+Architecture: all
+Source: glib2.0
+Version: 2.74.6-2+deb12u9
+
+Package: libglib2.0-dev
+Status: install ok installed
+Architecture: i386
+Source: glib2.0
+Version: 2.74.6-2+deb12u9
+
+Package: libglib2.0-dev-bin
+Status: install ok installed
+Architecture: i386
+Source: glib2.0
+Version: 2.74.6-2+deb12u9
+
+Package: libglu1-mesa
+Status: install ok installed
+Architecture: i386
+Source: libglu
+Version: 9.0.2-1.1
+
+Package: libglu1-mesa-dev
+Status: install ok installed
+Architecture: i386
+Source: libglu
+Version: 9.0.2-1.1
+
+Package: libglvnd0
+Status: install ok installed
+Architecture: i386
+Source: libglvnd
+Version: 1.6.0-1
+
+Package: libglx-dev
+Status: install ok installed
+Architecture: i386
+Source: libglvnd
+Version: 1.6.0-1
+
+Package: libglx-mesa0
+Status: install ok installed
+Architecture: i386
+Source: mesa
+Version: 22.3.6-1+deb12u2
+
+Package: libglx0
+Status: install ok installed
+Architecture: i386
+Source: libglvnd
+Version: 1.6.0-1
+
+Package: libgmp10
+Status: install ok installed
+Architecture: i386
+Source: gmp
+Version: 2:6.2.1+dfsg1-1.1
+
+Package: libgnutls30
+Status: install ok installed
+Architecture: i386
+Source: gnutls28
+Version: 3.7.9-2+deb12u7
+
+Package: libgomp1
+Status: install ok installed
+Architecture: i386
+Source: gcc-12
+Version: 12.2.0-14+deb12u1
+
+Package: libgpg-error0
+Status: install ok installed
+Architecture: i386
+Source: libgpg-error
+Version: 1.46-1
+
+Package: libgprofng0
+Status: install ok installed
+Architecture: i386
+Source: binutils
+Version: 2.40-2
+
+Package: libgssapi-krb5-2
+Status: install ok installed
+Architecture: i386
+Source: krb5
+Version: 1.20.1-2+deb12u5
+
+Package: libgudev-1.0-0
+Status: install ok installed
+Architecture: i386
+Source: libgudev
+Version: 237-2
+
+Package: libheif1
+Status: install ok installed
+Architecture: i386
+Source: libheif
+Version: 1.15.1-1+deb12u1
+
+Package: libhogweed6
+Status: install ok installed
+Architecture: i386
+Source: nettle
+Version: 3.8.1-2
+
+Package: libibus-1.0-5
+Status: install ok installed
+Architecture: i386
+Source: ibus
+Version: 1.5.27-5
+
+Package: libibus-1.0-dev
+Status: install ok installed
+Architecture: i386
+Source: ibus
+Version: 1.5.27-5
+
+Package: libice-dev
+Status: install ok installed
+Architecture: i386
+Source: libice
+Version: 2:1.0.10-1
+
+Package: libice6
+Status: install ok installed
+Architecture: i386
+Source: libice
+Version: 2:1.0.10-1
+
+Package: libicu72
+Status: install ok installed
+Architecture: i386
+Source: icu
+Version: 72.1-3+deb12u1
+
+Package: libidn2-0
+Status: install ok installed
+Architecture: i386
+Source: libidn2 (2.3.3-1)
+Version: 2.3.3-1+b1
+
+Package: libinput-bin
+Status: install ok installed
+Architecture: i386
+Source: libinput
+Version: 1.22.1-1+deb12u1
+
+Package: libinput10
+Status: install ok installed
+Architecture: i386
+Source: libinput
+Version: 1.22.1-1+deb12u1
+
+Package: libip4tc2
+Status: install ok installed
+Architecture: i386
+Source: iptables
+Version: 1.8.9-2
+
+Package: libisl23
+Status: install ok installed
+Architecture: i386
+Source: isl
+Version: 0.25-1.1
+
+Package: libitm1
+Status: install ok installed
+Architecture: i386
+Source: gcc-12
+Version: 12.2.0-14+deb12u1
+
+Package: libjansson4
+Status: install ok installed
+Architecture: i386
+Source: jansson
+Version: 2.14-2
+
+Package: libjbig-dev
+Status: install ok installed
+Architecture: i386
+Source: jbigkit
+Version: 2.1-6.1
+
+Package: libjbig0
+Status: install ok installed
+Architecture: i386
+Source: jbigkit
+Version: 2.1-6.1
+
+Package: libjpeg-dev
+Status: install ok installed
+Architecture: i386
+Source: libjpeg-turbo
+Version: 1:2.1.5-2
+
+Package: libjpeg62-turbo
+Status: install ok installed
+Architecture: i386
+Source: libjpeg-turbo
+Version: 1:2.1.5-2
+
+Package: libjpeg62-turbo-dev
+Status: install ok installed
+Architecture: i386
+Source: libjpeg-turbo
+Version: 1:2.1.5-2
+
+Package: libjson-c5
+Status: install ok installed
+Architecture: i386
+Source: json-c
+Version: 0.16-2
+
+Package: libjsoncpp25
+Status: install ok installed
+Architecture: i386
+Source: libjsoncpp
+Version: 1.9.5-4
+
+Package: libk5crypto3
+Status: install ok installed
+Architecture: i386
+Source: krb5
+Version: 1.20.1-2+deb12u5
+
+Package: libkeyutils1
+Status: install ok installed
+Architecture: i386
+Source: keyutils
+Version: 1.6.3-2
+
+Package: libklibc
+Status: install ok installed
+Architecture: i386
+Source: klibc
+Version: 2.0.12-1
+
+Package: libkmod2
+Status: install ok installed
+Architecture: i386
+Source: kmod
+Version: 30+20221128-1
+
+Package: libkrb5-3
+Status: install ok installed
+Architecture: i386
+Source: krb5
+Version: 1.20.1-2+deb12u5
+
+Package: libkrb5support0
+Status: install ok installed
+Architecture: i386
+Source: krb5
+Version: 1.20.1-2+deb12u5
+
+Package: liblcms2-2
+Status: install ok installed
+Architecture: i386
+Source: lcms2
+Version: 2.14-2+deb12u1
+
+Package: libldap-2.5-0
+Status: install ok installed
+Architecture: i386
+Source: openldap
+Version: 2.5.13+dfsg-5
+
+Package: liblerc-dev
+Status: install ok installed
+Architecture: i386
+Source: lerc
+Version: 4.0.0+ds-2
+
+Package: liblerc4
+Status: install ok installed
+Architecture: i386
+Source: lerc
+Version: 4.0.0+ds-2
+
+Package: libllvm15
+Status: install ok installed
+Architecture: i386
+Source: llvm-toolchain-15 (1:15.0.6-4)
+Version: 1:15.0.6-4+b1
+
+Package: liblocale-gettext-perl
+Status: install ok installed
+Architecture: i386
+Version: 1.07-5
+
+Package: liblqr-1-0
+Status: install ok installed
+Architecture: i386
+Source: liblqr
+Version: 0.4.2-2.1
+
+Package: libltdl7
+Status: install ok installed
+Architecture: i386
+Source: libtool
+Version: 2.4.7-7~deb12u1
+
+Package: liblz4-1
+Status: install ok installed
+Architecture: i386
+Source: lz4
+Version: 1.9.4-1
+
+Package: liblzma-dev
+Status: install ok installed
+Architecture: i386
+Source: xz-utils
+Version: 5.4.1-1+deb12u2
+
+Package: liblzma5
+Status: install ok installed
+Architecture: i386
+Source: xz-utils
+Version: 5.4.1-1+deb12u2
+
+Package: libmagickcore-6.q16-6
+Status: install ok installed
+Architecture: i386
+Source: imagemagick
+Version: 8:6.9.11.60+dfsg-1.6+deb12u15
+
+Package: libmagickwand-6.q16-6
+Status: install ok installed
+Architecture: i386
+Source: imagemagick
+Version: 8:6.9.11.60+dfsg-1.6+deb12u15
+
+Package: libmd0
+Status: install ok installed
+Architecture: i386
+Source: libmd
+Version: 1.0.4-2
+
+Package: libmnl0
+Status: install ok installed
+Architecture: i386
+Source: libmnl
+Version: 1.0.4-3
+
+Package: libmount-dev
+Status: install ok installed
+Architecture: i386
+Source: util-linux
+Version: 2.38.1-5+deb12u3
+
+Package: libmount1
+Status: install ok installed
+Architecture: i386
+Source: util-linux
+Version: 2.38.1-5+deb12u3
+
+Package: libmp3lame0
+Status: install ok installed
+Architecture: i386
+Source: lame
+Version: 3.100-6
+
+Package: libmpc3
+Status: install ok installed
+Architecture: i386
+Source: mpclib3
+Version: 1.3.1-1
+
+Package: libmpfr6
+Status: install ok installed
+Architecture: i386
+Source: mpfr4
+Version: 4.2.0-1
+
+Package: libmpg123-0
+Status: install ok installed
+Architecture: i386
+Source: mpg123
+Version: 1.31.2-1+deb12u1
+
+Package: libmtdev1
+Status: install ok installed
+Architecture: i386
+Source: mtdev
+Version: 1.1.6-1
+
+Package: libncursesw6
+Status: install ok installed
+Architecture: i386
+Source: ncurses
+Version: 6.4-4
+
+Package: libnettle8
+Status: install ok installed
+Architecture: i386
+Source: nettle
+Version: 3.8.1-2
+
+Package: libnftables1
+Status: install ok installed
+Architecture: i386
+Source: nftables
+Version: 1.0.6-2+deb12u2
+
+Package: libnftnl11
+Status: install ok installed
+Architecture: i386
+Source: libnftnl
+Version: 1.2.4-2
+
+Package: libnghttp2-14
+Status: install ok installed
+Architecture: i386
+Source: nghttp2
+Version: 1.52.0-1+deb12u3
+
+Package: libnsl-dev
+Status: install ok installed
+Architecture: i386
+Source: libnsl
+Version: 1.3.0-2
+
+Package: libnsl2
+Status: install ok installed
+Architecture: i386
+Source: libnsl
+Version: 1.3.0-2
+
+Package: libnss-mdns
+Status: install ok installed
+Architecture: i386
+Source: nss-mdns
+Version: 0.15.1-3
+
+Package: libnuma1
+Status: install ok installed
+Architecture: i386
+Source: numactl
+Version: 2.0.16-1
+
+Package: libnumber-compare-perl
+Status: install ok installed
+Architecture: all
+Version: 0.03-3
+
+Package: libogg0
+Status: install ok installed
+Architecture: i386
+Source: libogg
+Version: 1.3.5-3
+
+Package: libopengl-dev
+Status: install ok installed
+Architecture: i386
+Source: libglvnd
+Version: 1.6.0-1
+
+Package: libopengl0
+Status: install ok installed
+Architecture: i386
+Source: libglvnd
+Version: 1.6.0-1
+
+Package: libopenjp2-7
+Status: install ok installed
+Architecture: i386
+Source: openjpeg2
+Version: 2.5.0-2+deb12u3
+
+Package: libopus0
+Status: install ok installed
+Architecture: i386
+Source: opus
+Version: 1.3.1-3
+
+Package: libp11-kit0
+Status: install ok installed
+Architecture: i386
+Source: p11-kit
+Version: 0.24.1-2
+
+Package: libpam-modules
+Status: install ok installed
+Architecture: i386
+Source: pam
+Version: 1.5.2-6+deb12u2
+
+Package: libpam-modules-bin
+Status: install ok installed
+Architecture: i386
+Source: pam
+Version: 1.5.2-6+deb12u2
+
+Package: libpam-runtime
+Status: install ok installed
+Architecture: all
+Source: pam
+Version: 1.5.2-6+deb12u2
+
+Package: libpam0g
+Status: install ok installed
+Architecture: i386
+Source: pam
+Version: 1.5.2-6+deb12u2
+
+Package: libpci3
+Status: install ok installed
+Architecture: i386
+Source: pciutils
+Version: 1:3.9.0-4
+
+Package: libpciaccess-dev
+Status: install ok installed
+Architecture: i386
+Source: libpciaccess
+Version: 0.17-2
+
+Package: libpciaccess0
+Status: install ok installed
+Architecture: i386
+Source: libpciaccess
+Version: 0.17-2
+
+Package: libpcre2-16-0
+Status: install ok installed
+Architecture: i386
+Source: pcre2
+Version: 10.42-1+deb12u2
+
+Package: libpcre2-32-0
+Status: install ok installed
+Architecture: i386
+Source: pcre2
+Version: 10.42-1+deb12u2
+
+Package: libpcre2-8-0
+Status: install ok installed
+Architecture: i386
+Source: pcre2
+Version: 10.42-1+deb12u2
+
+Package: libpcre2-dev
+Status: install ok installed
+Architecture: i386
+Source: pcre2
+Version: 10.42-1+deb12u2
+
+Package: libpcre2-posix3
+Status: install ok installed
+Architecture: i386
+Source: pcre2
+Version: 10.42-1+deb12u2
+
+Package: libperl5.36
+Status: install ok installed
+Architecture: i386
+Source: perl
+Version: 5.36.0-7+deb12u4
+
+Package: libpixman-1-0
+Status: install ok installed
+Architecture: i386
+Source: pixman
+Version: 0.42.2-1
+
+Package: libpkgconf3
+Status: install ok installed
+Architecture: i386
+Source: pkgconf
+Version: 1.8.1-1
+
+Package: libpng-dev
+Status: install ok installed
+Architecture: i386
+Source: libpng1.6
+Version: 1.6.39-2+deb12u6
+
+Package: libpng16-16
+Status: install ok installed
+Architecture: i386
+Source: libpng1.6
+Version: 1.6.39-2+deb12u6
+
+Package: libproc2-0
+Status: install ok installed
+Architecture: i386
+Source: procps
+Version: 2:4.0.2-3
+
+Package: libpsl5
+Status: install ok installed
+Architecture: i386
+Source: libpsl
+Version: 0.21.2-1
+
+Package: libpthread-stubs0-dev
+Status: install ok installed
+Architecture: i386
+Source: libpthread-stubs
+Version: 0.4-1
+
+Package: libpulse-dev
+Status: install ok installed
+Architecture: i386
+Source: pulseaudio (16.1+dfsg1-2)
+Version: 16.1+dfsg1-2+b1
+
+Package: libpulse-mainloop-glib0
+Status: install ok installed
+Architecture: i386
+Source: pulseaudio (16.1+dfsg1-2)
+Version: 16.1+dfsg1-2+b1
+
+Package: libpulse0
+Status: install ok installed
+Architecture: i386
+Source: pulseaudio (16.1+dfsg1-2)
+Version: 16.1+dfsg1-2+b1
+
+Package: libpython3-stdlib
+Status: install ok installed
+Architecture: i386
+Source: python3-defaults (3.11.2-1)
+Version: 3.11.2-1+b1
+
+Package: libpython3.11-minimal
+Status: install ok installed
+Architecture: i386
+Source: python3.11
+Version: 3.11.2-6+deb12u9
+
+Package: libpython3.11-stdlib
+Status: install ok installed
+Architecture: i386
+Source: python3.11
+Version: 3.11.2-6+deb12u9
+
+Package: libquadmath0
+Status: install ok installed
+Architecture: i386
+Source: gcc-12
+Version: 12.2.0-14+deb12u1
+
+Package: libreadline8
+Status: install ok installed
+Architecture: i386
+Source: readline
+Version: 8.2-1.3
+
+Package: librhash0
+Status: install ok installed
+Architecture: i386
+Source: rhash
+Version: 1.4.3-3
+
+Package: librtmp1
+Status: install ok installed
+Architecture: i386
+Source: rtmpdump (2.4+20151223.gitfa8646d.1-2)
+Version: 2.4+20151223.gitfa8646d.1-2+b2
+
+Package: libsamplerate0
+Status: install ok installed
+Architecture: i386
+Source: libsamplerate
+Version: 0.2.2-3
+
+Package: libsamplerate0-dev
+Status: install ok installed
+Architecture: i386
+Source: libsamplerate
+Version: 0.2.2-3
+
+Package: libsasl2-2
+Status: install ok installed
+Architecture: i386
+Source: cyrus-sasl2
+Version: 2.1.28+dfsg-10+deb12u1
+
+Package: libsasl2-modules-db
+Status: install ok installed
+Architecture: i386
+Source: cyrus-sasl2
+Version: 2.1.28+dfsg-10+deb12u1
+
+Package: libsdl-image1.2
+Status: install ok installed
+Architecture: i386
+Source: sdl-image1.2 (1.2.12-13)
+Version: 1.2.12-13+b2
+
+Package: libsdl-image1.2-dev
+Status: install ok installed
+Architecture: i386
+Source: sdl-image1.2 (1.2.12-13)
+Version: 1.2.12-13+b2
+
+Package: libsdl1.2-dev
+Status: install ok installed
+Architecture: i386
+Source: libsdl1.2
+Version: 1.2.15+dfsg2-8
+
+Package: libsdl1.2debian
+Status: install ok installed
+Architecture: i386
+Source: libsdl1.2
+Version: 1.2.15+dfsg2-8
+
+Package: libsdl2-2.0-0
+Status: install ok installed
+Architecture: i386
+Source: libsdl2
+Version: 2.26.5+dfsg-1
+
+Package: libsdl2-dev
+Status: install ok installed
+Architecture: i386
+Source: libsdl2
+Version: 2.26.5+dfsg-1
+
+Package: libseccomp2
+Status: install ok installed
+Architecture: i386
+Source: libseccomp
+Version: 2.5.4-1+deb12u1
+
+Package: libselinux1
+Status: install ok installed
+Architecture: i386
+Source: libselinux (3.4-1)
+Version: 3.4-1+b6
+
+Package: libselinux1-dev
+Status: install ok installed
+Architecture: i386
+Source: libselinux (3.4-1)
+Version: 3.4-1+b6
+
+Package: libsemanage-common
+Status: install ok installed
+Architecture: all
+Source: libsemanage
+Version: 3.4-1
+
+Package: libsemanage2
+Status: install ok installed
+Architecture: i386
+Source: libsemanage (3.4-1)
+Version: 3.4-1+b5
+
+Package: libsensors-config
+Status: install ok installed
+Architecture: all
+Source: lm-sensors
+Version: 1:3.6.0-7.1
+
+Package: libsensors5
+Status: install ok installed
+Architecture: i386
+Source: lm-sensors
+Version: 1:3.6.0-7.1
+
+Package: libsepol-dev
+Status: install ok installed
+Architecture: i386
+Source: libsepol
+Version: 3.4-2.1
+
+Package: libsepol2
+Status: install ok installed
+Architecture: i386
+Source: libsepol
+Version: 3.4-2.1
+
+Package: libslang2
+Status: install ok installed
+Architecture: i386
+Source: slang2
+Version: 2.3.3-3
+
+Package: libslang2-dev
+Status: install ok installed
+Architecture: i386
+Source: slang2
+Version: 2.3.3-3
+
+Package: libsm-dev
+Status: install ok installed
+Architecture: i386
+Source: libsm
+Version: 2:1.2.3-1
+
+Package: libsm6
+Status: install ok installed
+Architecture: i386
+Source: libsm
+Version: 2:1.2.3-1
+
+Package: libsmartcols1
+Status: install ok installed
+Architecture: i386
+Source: util-linux
+Version: 2.38.1-5+deb12u3
+
+Package: libsndfile1
+Status: install ok installed
+Architecture: i386
+Source: libsndfile
+Version: 1.2.0-1+deb12u1
+
+Package: libsndio-dev
+Status: install ok installed
+Architecture: i386
+Source: sndio (1.9.0-0.3)
+Version: 1.9.0-0.3+b2
+
+Package: libsndio7.0
+Status: install ok installed
+Architecture: i386
+Source: sndio (1.9.0-0.3)
+Version: 1.9.0-0.3+b2
+
+Package: libsqlite3-0
+Status: install ok installed
+Architecture: i386
+Source: sqlite3
+Version: 3.40.1-2+deb12u2
+
+Package: libss2
+Status: install ok installed
+Architecture: i386
+Source: e2fsprogs (1.47.0-2)
+Version: 1.47.0-2+b2
+
+Package: libssh2-1
+Status: install ok installed
+Architecture: i386
+Source: libssh2
+Version: 1.10.0-3+deb12u1
+
+Package: libssl3
+Status: install ok installed
+Architecture: i386
+Source: openssl
+Version: 3.0.22-1~deb12u2
+
+Package: libstdc++-12-dev
+Status: install ok installed
+Architecture: i386
+Source: gcc-12
+Version: 12.2.0-14+deb12u1
+
+Package: libstdc++6
+Status: install ok installed
+Architecture: i386
+Source: gcc-12
+Version: 12.2.0-14+deb12u1
+
+Package: libsystemd-shared
+Status: install ok installed
+Architecture: i386
+Source: systemd
+Version: 252.39-1~deb12u2
+
+Package: libsystemd0
+Status: install ok installed
+Architecture: i386
+Source: systemd
+Version: 252.39-1~deb12u2
+
+Package: libtasn1-6
+Status: install ok installed
+Architecture: i386
+Version: 4.19.0-2+deb12u1
+
+Package: libtext-glob-perl
+Status: install ok installed
+Architecture: all
+Version: 0.11-3
+
+Package: libtiff-dev
+Status: install ok installed
+Architecture: i386
+Source: tiff
+Version: 4.5.0-6+deb12u4
+
+Package: libtiff6
+Status: install ok installed
+Architecture: i386
+Source: tiff
+Version: 4.5.0-6+deb12u4
+
+Package: libtiffxx6
+Status: install ok installed
+Architecture: i386
+Source: tiff
+Version: 4.5.0-6+deb12u4
+
+Package: libtinfo6
+Status: install ok installed
+Architecture: i386
+Source: ncurses
+Version: 6.4-4
+
+Package: libtirpc-common
+Status: install ok installed
+Architecture: all
+Source: libtirpc
+Version: 1.3.3+ds-1
+
+Package: libtirpc-dev
+Status: install ok installed
+Architecture: i386
+Source: libtirpc
+Version: 1.3.3+ds-1
+
+Package: libtirpc3
+Status: install ok installed
+Architecture: i386
+Source: libtirpc
+Version: 1.3.3+ds-1
+
+Package: libubsan1
+Status: install ok installed
+Architecture: i386
+Source: gcc-12
+Version: 12.2.0-14+deb12u1
+
+Package: libudev-dev
+Status: install ok installed
+Architecture: i386
+Source: systemd
+Version: 252.39-1~deb12u2
+
+Package: libudev1
+Status: install ok installed
+Architecture: i386
+Source: systemd
+Version: 252.39-1~deb12u2
+
+Package: libunistring2
+Status: install ok installed
+Architecture: i386
+Source: libunistring
+Version: 1.0-2
+
+Package: libunwind8
+Status: install ok installed
+Architecture: i386
+Source: libunwind
+Version: 1.6.2-3
+
+Package: libusb-1.0-0
+Status: install ok installed
+Architecture: i386
+Source: libusb-1.0
+Version: 2:1.0.26-1
+
+Package: libutempter0
+Status: install ok installed
+Architecture: i386
+Source: libutempter
+Version: 1.2.1-3
+
+Package: libuuid1
+Status: install ok installed
+Architecture: i386
+Source: util-linux
+Version: 2.38.1-5+deb12u3
+
+Package: libuv1
+Status: install ok installed
+Architecture: i386
+Version: 1.44.2-1+deb12u1
+
+Package: libvorbis0a
+Status: install ok installed
+Architecture: i386
+Source: libvorbis
+Version: 1.3.7-1
+
+Package: libvorbisenc2
+Status: install ok installed
+Architecture: i386
+Source: libvorbis
+Version: 1.3.7-1
+
+Package: libwacom-common
+Status: install ok installed
+Architecture: all
+Source: libwacom
+Version: 2.6.0-1
+
+Package: libwacom9
+Status: install ok installed
+Architecture: i386
+Source: libwacom
+Version: 2.6.0-1
+
+Package: libwayland-bin
+Status: install ok installed
+Architecture: i386
+Source: wayland
+Version: 1.21.0-1
+
+Package: libwayland-client0
+Status: install ok installed
+Architecture: i386
+Source: wayland
+Version: 1.21.0-1
+
+Package: libwayland-cursor0
+Status: install ok installed
+Architecture: i386
+Source: wayland
+Version: 1.21.0-1
+
+Package: libwayland-dev
+Status: install ok installed
+Architecture: i386
+Source: wayland
+Version: 1.21.0-1
+
+Package: libwayland-egl1
+Status: install ok installed
+Architecture: i386
+Source: wayland
+Version: 1.21.0-1
+
+Package: libwayland-server0
+Status: install ok installed
+Architecture: i386
+Source: wayland
+Version: 1.21.0-1
+
+Package: libwebp-dev
+Status: install ok installed
+Architecture: i386
+Source: libwebp
+Version: 1.2.4-0.2+deb12u1
+
+Package: libwebp7
+Status: install ok installed
+Architecture: i386
+Source: libwebp
+Version: 1.2.4-0.2+deb12u1
+
+Package: libwebpdemux2
+Status: install ok installed
+Architecture: i386
+Source: libwebp
+Version: 1.2.4-0.2+deb12u1
+
+Package: libwebpmux3
+Status: install ok installed
+Architecture: i386
+Source: libwebp
+Version: 1.2.4-0.2+deb12u1
+
+Package: libwrap0
+Status: install ok installed
+Architecture: i386
+Source: tcp-wrappers
+Version: 7.6.q-32
+
+Package: libx11-6
+Status: install ok installed
+Architecture: i386
+Source: libx11
+Version: 2:1.8.4-2+deb12u2
+
+Package: libx11-data
+Status: install ok installed
+Architecture: all
+Source: libx11
+Version: 2:1.8.4-2+deb12u2
+
+Package: libx11-dev
+Status: install ok installed
+Architecture: i386
+Source: libx11
+Version: 2:1.8.4-2+deb12u2
+
+Package: libx11-xcb1
+Status: install ok installed
+Architecture: i386
+Source: libx11
+Version: 2:1.8.4-2+deb12u2
+
+Package: libx265-199
+Status: install ok installed
+Architecture: i386
+Source: x265 (3.5-2)
+Version: 3.5-2+b1
+
+Package: libxau-dev
+Status: install ok installed
+Architecture: i386
+Source: libxau
+Version: 1:1.0.9-1
+
+Package: libxau6
+Status: install ok installed
+Architecture: i386
+Source: libxau
+Version: 1:1.0.9-1
+
+Package: libxaw7
+Status: install ok installed
+Architecture: i386
+Source: libxaw
+Version: 2:1.0.14-1
+
+Package: libxcb-dri2-0
+Status: install ok installed
+Architecture: i386
+Source: libxcb
+Version: 1.15-1
+
+Package: libxcb-dri3-0
+Status: install ok installed
+Architecture: i386
+Source: libxcb
+Version: 1.15-1
+
+Package: libxcb-glx0
+Status: install ok installed
+Architecture: i386
+Source: libxcb
+Version: 1.15-1
+
+Package: libxcb-present0
+Status: install ok installed
+Architecture: i386
+Source: libxcb
+Version: 1.15-1
+
+Package: libxcb-randr0
+Status: install ok installed
+Architecture: i386
+Source: libxcb
+Version: 1.15-1
+
+Package: libxcb-shm0
+Status: install ok installed
+Architecture: i386
+Source: libxcb
+Version: 1.15-1
+
+Package: libxcb-sync1
+Status: install ok installed
+Architecture: i386
+Source: libxcb
+Version: 1.15-1
+
+Package: libxcb-xfixes0
+Status: install ok installed
+Architecture: i386
+Source: libxcb
+Version: 1.15-1
+
+Package: libxcb1
+Status: install ok installed
+Architecture: i386
+Source: libxcb
+Version: 1.15-1
+
+Package: libxcb1-dev
+Status: install ok installed
+Architecture: i386
+Source: libxcb
+Version: 1.15-1
+
+Package: libxcursor-dev
+Status: install ok installed
+Architecture: i386
+Source: libxcursor
+Version: 1:1.2.1-1
+
+Package: libxcursor1
+Status: install ok installed
+Architecture: i386
+Source: libxcursor
+Version: 1:1.2.1-1
+
+Package: libxcvt0
+Status: install ok installed
+Architecture: i386
+Source: libxcvt
+Version: 0.1.2-1
+
+Package: libxdmcp-dev
+Status: install ok installed
+Architecture: i386
+Source: libxdmcp
+Version: 1:1.1.2-3
+
+Package: libxdmcp6
+Status: install ok installed
+Architecture: i386
+Source: libxdmcp
+Version: 1:1.1.2-3
+
+Package: libxext-dev
+Status: install ok installed
+Architecture: i386
+Source: libxext (2:1.3.4-1)
+Version: 2:1.3.4-1+b1
+
+Package: libxext6
+Status: install ok installed
+Architecture: i386
+Source: libxext (2:1.3.4-1)
+Version: 2:1.3.4-1+b1
+
+Package: libxfixes-dev
+Status: install ok installed
+Architecture: i386
+Source: libxfixes
+Version: 1:6.0.0-2
+
+Package: libxfixes3
+Status: install ok installed
+Architecture: i386
+Source: libxfixes
+Version: 1:6.0.0-2
+
+Package: libxfont2
+Status: install ok installed
+Architecture: i386
+Source: libxfont
+Version: 1:2.0.6-1+deb12u1
+
+Package: libxft2
+Status: install ok installed
+Architecture: i386
+Source: xft
+Version: 2.3.6-1
+
+Package: libxi-dev
+Status: install ok installed
+Architecture: i386
+Source: libxi (2:1.8-1)
+Version: 2:1.8-1+b1
+
+Package: libxi6
+Status: install ok installed
+Architecture: i386
+Source: libxi (2:1.8-1)
+Version: 2:1.8-1+b1
+
+Package: libxinerama-dev
+Status: install ok installed
+Architecture: i386
+Source: libxinerama
+Version: 2:1.1.4-3
+
+Package: libxinerama1
+Status: install ok installed
+Architecture: i386
+Source: libxinerama
+Version: 2:1.1.4-3
+
+Package: libxkbcommon-dev
+Status: install ok installed
+Architecture: i386
+Source: libxkbcommon
+Version: 1.5.0-1
+
+Package: libxkbcommon0
+Status: install ok installed
+Architecture: i386
+Source: libxkbcommon
+Version: 1.5.0-1
+
+Package: libxkbfile1
+Status: install ok installed
+Architecture: i386
+Source: libxkbfile
+Version: 1:1.1.0-1
+
+Package: libxml2
+Status: install ok installed
+Architecture: i386
+Version: 2.9.14+dfsg-1.3~deb12u6
+
+Package: libxmu6
+Status: install ok installed
+Architecture: i386
+Source: libxmu
+Version: 2:1.1.3-3
+
+Package: libxmuu1
+Status: install ok installed
+Architecture: i386
+Source: libxmu
+Version: 2:1.1.3-3
+
+Package: libxpm4
+Status: install ok installed
+Architecture: i386
+Source: libxpm
+Version: 1:3.5.12-1.1+deb12u1
+
+Package: libxrandr-dev
+Status: install ok installed
+Architecture: i386
+Source: libxrandr (2:1.5.2-2)
+Version: 2:1.5.2-2+b1
+
+Package: libxrandr2
+Status: install ok installed
+Architecture: i386
+Source: libxrandr (2:1.5.2-2)
+Version: 2:1.5.2-2+b1
+
+Package: libxrender-dev
+Status: install ok installed
+Architecture: i386
+Source: libxrender
+Version: 1:0.9.10-1.1
+
+Package: libxrender1
+Status: install ok installed
+Architecture: i386
+Source: libxrender
+Version: 1:0.9.10-1.1
+
+Package: libxshmfence1
+Status: install ok installed
+Architecture: i386
+Source: libxshmfence
+Version: 1.3-1
+
+Package: libxss-dev
+Status: install ok installed
+Architecture: i386
+Source: libxss
+Version: 1:1.2.3-1
+
+Package: libxss1
+Status: install ok installed
+Architecture: i386
+Source: libxss
+Version: 1:1.2.3-1
+
+Package: libxt-dev
+Status: install ok installed
+Architecture: i386
+Source: libxt
+Version: 1:1.2.1-1.1
+
+Package: libxt6
+Status: install ok installed
+Architecture: i386
+Source: libxt
+Version: 1:1.2.1-1.1
+
+Package: libxtables12
+Status: install ok installed
+Architecture: i386
+Source: iptables
+Version: 1.8.9-2
+
+Package: libxv-dev
+Status: install ok installed
+Architecture: i386
+Source: libxv
+Version: 2:1.0.11-1.1
+
+Package: libxv1
+Status: install ok installed
+Architecture: i386
+Source: libxv
+Version: 2:1.0.11-1.1
+
+Package: libxxf86vm-dev
+Status: install ok installed
+Architecture: i386
+Source: libxxf86vm (1:1.1.4-1)
+Version: 1:1.1.4-1+b2
+
+Package: libxxf86vm1
+Status: install ok installed
+Architecture: i386
+Source: libxxf86vm (1:1.1.4-1)
+Version: 1:1.1.4-1+b2
+
+Package: libxxhash0
+Status: install ok installed
+Architecture: i386
+Source: xxhash
+Version: 0.8.1-1
+
+Package: libz3-4
+Status: install ok installed
+Architecture: i386
+Source: z3
+Version: 4.8.12-3.1
+
+Package: libzip-dev
+Status: install ok installed
+Architecture: i386
+Source: libzip (1.7.3-1)
+Version: 1.7.3-1+b1
+
+Package: libzip4
+Status: install ok installed
+Architecture: i386
+Source: libzip (1.7.3-1)
+Version: 1.7.3-1+b1
+
+Package: libzstd-dev
+Status: install ok installed
+Architecture: i386
+Source: libzstd
+Version: 1.5.4+dfsg2-5
+
+Package: libzstd1
+Status: install ok installed
+Architecture: i386
+Source: libzstd
+Version: 1.5.4+dfsg2-5
+
+Package: linux-base
+Status: install ok installed
+Architecture: all
+Version: 4.12.1~deb12u1
+
+Package: linux-image-6.1.0-54-686-pae
+Status: install ok installed
+Architecture: i386
+Source: linux-signed-i386 (6.1.190+1)
+Version: 6.1.190-1
+
+Package: linux-image-686-pae
+Status: install ok installed
+Architecture: i386
+Source: linux-signed-i386 (6.1.190+1)
+Version: 6.1.190-1
+
+Package: linux-libc-dev
+Status: install ok installed
+Architecture: i386
+Source: linux
+Version: 6.1.190-1
+
+Package: login
+Status: install ok installed
+Architecture: i386
+Source: shadow
+Version: 1:4.13+dfsg1-1+deb12u2
+
+Package: logsave
+Status: install ok installed
+Architecture: i386
+Source: e2fsprogs (1.47.0-2)
+Version: 1.47.0-2+b2
+
+Package: make
+Status: install ok installed
+Architecture: i386
+Source: make-dfsg
+Version: 4.3-4.1
+
+Package: mawk
+Status: install ok installed
+Architecture: i386
+Version: 1.3.4.20200120-3.1
+
+Package: media-types
+Status: install ok installed
+Architecture: all
+Version: 10.0.0
+
+Package: mount
+Status: install ok installed
+Architecture: i386
+Source: util-linux
+Version: 2.38.1-5+deb12u3
+
+Package: nano
+Status: install ok installed
+Architecture: i386
+Version: 7.2-1+deb12u1
+
+Package: ncurses-base
+Status: install ok installed
+Architecture: all
+Source: ncurses
+Version: 6.4-4
+
+Package: ncurses-bin
+Status: install ok installed
+Architecture: i386
+Source: ncurses
+Version: 6.4-4
+
+Package: nftables
+Status: install ok installed
+Architecture: i386
+Version: 1.0.6-2+deb12u2
+
+Package: openssh-client
+Status: install ok installed
+Architecture: i386
+Source: openssh
+Version: 1:9.2p1-2+deb12u10
+
+Package: openssh-server
+Status: install ok installed
+Architecture: i386
+Source: openssh
+Version: 1:9.2p1-2+deb12u10
+
+Package: openssh-sftp-server
+Status: install ok installed
+Architecture: i386
+Source: openssh
+Version: 1:9.2p1-2+deb12u10
+
+Package: passwd
+Status: install ok installed
+Architecture: i386
+Source: shadow
+Version: 1:4.13+dfsg1-1+deb12u2
+
+Package: patch
+Status: install ok installed
+Architecture: i386
+Version: 2.7.6-7
+
+Package: pci.ids
+Status: install ok installed
+Architecture: all
+Version: 0.0~2023.04.11-1
+
+Package: pciutils
+Status: install ok installed
+Architecture: i386
+Version: 1:3.9.0-4
+
+Package: perl
+Status: install ok installed
+Architecture: i386
+Version: 5.36.0-7+deb12u4
+
+Package: perl-base
+Status: install ok installed
+Architecture: i386
+Source: perl
+Version: 5.36.0-7+deb12u4
+
+Package: perl-modules-5.36
+Status: install ok installed
+Architecture: all
+Source: perl
+Version: 5.36.0-7+deb12u4
+
+Package: pkg-config
+Status: install ok installed
+Architecture: i386
+Source: pkgconf
+Version: 1.8.1-1
+
+Package: pkgconf
+Status: install ok installed
+Architecture: i386
+Version: 1.8.1-1
+
+Package: pkgconf-bin
+Status: install ok installed
+Architecture: i386
+Source: pkgconf
+Version: 1.8.1-1
+
+Package: procps
+Status: install ok installed
+Architecture: i386
+Version: 2:4.0.2-3
+
+Package: python3
+Status: install ok installed
+Architecture: i386
+Source: python3-defaults (3.11.2-1)
+Version: 3.11.2-1+b1
+
+Package: python3-distutils
+Status: install ok installed
+Architecture: all
+Source: python3-stdlib-extensions
+Version: 3.11.2-3
+
+Package: python3-lib2to3
+Status: install ok installed
+Architecture: all
+Source: python3-stdlib-extensions
+Version: 3.11.2-3
+
+Package: python3-minimal
+Status: install ok installed
+Architecture: i386
+Source: python3-defaults (3.11.2-1)
+Version: 3.11.2-1+b1
+
+Package: python3.11
+Status: install ok installed
+Architecture: i386
+Version: 3.11.2-6+deb12u9
+
+Package: python3.11-minimal
+Status: install ok installed
+Architecture: i386
+Source: python3.11
+Version: 3.11.2-6+deb12u9
+
+Package: readline-common
+Status: install ok installed
+Architecture: all
+Source: readline
+Version: 8.2-1.3
+
+Package: rpcsvc-proto
+Status: install ok installed
+Architecture: i386
+Version: 1.4.3-1
+
+Package: runit-helper
+Status: install ok installed
+Architecture: all
+Source: dh-runit
+Version: 2.15.2
+
+Package: sed
+Status: install ok installed
+Architecture: i386
+Version: 4.9-1+deb12u1
+
+Package: sensible-utils
+Status: install ok installed
+Architecture: all
+Version: 0.0.17+nmu1
+
+Package: sgml-base
+Status: install ok installed
+Architecture: all
+Version: 1.31
+
+Package: sudo
+Status: install ok installed
+Architecture: i386
+Version: 1.9.13p3-1+deb12u4
+
+Package: systemd
+Status: install ok installed
+Architecture: i386
+Version: 252.39-1~deb12u2
+
+Package: systemd-sysv
+Status: install ok installed
+Architecture: i386
+Source: systemd
+Version: 252.39-1~deb12u2
+
+Package: systemd-timesyncd
+Status: install ok installed
+Architecture: i386
+Source: systemd
+Version: 252.39-1~deb12u2
+
+Package: sysvinit-utils
+Status: install ok installed
+Architecture: i386
+Source: sysvinit
+Version: 3.06-4
+
+Package: tar
+Status: install ok installed
+Architecture: i386
+Version: 1.34+dfsg-1.2+deb12u1
+
+Package: tzdata
+Status: install ok installed
+Architecture: all
+Version: 2026f-0+deb12u1
+
+Package: ucf
+Status: install ok installed
+Architecture: all
+Version: 3.0043+nmu1+deb12u1
+
+Package: udev
+Status: install ok installed
+Architecture: i386
+Source: systemd
+Version: 252.39-1~deb12u2
+
+Package: usbutils
+Status: install ok installed
+Architecture: i386
+Version: 1:014-1+deb12u1
+
+Package: usrmerge
+Status: install ok installed
+Architecture: all
+Version: 37~deb12u1
+
+Package: util-linux
+Status: install ok installed
+Architecture: i386
+Version: 2.38.1-5+deb12u3
+
+Package: util-linux-extra
+Status: install ok installed
+Architecture: i386
+Source: util-linux
+Version: 2.38.1-5+deb12u3
+
+Package: uuid-dev
+Status: install ok installed
+Architecture: i386
+Source: util-linux
+Version: 2.38.1-5+deb12u3
+
+Package: x11-common
+Status: install ok installed
+Architecture: all
+Source: xorg
+Version: 1:7.7+23
+
+Package: x11-xkb-utils
+Status: install ok installed
+Architecture: i386
+Version: 7.7+7
+
+Package: x11-xserver-utils
+Status: install ok installed
+Architecture: i386
+Source: x11-xserver-utils (7.7+9)
+Version: 7.7+9+b1
+
+Package: x11proto-dev
+Status: install ok installed
+Architecture: all
+Source: xorgproto
+Version: 2022.1-1
+
+Package: xauth
+Status: install ok installed
+Architecture: i386
+Version: 1:1.1.2-1
+
+Package: xbitmaps
+Status: install ok installed
+Architecture: all
+Version: 1.1.1-2.2
+
+Package: xinit
+Status: install ok installed
+Architecture: i386
+Version: 1.4.0-1
+
+Package: xkb-data
+Status: install ok installed
+Architecture: all
+Source: xkeyboard-config
+Version: 2.35.1-1
+
+Package: xml-core
+Status: install ok installed
+Architecture: all
+Version: 0.18+nmu1
+
+Package: xorg-sgml-doctools
+Status: install ok installed
+Architecture: all
+Version: 1:1.11-1.1
+
+Package: xserver-common
+Status: install ok installed
+Architecture: all
+Source: xorg-server
+Version: 2:21.1.7-3+deb12u13
+
+Package: xserver-xorg-core
+Status: install ok installed
+Architecture: i386
+Source: xorg-server
+Version: 2:21.1.7-3+deb12u13
+
+Package: xserver-xorg-input-libinput
+Status: install ok installed
+Architecture: i386
+Source: xserver-xorg-input-libinput (1.2.1-1)
+Version: 1.2.1-1+b1
+
+Package: xserver-xorg-legacy
+Status: install ok installed
+Architecture: i386
+Source: xorg-server
+Version: 2:21.1.7-3+deb12u13
+
+Package: xserver-xorg-video-fbdev
+Status: install ok installed
+Architecture: i386
+Version: 1:0.5.0-2
+
+Package: xterm
+Status: install ok installed
+Architecture: i386
+Version: 379-1
+
+Package: xtrans-dev
+Status: install ok installed
+Architecture: all
+Source: xtrans
+Version: 1.4.0-1
+
+Package: xz-utils
+Status: install ok installed
+Architecture: i386
+Version: 5.4.1-1+deb12u2
+
+Package: zlib1g
+Status: install ok installed
+Architecture: i386
+Source: zlib
+Version: 1:1.2.13.dfsg-1
+
+Package: zlib1g-dev
+Status: install ok installed
+Architecture: i386
+Source: zlib
+Version: 1:1.2.13.dfsg-1
+
+Package: zstd
+Status: install ok installed
+Architecture: i386
+Source: libzstd
+Version: 1.5.4+dfsg2-5
+
