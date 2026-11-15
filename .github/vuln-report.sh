@@ -34,12 +34,15 @@ echo "Debian has fixed **$n** vulnerabilities in packages of the recorded image 
 echo
 echo "| Package | Fixed vulnerabilities |"
 echo "| --- | --- |"
-awk '{ count[$2]++; ids[$2] = ids[$2] (ids[$2] ? ", " : "") $1 }
-     END { for (p in count) print "| `" p "` | " count[p] ": " ids[p] " |" }' "$found" | sort
+# At most ten identifiers per package: a kernel update can fix a thousand.
+awk '{ count[$2]++; if (count[$2] <= 10) ids[$2] = ids[$2] (ids[$2] ? ", " : "") $1 }
+     END { for (p in count) print "| `" p "` | " count[p] ": " ids[p] (count[p] > 10 ? ", and " count[p] - 10 " more" : "") " |" }' "$found" | sort
 echo
 echo "What to do: rebuild (\`./build.sh && ./mkimage.sh\`), check it, run \`env/vuln-check --record\`"
 echo "and commit \`docs/image-packages.status\`. A box that is already running gets the same fixes"
-echo "from \`sudo apt update && sudo apt upgrade\`; see SECURITY.md."
+echo "from \`sudo apt update && sudo apt upgrade\`, except the kernel's: the box boots the kernel built"
+echo "into mach_kernel on its boot partition, so a kernel fix needs a new image (\`linux-libc-dev\` here"
+echo "stands for the kernel). See SECURITY.md."
 echo
 echo "Details for each identifier: https://security-tracker.debian.org/tracker/"
 exit 1

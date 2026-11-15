@@ -69,7 +69,10 @@ check "the vulnerability report says nothing to fix for none, and lists packages
     printf 'CVE-2024-0727 libssl3 (fixed)\nCVE-2023-5678 libssl3 (fixed)\nCVE-2024-1 zlib1g (fixed)\n' > '$SCRATCH/some.txt' &&
     ! sh '$PROJECT/.github/vuln-report.sh' '$SCRATCH/some.txt' > '$SCRATCH/report.md' &&
     grep -q 'fixed \*\*3\*\* vulnerabilities' '$SCRATCH/report.md' &&
-    grep -q '^| .libssl3. | 2: CVE-2023-5678, CVE-2024-0727 |' '$SCRATCH/report.md'"
+    grep -q '^| .libssl3. | 2: CVE-2023-5678, CVE-2024-0727 |' '$SCRATCH/report.md' &&
+    seq -f 'CVE-2026-%g linux-libc-dev (fixed)' 1000 1012 > '$SCRATCH/many.txt' &&
+    ! sh '$PROJECT/.github/vuln-report.sh' '$SCRATCH/many.txt' > '$SCRATCH/report.md' &&
+    grep -q '^| .linux-libc-dev. | 13: CVE-2026-1000, .*CVE-2026-1009, and 3 more |' '$SCRATCH/report.md'"
 # Which files they are, not whether yours match: build.sh and mkimage.sh warn about that.
 check "assets.sha256 names the four files the build takes from assets/" sh -c "
     [ \"\$(grep -cE '^[0-9a-f]{64}  assets/' '$PROJECT/assets.sha256')\" -eq 4 ] &&
