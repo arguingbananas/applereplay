@@ -82,7 +82,8 @@ check "git ignores build output, keys, assets and personal notes" \
 check "no private keys are tracked" sh -c "! git grep -l 'PRIVATE KEY' -- . ':!env/keyring' ':!tests/static.sh'"
 # Paths on the box (/home/apple) are fine; anyone else's home, a private IP
 # or a personal email address is not.
-private_ip='\b(10|192\.168|172\.(1[6-9]|2[0-9]|3[01]))\.[0-9]+\.[0-9]+\b'
+# All four parts, so version numbers like 10.0.0 don't match.
+private_ip='\b(10\.[0-9]+|192\.168|172\.(1[6-9]|2[0-9]|3[01]))\.[0-9]+\.[0-9]+\b'
 personal_email='@(gmail|yahoo|outlook|hotmail|icloud)\.'
 no_leaks() {
     ! { git grep -nE '/home/[a-z]+' -- . ':!env/keyring' | grep -v '/home/apple'
