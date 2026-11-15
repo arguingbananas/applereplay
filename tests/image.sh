@@ -107,6 +107,15 @@ if [ -f "$I" ] && [ -x "$PROJECT/env/root/bin/sh" ]; then
         grep -A1 '<key>Boot Logo</key>' '$P' | grep -q '<string>BootLogo.png</string>'"
     check "the bmap matches the image" sh -c "
         grep -q \"<ImageSize> \$(stat -c %s '$I') </ImageSize>\" '$PROJECT/out/totalreplay.bmap'"
+    # bmaptool writes only the bmap's ranges; the first MiB (partition table
+    # plus the gap before partition 1) must be one of them, or a reused stick
+    # keeps its old signatures there.
+    check "the bmap covers the whole first MiB, so writing clears a reused stick's leftovers" sh -c "
+        grep -q '<BlockSize> 4096 </BlockSize>' '$PROJECT/out/totalreplay.bmap' &&
+        sed -n 's/.*<Range[^>]*> *\\([0-9]*\\)-\\([0-9]*\\) *<.*/\\1 \\2/p' '$PROJECT/out/totalreplay.bmap' |
+            awk '\$1 == 0 && \$2 >= 255 { ok = 1 } END { exit !ok }'"
+    check "and that gap is all zeros" sh -c "
+        [ \"\$(dd if='$I' bs=512 skip=34 count=2014 status=none | tr -d '\\000' | wc -c)\" = 0 ]"
 else
     echo "  skip  image checks (no out/totalreplay.img or no toolchain)"
 fi

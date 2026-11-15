@@ -34,7 +34,9 @@ stick needs root.
 - A USB stick of 8 GB or more. The image is 7.0 GB whatever it contains (a
   0.5 GB boot partition and a 6 GB system partition, about a fifth of it
   used); the rest of the stick is left alone. A USB 3.0 stick works, at
-  USB 2.0 speed.
+  USB 2.0 speed. Avoid the cheapest sticks: a no-name USB 2.0 one took three
+  minutes to boot instead of about 30 seconds, because each write to it took
+  over half a second.
 
   Tried and working together: a powered USB 2.0 hub, a USB 3.0 stick, an
   Apple USB keyboard from a 2006 iMac and a wired Xbox 360 controller.
@@ -121,16 +123,11 @@ Check which device the stick is (`lsblk`), and unmount any of its partitions
 your desktop mounted. Then, with `/dev/sdX` replaced:
 
 ```
-sudo wipefs --all /dev/sdX
 sudo bmaptool copy out/totalreplay.img /dev/sdX
 sudo sgdisk -e /dev/sdX
 ```
 
-This erases the stick. The first line matters on a stick that was used
-before: `bmaptool` writes only the parts of the image that hold data and skips
-the empty first megabyte, so whatever was there survives. A stick that had
-held an Ubuntu installer still called itself "Ubuntu" afterwards, until
-`wipefs` cleared it. Put it in the Apple TV and power on: the applereplay
+This erases the stick, including anything left from its earlier use. Put it in the Apple TV and power on: the applereplay
 logo, some boot text, then Total Replay.
 
 ## Using the box

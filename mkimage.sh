@@ -81,6 +81,11 @@ rm -f "$OUT/totalreplay.img" "$OUT/totalreplay.bmap" "$OUT/boot.fat" "$OUT/root.
         totalreplay.img >/dev/null
     dd if=boot.fat of=totalreplay.img bs=1M seek=1 conv=notrunc,sparse status=none
     dd if=root.ext4 of=totalreplay.img bs=1M seek=$((1 + BOOT_SIZE_MIB)) conv=notrunc,sparse status=none
+    # The gap between the partition table and partition 1 (sectors 34-2047) as
+    # real zeros, not a hole, so the bmap lists it and bmaptool overwrites what
+    # a reused stick had there (an old installer's ISO 9660 header at 32 KiB
+    # survived otherwise, and the stick still called itself Ubuntu).
+    dd if=/dev/zero of=totalreplay.img bs=512 seek=34 count=2014 conv=notrunc status=none
     rm boot.fat root.ext4
     sgdisk -p totalreplay.img
     sgdisk -i 2 totalreplay.img | grep -qi 'unique GUID: $ROOT_PARTUUID' || { echo 'partition table missing' >&2; exit 1; }
