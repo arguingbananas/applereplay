@@ -117,14 +117,20 @@ i386 checks need `env/devroot init`. The shell scripts are checked with
 
 ## Write the stick
 
-Check which device the stick is (`lsblk`), then, with `/dev/sdX` replaced:
+Check which device the stick is (`lsblk`), and unmount any of its partitions
+your desktop mounted. Then, with `/dev/sdX` replaced:
 
 ```
+sudo wipefs --all /dev/sdX
 sudo bmaptool copy out/totalreplay.img /dev/sdX
 sudo sgdisk -e /dev/sdX
 ```
 
-This erases the stick. Put it in the Apple TV and power on: the applereplay
+This erases the stick. The first line matters on a stick that was used
+before: `bmaptool` writes only the parts of the image that hold data and skips
+the empty first megabyte, so whatever was there survives. A stick that had
+held an Ubuntu installer still called itself "Ubuntu" afterwards, until
+`wipefs` cleared it. Put it in the Apple TV and power on: the applereplay
 logo, some boot text, then Total Replay.
 
 ## Using the box
