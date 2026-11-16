@@ -81,6 +81,17 @@ check "the vulnerability report notes a kernel held back from its headers ($imag
     sh '$PROJECT/.github/vuln-report.sh' '$SCRATCH/none.txt' > '$SCRATCH/report.md'
     if [ '$image_kernel' = '$headers' ]; then ! grep -q 'kernel is' '$SCRATCH/report.md'
     else grep -q \"kernel is $image_kernel, but kernel fixes are counted against linux-libc-dev\" '$SCRATCH/report.md'; fi"
+# The daily kernel pin check on GitHub, against made-up archive listings.
+check "the kernel pin check is quiet while Debian's newest kernel is known to be bad, and speaks up for a newer one" sh -c "
+    if ! grep -q '^KERNEL_PACKAGE=linux-image-6' '$PROJECT/hooks/customize.sh'; then
+        sh '$PROJECT/.github/kernel-pin-check.sh' | grep -q \"isn't pinned\"; exit; fi
+    pinned=\$(sed -n 's/^KERNEL_PACKAGE=//p' '$PROJECT/hooks/customize.sh')
+    bad=\$(grep -v '^#' '$PROJECT/tests/known-bad-kernels' | awk 'NR == 1 { print \$1 }')
+    printf 'Package: %s\nVersion: 6.1.0-1\n\nPackage: linux-image-686-pae\nVersion: %s\n' \"\$pinned\" \"\$bad\" > '$SCRATCH/bad.pkgs' &&
+    sh '$PROJECT/.github/kernel-pin-check.sh' '$SCRATCH/bad.pkgs' | grep -q 'listed in tests/known-bad-kernels' &&
+    printf '\nPackage: linux-image-686-pae\nVersion: 99.0-1\n' | cat '$SCRATCH/bad.pkgs' - > '$SCRATCH/new.pkgs' &&
+    ! sh '$PROJECT/.github/kernel-pin-check.sh' '$SCRATCH/new.pkgs' > '$SCRATCH/pin.md' &&
+    grep -q '\*\*99.0-1\*\*' '$SCRATCH/pin.md'"
 # Which files they are, not whether yours match: build.sh and mkimage.sh warn about that.
 check "assets.sha256 names the four files the build takes from assets/" sh -c "
     [ \"\$(grep -cE '^[0-9a-f]{64}  assets/' '$PROJECT/assets.sha256')\" -eq 4 ] &&
