@@ -1,0 +1,4 @@
+# Debian kernel package versions the image must not ship, one per line:
+# version, then why. tests/image.sh fails if the image's kernel is listed,
+# tests/box.sh if the box is running one.
+6.1.192-1  ext4 dereferences NULL in ext4_mb_load_buddy_gfp when a block bitmap page isn't cached: crash, frozen filesystem (docs/NOTES.md, Kernel)

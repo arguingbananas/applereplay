@@ -6,6 +6,8 @@
 check "the Apple TV answers over SSH ($BOX_HOST)" box true || exit 1
 box '
     echo "host $(hostname)"
+    echo "kernel $(uname -v | sed -n "s/.*Debian \([^ ]*\) .*/\1/p")"
+    echo "oops $(sudo dmesg | grep -cE "BUG:|Oops:|general protection fault")"
     echo "cmdline $(cat /proc/cmdline)"
     echo "nouveau $(grep -c "^nouveau " /proc/modules)"
     echo "fb $(cat /proc/fb)"
@@ -29,6 +31,11 @@ B=$SCRATCH/box.txt
 has() { grep -qx "$1" "$B"; }
 
 check "it's applereplay" has "host applereplay"
+kernel=$(sed -n 's/^kernel //p' "$B")
+check "it runs a kernel not known to be bad (${kernel:-unknown}; tests/known-bad-kernels)" sh -c "
+    [ -n '$kernel' ] &&
+    ! grep -v '^#' '$PROJECT/tests/known-bad-kernels' | awk '{ print \$1 }' | grep -qx '$kernel'"
+check "the kernel hasn't crashed since boot (no BUG or Oops in its log)" has "oops 0"
 check "nouveau is blacklisted and not loaded; X has the firmware framebuffer" sh -c "
     grep -q '^cmdline .*modprobe.blacklist=nouveau' '$B' && grep -qx 'nouveau 0' '$B' &&
     grep -q '^fb 0 EFI VGA' '$B'"
@@ -71,3 +78,19 @@ median=$(sed -n 's/^Per second: median \([0-9]*\), lowest \([0-9]*\) .*/\1/p' "$
 lowest=$(sed -n 's/^Per second: median \([0-9]*\), lowest \([0-9]*\) .*/\2/p' "$SCRATCH/fps.txt")
 check "linapple's median second over 30 s has 58 frames or more (median ${median:-?}, lowest ${lowest:-?})" \
     sh -c "[ '${median:-0}' -ge 58 ] || { cat '$SCRATCH/fps.txt'; exit 1; }"
+
+# Last, because on a kernel with the bug it freezes the box until it is
+# power-cycled. Debian's 6.1.192 crashed in ext4 when it freed disk blocks
+# while a block bitmap wasn't cached (docs/NOTES.md, Kernel); this writes
+# 100 files, drops the kernel's caches and deletes them, which takes a few
+# seconds on a good kernel. The time limit is on this side: a frozen box
+# never answers.
+timeout 150 ssh -i "$PROJECT/out/ssh/totalreplay_ed25519" -o BatchMode=yes -o ConnectTimeout=10 "$BOX_HOST" '
+    d=$(mktemp -d /var/tmp/applereplay-fs-test.XXXXXX) &&
+    for i in $(seq 100); do head -c 262144 /dev/urandom > "$d/f$i"; done && sync &&
+    echo 3 | sudo tee /proc/sys/vm/drop_caches >/dev/null &&
+    rm -rf "$d" && sync && echo "survived, $(sudo dmesg | grep -cE "BUG:|Oops:") oopses"
+' > "$SCRATCH/fs.txt" 2>&1
+check "freeing disk blocks right after the caches are dropped doesn't crash the kernel" \
+    sh -c "grep -qx 'survived, 0 oopses' '$SCRATCH/fs.txt' ||
+        { cat '$SCRATCH/fs.txt'; echo '(if the box stopped answering, it needs a power cycle)'; exit 1; }"

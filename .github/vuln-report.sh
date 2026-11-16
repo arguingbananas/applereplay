@@ -24,8 +24,26 @@ fi
 
 n=$(grep -c . "$found" || true)
 packages=$(grep -c "^Package:" "$list")
+
+# debsecan counts kernel fixes against linux-libc-dev, the kernel's headers,
+# not the kernel package itself. When the kernel is held back (see
+# tests/known-bad-kernels), the two differ and the kernel's missing fixes
+# can't be counted, so say so.
+version() { awk -v p="$1" '$0 ~ "^Package: " p "$" { f = 1 } f && /^Version:/ { print $2; exit }' "$list"; }
+kernel=$(version 'linux-image-[0-9][^ ]*')
+headers=$(version 'linux-libc-dev')
+kernel_note() {
+    if [ -n "$kernel" ] && [ -n "$headers" ] && [ "$kernel" != "$headers" ]; then
+        echo
+        echo "Note: the image's kernel is $kernel, but kernel fixes are counted against linux-libc-dev"
+        echo "$headers, so whatever Debian fixed between the two isn't listed here. The kernel is"
+        echo "held back on purpose while a newer one is listed in tests/known-bad-kernels."
+    fi
+}
+
 if [ "$n" -eq 0 ]; then
     echo "Nothing to fix: Debian has no security fixes that the $packages packages in the recorded image lack."
+    kernel_note
     exit 0
 fi
 
@@ -45,4 +63,5 @@ echo "into mach_kernel on its boot partition, so a kernel fix needs a new image 
 echo "stands for the kernel). See SECURITY.md."
 echo
 echo "Details for each identifier: https://security-tracker.debian.org/tracker/"
+kernel_note
 exit 1

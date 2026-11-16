@@ -11,7 +11,7 @@ tar -x -f "$PROJECT/out/rootfs.tar" -C "$T/root" --wildcards \
     ./etc/hostname ./etc/asound.conf ./etc/X11 ./etc/totalreplay \
     ./etc/ssh/sshd_config.d ./etc/systemd/system ./etc/modprobe.d ./etc/nftables.conf \
     './home/apple/.ssh/authorized_keys' './usr/local/bin/*' './usr/local/sbin/*' './usr/local/lib/totalreplay/*' \
-    ./usr/bin/hda-verb './boot/vmlinuz-*' 2>/dev/null
+    ./usr/bin/hda-verb './boot/vmlinuz-*' ./var/lib/dpkg/status 2>/dev/null
 R=$T/root
 
 # The image is only worth checking against the repo if it was built after
@@ -70,6 +70,11 @@ check "linapple (sdl2 and sdl1), fps, the kiosk and the services' scripts are in
              usr/local/sbin/applereplay-hdmi-audio usr/bin/hda-verb; do
         [ -x "$f" ] || { echo "missing $f"; exit 1; }
     done'
+# The kernel package's version, against the list of kernels known to break.
+kernel=$(awk '/^Package: linux-image-[0-9]/ { p = 1 } p && /^Version:/ { print $2; exit }' var/lib/dpkg/status)
+check "the image's kernel (${kernel:-none found}) isn't one known to be bad (tests/known-bad-kernels)" sh -c "
+    [ -n '$kernel' ] &&
+    ! grep -v '^#' '$PROJECT/tests/known-bad-kernels' | awk '{ print \$1 }' | grep -qx '$kernel'"
 check "out/boot/vmlinuz is the image's kernel" sh -c "
     for k in boot/vmlinuz-*; do cmp -s \"\$k\" '$PROJECT/out/boot/vmlinuz' && exit 0; done; exit 1"
 

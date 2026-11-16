@@ -13,7 +13,13 @@ chmod 0440 /etc/sudoers.d/apple
 mkdir -p /boot/atv
 
 echo "== kernel"
-apt-get install -y --no-install-recommends linux-image-686-pae
+# Pinned to Debian's 6.1.190 (ABI 6.1.0-54) instead of linux-image-686-pae,
+# which would bring 6.1.192: that one's ext4 dereferences NULL when a block
+# bitmap isn't cached, crashing and freezing the box (docs/NOTES.md, Kernel).
+# Go back to linux-image-686-pae once a fixed kernel is out;
+# tests/known-bad-kernels keeps 6.1.192 out of the image either way.
+KERNEL_PACKAGE=linux-image-6.1.0-54-686-pae
+apt-get install -y --no-install-recommends "$KERNEL_PACKAGE"
 ls /boot/vmlinuz-* /boot/initrd.img-*
 
 echo "== user apple"

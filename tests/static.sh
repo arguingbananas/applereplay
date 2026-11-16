@@ -63,7 +63,7 @@ check "every script in the overlay is executable" sh -c "
 check "docs/image-packages.status lists installed packages with versions" sh -c "
     n=\$(grep -c '^Package: ' '$PROJECT/docs/image-packages.status') && [ \"\$n\" -gt 300 ] &&
     [ \"\$(grep -c '^Version: ' '$PROJECT/docs/image-packages.status')\" -eq \"\$n\" ] &&
-    grep -qx 'Package: linux-image-686-pae' '$PROJECT/docs/image-packages.status'"
+    grep -q '^Package: linux-image-6\.' '$PROJECT/docs/image-packages.status'"
 check "the vulnerability report says nothing to fix for none, and lists packages and fails for some" sh -c "
     : > '$SCRATCH/none.txt' && sh '$PROJECT/.github/vuln-report.sh' '$SCRATCH/none.txt' | grep -q '^Nothing to fix' &&
     printf 'CVE-2024-0727 libssl3 (fixed)\nCVE-2023-5678 libssl3 (fixed)\nCVE-2024-1 zlib1g (fixed)\n' > '$SCRATCH/some.txt' &&
@@ -73,6 +73,14 @@ check "the vulnerability report says nothing to fix for none, and lists packages
     seq -f 'CVE-2026-%g linux-libc-dev (fixed)' 1000 1012 > '$SCRATCH/many.txt' &&
     ! sh '$PROJECT/.github/vuln-report.sh' '$SCRATCH/many.txt' > '$SCRATCH/report.md' &&
     grep -q '^| .linux-libc-dev. | 13: CVE-2026-1000, .*CVE-2026-1009, and 3 more |' '$SCRATCH/report.md'"
+# The recorded list's kernel and kernel headers: the report must point out
+# when they differ (a held-back kernel), and stay quiet when they match.
+image_kernel=$(awk '/^Package: linux-image-[0-9]/ { f = 1 } f && /^Version:/ { print $2; exit }' "$PROJECT/docs/image-packages.status")
+headers=$(awk '/^Package: linux-libc-dev$/ { f = 1 } f && /^Version:/ { print $2; exit }' "$PROJECT/docs/image-packages.status")
+check "the vulnerability report notes a kernel held back from its headers ($image_kernel vs $headers)" sh -c "
+    sh '$PROJECT/.github/vuln-report.sh' '$SCRATCH/none.txt' > '$SCRATCH/report.md'
+    if [ '$image_kernel' = '$headers' ]; then ! grep -q 'kernel is' '$SCRATCH/report.md'
+    else grep -q \"kernel is $image_kernel, but kernel fixes are counted against linux-libc-dev\" '$SCRATCH/report.md'; fi"
 # Which files they are, not whether yours match: build.sh and mkimage.sh warn about that.
 check "assets.sha256 names the four files the build takes from assets/" sh -c "
     [ \"\$(grep -cE '^[0-9a-f]{64}  assets/' '$PROJECT/assets.sha256')\" -eq 4 ] &&
