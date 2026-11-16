@@ -1,8 +1,25 @@
 # linux 6.1.192: NULL dereference in ext4_mb_load_buddy_gfp() (backport assumes ERR_PTR)
 
-Draft bug report, for Debian (package `src:linux`, version 6.1.192-1) and the
-stable kernel maintainers (stable@vger.kernel.org, linux-ext4@vger.kernel.org).
-Found and reproduced on 2026-11-15/16 while building applereplay.
+Found and reproduced on 2026-11-15/16 while building applereplay. Not sent:
+others had already reported it to Debian as bug #1154101
+(https://bugs.debian.org/1154101, severity critical, seen on amd64, arm64,
+Xen, KVM and Hyper-V). Debian's fix, salsa.debian.org kernel-team/linux merge
+request 2168 ("ext4: fix NULL folio dereference in mballoc"), was merged into
+its bookworm-security branch on 2026-11-16. Kept as the record of what we
+found, and for the reproducer, which the Debian bug lacks.
+
+## History
+
+The same backports were in 6.1.167-rc1 (March 2026). Mark Brown bisected an
+arm64 oops in `ext4_mb_load_buddy_gfp()` to "ext4: convert bd_bitmap_page to
+bd_bitmap_folio", a 32-bit ARM board crashed in it too, and Theodore Ts'o
+reproduced it on x86_64 with `kvm-xfstests -c ext4/4k generic/001`, which
+crashed before its first test. He asked for the two folio conversions and
+"ext4: fix e4b bitmap inconsistency reports" to be dropped together, and Greg
+Kroah-Hartman dropped them
+(https://lkml.iu.edu/hypermail/linux/kernel/2603.3/02704.html,
+https://lkml.iu.edu/hypermail/linux/kernel/2603.3/03175.html). 6.1.192 picked
+them up again.
 
 ## Summary
 
