@@ -2,10 +2,16 @@
 # Started from apple's ~/.bash_profile on tty1. Touch /etc/totalreplay/no-kiosk
 # to get a plain shell instead (e.g. over SSH, while testing by hand).
 
-# Show the address for a few seconds so the box can be found without a keyboard.
-i=0
-while [ $i -lt 10 ] && [ -z "$(hostname -I)" ]; do sleep 1; i=$((i + 1)); done
-echo "$(hostname): IP address $(hostname -I)"
-sleep 3
+# Show the address for a few seconds so the box can be found without a keyboard,
+# unless the boot splash already showed it (applereplay-splash-end).
+if [ ! -e /run/totalreplay/address-shown ]; then
+    i=0
+    while [ $i -lt 10 ] && [ -z "$(hostname -I)" ]; do sleep 1; i=$((i + 1)); done
+    echo "$(hostname): IP address $(hostname -I)"
+    sleep 3
+fi
 
-exec xinit /usr/local/lib/totalreplay/xsession -- :0 vt1 -keeptty -nolisten tcp -nocursor
+# A blank console, and X's messages in the journal (tag xinit): nothing to
+# read between a restart of the emulator and X's next picture.
+clear
+exec systemd-cat -t xinit xinit /usr/local/lib/totalreplay/xsession -- :0 vt1 -keeptty -nolisten tcp -nocursor

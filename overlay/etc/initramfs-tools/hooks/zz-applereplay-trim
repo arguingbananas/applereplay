@@ -1,0 +1,15 @@
+#!/bin/sh
+# Plymouth's initramfs hook copies every DRM (graphics) driver in, for
+# splash screens drawn through a GPU, and fonts for its label plugin (text).
+# This box draws on the firmware's framebuffer, blacklists nouveau, and its
+# theme draws its own characters without the label plugin, so both are dead
+# weight in an initramfs that ends up inside mach_kernel. (The hook needs
+# fc-cache, from the fontconfig package, to run at all.) Hooks in /etc run
+# after Debian's.
+set -e
+[ "${1:-}" = prereqs ] && exit 0
+for d in "${DESTDIR}"/lib/modules/*/kernel/drivers/gpu/drm "${DESTDIR}"/usr/lib/modules/*/kernel/drivers/gpu/drm; do
+    if [ -d "$d" ]; then rm -rf "$d"; fi
+done
+rm -rf "${DESTDIR}/usr/share/fonts" "${DESTDIR}/etc/fonts" "${DESTDIR}/var/cache/fontconfig"
+exit 0

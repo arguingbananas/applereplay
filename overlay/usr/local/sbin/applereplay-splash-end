@@ -1,0 +1,17 @@
+#!/bin/sh
+# End the boot splash just before the login on tty1: show the box's address
+# under the progress bar for a few seconds (so it can be found without a
+# keyboard), then quit Plymouth, leaving its last picture on screen until X
+# draws over it (getty@tty1 is told not to reset the console). Runs as root
+# because plymouthd ignores everyone else; the kiosk (user apple) shows the
+# address as text only when this didn't.
+set -u
+i=0
+while [ $i -lt 10 ] && [ -z "$(hostname -I)" ]; do sleep 1; i=$((i + 1)); done
+ip=$(hostname -I | cut -d' ' -f1)
+if [ -n "$ip" ] && plymouth display-message --text="IP $ip"; then
+    : > /run/totalreplay/address-shown
+    sleep 3
+fi
+# With the kiosk off, a shell comes up on tty1: switch the console back to text.
+if [ -e /etc/totalreplay/no-kiosk ]; then plymouth quit; else plymouth quit --retain-splash; fi

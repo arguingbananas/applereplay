@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=applereplay
+Description=The applereplay logo with a progress bar in Apple II colours
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/applereplay
+ScriptFile=/usr/share/plymouth/themes/applereplay/applereplay.script

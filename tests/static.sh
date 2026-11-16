@@ -51,6 +51,13 @@ fi
 check "logo/BootLogo.png is what logo/make-logo.py draws: 640x360, 8-bit RGB, not interlaced" sh -c "
     python3 '$PROJECT/logo/make-logo.py' | cmp -s - '$PROJECT/logo/BootLogo.png' &&
     [ \"\$(od -A n -t u1 -j 16 -N 13 '$PROJECT/logo/BootLogo.png' | tr -s ' ')\" = ' 0 0 2 128 0 0 1 104 8 2 0 0 0' ]"
+# The splash's blocks and characters, like the logo, come from a script.
+check "the boot splash's images are what logo/make-splash.py draws" sh -c "
+    rm -rf '$SCRATCH/splash' && mkdir -p '$SCRATCH/splash' &&
+    python3 '$PROJECT/logo/make-splash.py' '$SCRATCH/splash' &&
+    T='$PROJECT/overlay/usr/share/plymouth/themes/applereplay' &&
+    [ \"\$(ls '$SCRATCH/splash')\" = \"\$(cd \"\$T\" && ls *.png)\" ] &&
+    for f in '$SCRATCH'/splash/*.png; do cmp -s \"\$f\" \"\$T/\$(basename \"\$f\")\" || { echo \"differs: \$f\"; exit 1; }; done"
 check "the overlay has no empty directories (git drops them, so a clone would lack them)" \
     sh -c "[ -z \"\$(find '$PROJECT/overlay' -type d -empty)\" ]"
 # The image gets each overlay file with the mode it has here.

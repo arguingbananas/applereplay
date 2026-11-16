@@ -22,7 +22,9 @@ ATV_RECOVERY_TYPE=5265636f-7665-11aa-aa11-00306543ecac
 # When nouveau sets a mode, the HDMI transmitter sends YCbCr that the TV takes
 # for RGB, so black comes out purple.
 # init_on_alloc=0: Debian zeroes every page it hands out; a small CPU cost here.
-KERNEL_FLAGS="root=PARTUUID=$ROOT_PARTUUID ro video=vesafb net.ifnames=0 consoleblank=0 init_on_alloc=0 modprobe.blacklist=nouveau"
+# quiet splash and the rest: the boot splash (Plymouth) instead of boot
+# messages; Esc on the keyboard shows them, and journalctl -b has them all.
+KERNEL_FLAGS="root=PARTUUID=$ROOT_PARTUUID ro video=vesafb net.ifnames=0 consoleblank=0 init_on_alloc=0 modprobe.blacklist=nouveau quiet splash loglevel=3 systemd.show_status=false udev.log_level=3 rd.udev.log_level=3 vt.global_cursor_default=0"
 
 die() { echo "mkimage.sh: $*" >&2; exit 1; }
 for f in rootfs.tar boot/vmlinuz boot/initrd; do

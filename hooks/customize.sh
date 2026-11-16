@@ -11,6 +11,9 @@ echo "== overlay"
 cp -r --no-preserve=ownership "$STAGE/overlay/." /
 chmod 0440 /etc/sudoers.d/apple
 mkdir -p /boot/atv
+# The boot splash (Plymouth) shows the boot logo. In place before the kernel
+# install, whose initramfs takes the theme along.
+install -m 644 "$STAGE/BootLogo.png" /usr/share/plymouth/themes/applereplay/BootLogo.png
 
 echo "== kernel"
 # Debian's newest i386 kernel. 6.1.192-1 crashed in ext4 and the image was
@@ -37,6 +40,8 @@ if [ "$(tty)" = /dev/tty1 ] && [ ! -e /etc/totalreplay/no-kiosk ]; then
     exec /usr/local/bin/totalreplay-kiosk
 fi
 EOF
+# No "Last login" or Debian's notice on the console as the kiosk starts.
+touch /home/apple/.hushlogin
 install -d -m 700 /home/apple/.ssh
 install -m 600 "$STAGE/authorized_keys" /home/apple/.ssh/authorized_keys
 chown -R apple:apple /home/apple
@@ -90,6 +95,10 @@ systemctl enable applereplay-fb-wc.service applereplay-hdmi-audio.service ssh.se
 systemctl enable nftables.service
 # A kiosk shouldn't be running apt in the background.
 systemctl mask apt-daily.timer apt-daily-upgrade.timer
+# The boot splash: applereplay-splash-end shows the address on it and ends it
+# just before the login on tty1, in place of Plymouth's own services.
+systemctl enable applereplay-splash-end.service
+systemctl mask plymouth-quit.service plymouth-quit-wait.service
 
 apt-get clean
 rm -rf "$STAGE"

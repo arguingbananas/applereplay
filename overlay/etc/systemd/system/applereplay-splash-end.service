@@ -1,0 +1,39 @@
+[Unit]
+Description=Show the address on the boot splash, then end it
+After=plymouth-start.service networking.service systemd-user-sessions.service
+Before=getty@tty1.service
+ConditionPathExists=/run/plymouth/pid
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/applereplay-splash-end
+RemainAfterExit=yes
+# The kiosk looks for /run/totalreplay/address-shown.
+RuntimeDirectory=totalreplay
+RuntimeDirectoryPreserve=yes
+
+# Root only because plymouthd answers nobody else; it needs no capabilities.
+# Not PrivateNetwork: plymouthd's socket and the address are in the host's.
+CapabilityBoundingSet=
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectKernelTunables=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6 AF_NETLINK
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+
+[Install]
+WantedBy=multi-user.target

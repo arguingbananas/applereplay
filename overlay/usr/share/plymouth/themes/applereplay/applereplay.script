@@ -1,0 +1,84 @@
+# applereplay's boot splash (a Plymouth script theme).
+# The logo goes exactly where boot.efi drew it (centred), so the hand-over
+# from the firmware's picture to this one can't be seen. Under it, a bar of
+# 32 blocks lights up in the Apple II's hi-res colours as the boot goes on;
+# Plymouth estimates the progress from how long earlier boots took. When the
+# kiosk is about to start Total Replay it sends "IP <address>", which fills
+# the bar and shows the address under it (images from logo/make-splash.py).
+
+Window.SetBackgroundTopColor(0, 0, 0);
+Window.SetBackgroundBottomColor(0, 0, 0);
+
+logo.image = Image("BootLogo.png");
+logo.sprite = Sprite(logo.image);
+logo.x = Math.Int((Window.GetWidth() - logo.image.GetWidth()) / 2);
+logo.y = Math.Int((Window.GetHeight() - logo.image.GetHeight()) / 2);
+logo.sprite.SetPosition(logo.x, logo.y, 0);
+
+BLOCKS = 32;
+STEP = 20;  # 16-pixel blocks, 4 apart
+colour[0] = "green";
+colour[1] = "violet";
+colour[2] = "orange";
+colour[3] = "blue";
+bar.x = Math.Int((Window.GetWidth() - (BLOCKS * STEP - 4)) / 2);
+bar.y = logo.y + logo.image.GetHeight() + 24;
+bar.shown = 0;
+
+# Only while booting; on the way down the logo alone is enough.
+if (Plymouth.GetMode() == "boot") {
+    off = Image("block-off.png");
+    for (i = 0; i < BLOCKS; i++) {
+        lit[i] = Image("block-" + colour[i - Math.Int(i / 4) * 4] + ".png");
+        block[i] = Sprite(off);
+        block[i].SetPosition(bar.x + i * STEP, bar.y, 1);
+    }
+}
+
+fun light_blocks(n) {
+    if (Plymouth.GetMode() != "boot")
+        return;
+    while (bar.shown < n && bar.shown < BLOCKS) {
+        block[bar.shown].SetImage(lit[bar.shown]);
+        bar.shown++;
+    }
+}
+
+fun boot_progress(duration, progress) {
+    light_blocks(Math.Int(progress * BLOCKS));
+}
+Plymouth.SetBootProgressFunction(boot_progress);
+
+# Characters the images cover; anything else is skipped.
+fun char_image(c) {
+    if (c == ".")
+        return Image("char-dot.png");
+    if (c == "I" || c == "P" || (c >= "0" && c <= "9"))
+        return Image("char-" + c + ".png");
+    return NULL;
+}
+
+GLYPH_STEP = 18;  # 15-pixel characters, 3 apart
+fun show_message(text) {
+    light_blocks(BLOCKS);
+    for (i = 0; i < message.count; i++)
+        message.sprite[i].SetOpacity(0);
+    message.count = 0;
+    n = 0;
+    c = text.CharAt(0);
+    while (c != "" && n < 40) {
+        image = char_image(c);
+        if (image) {
+            message.sprite[message.count] = Sprite(image);
+            message.column[message.count] = n;
+            message.count++;
+        }
+        n++;
+        c = text.CharAt(n);
+    }
+    x = Math.Int((Window.GetWidth() - (n * GLYPH_STEP - 3)) / 2);
+    for (i = 0; i < message.count; i++)
+        message.sprite[i].SetPosition(x + message.column[i] * GLYPH_STEP, bar.y + 40, 1);
+}
+message.count = 0;
+Plymouth.SetDisplayMessageFunction(show_message);

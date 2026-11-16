@@ -13,7 +13,7 @@ LINAPPLE_REPO=https://github.com/linappleii/linapple
 LINAPPLE_REF=${LINAPPLE_REF:-0b22441e91cb95cb813193195187d02db7227bd0}
 
 PACKAGES="
-systemd-sysv udev dbus kmod initramfs-tools zstd
+systemd-sysv udev dbus kmod initramfs-tools zstd plymouth fontconfig
 ifupdown isc-dhcp-client iproute2 iputils-ping openssh-server
 avahi-daemon libnss-mdns systemd-timesyncd sudo nftables
 less nano procps pciutils usbutils evtest alsa-utils alsa-tools libdrm-tests
@@ -84,6 +84,7 @@ mmdebstrap \
     --customize-hook="upload '$OUT/ssh/totalreplay_ed25519.pub' $STAGE/authorized_keys" \
     --customize-hook="upload '$HERE/assets/total-replay.hdv' $STAGE/total-replay.hdv" \
     --customize-hook="upload '$HERE/tools/fps' $STAGE/fps" \
+    --customize-hook="upload '$HERE/logo/BootLogo.png' $STAGE/BootLogo.png" \
     --customize-hook="upload '$HERE/hooks/customize.sh' $STAGE/customize.sh" \
     --customize-hook='chroot "$1" sh /var/tmp/stage/customize.sh' \
     --customize-hook="download /vmlinuz '$OUT/boot/vmlinuz'" \

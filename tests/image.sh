@@ -9,7 +9,8 @@ mkdir -p "$T/root"
 # One pass over the tarball for the files we look at.
 tar -x -f "$PROJECT/out/rootfs.tar" -C "$T/root" --wildcards \
     ./etc/hostname ./etc/asound.conf ./etc/X11 ./etc/totalreplay \
-    ./etc/ssh/sshd_config.d ./etc/systemd/system ./etc/modprobe.d ./etc/nftables.conf \
+    ./etc/ssh/sshd_config.d ./etc/systemd/system ./etc/modprobe.d ./etc/nftables.conf ./etc/plymouth \
+    ./usr/share/plymouth/themes/applereplay/BootLogo.png \
     './home/apple/.ssh/authorized_keys' './usr/local/bin/*' './usr/local/sbin/*' './usr/local/lib/totalreplay/*' \
     ./usr/bin/hda-verb './boot/vmlinuz-*' ./var/lib/dpkg/status 2>/dev/null
 R=$T/root
@@ -38,9 +39,15 @@ check "the keypad is the joystick by default, and the session hands it to a cont
 check "HDMI (card 0 device 3) is the default sound output" \
     grep -qx 'defaults.pcm.device 3' etc/asound.conf
 check "the box's services are enabled" sh -c '
-    for s in applereplay-fb-wc applereplay-hdmi-audio ssh avahi-daemon systemd-timesyncd nftables; do
+    for s in applereplay-fb-wc applereplay-hdmi-audio applereplay-splash-end ssh avahi-daemon systemd-timesyncd nftables; do
         ls etc/systemd/system/*.wants/$s.service >/dev/null 2>&1 || { echo "$s not enabled"; exit 1; }
     done'
+# plymouthd aborts on DeviceTimeout=0 (an assertion in its timer code), and
+# then there is no splash and the boot messages show.
+check "the boot splash is the applereplay theme, with a device timeout above 0" sh -c '
+    grep -qx "Theme=applereplay" etc/plymouth/plymouthd.conf &&
+    awk -F= "/^DeviceTimeout=/ { t = \$2 } END { exit !(t > 0) }" etc/plymouth/plymouthd.conf &&
+    [ -f usr/share/plymouth/themes/applereplay/BootLogo.png ]'
 check "apt's background timers are masked" sh -c '
     [ "$(readlink etc/systemd/system/apt-daily.timer)" = /dev/null ] &&
     [ "$(readlink etc/systemd/system/apt-daily-upgrade.timer)" = /dev/null ]'
@@ -51,10 +58,11 @@ check "the firewall drops what it doesn't name, and names SSH and mDNS" sh -c '
     grep -q "hook input priority filter; policy drop;" etc/nftables.conf &&
     grep -qx " *tcp dport 22 accept" etc/nftables.conf &&
     grep -qx " *udp dport 5353 accept" etc/nftables.conf'
-check "the root services are confined to the one capability each needs" sh -c '
+check "the root services are confined to the one capability each needs (the splash's to none)" sh -c '
     grep -qx "CapabilityBoundingSet=CAP_SYS_ADMIN" etc/systemd/system/applereplay-fb-wc.service &&
     grep -qx "CapabilityBoundingSet=CAP_SYS_RAWIO" etc/systemd/system/applereplay-hdmi-audio.service &&
-    for u in applereplay-fb-wc applereplay-hdmi-audio; do
+    grep -qx "CapabilityBoundingSet=" etc/systemd/system/applereplay-splash-end.service &&
+    for u in applereplay-fb-wc applereplay-hdmi-audio applereplay-splash-end; do
         grep -qx "ProtectSystem=strict" etc/systemd/system/$u.service &&
         grep -qx "NoNewPrivileges=yes" etc/systemd/system/$u.service || exit 1
     done'
