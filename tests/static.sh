@@ -83,7 +83,7 @@ check "the vulnerability report notes a kernel held back from its headers ($imag
     else grep -q \"kernel is $image_kernel, but kernel fixes are counted against linux-libc-dev\" '$SCRATCH/report.md'; fi"
 # The daily kernel pin check on GitHub, against made-up archive listings.
 check "the kernel pin check is quiet while Debian's newest kernel is known to be bad, and speaks up for a newer one" sh -c "
-    if ! grep -q '^KERNEL_PACKAGE=linux-image-6' '$PROJECT/hooks/customize.sh'; then
+    if grep -qx 'KERNEL_PACKAGE=linux-image-686-pae' '$PROJECT/hooks/customize.sh'; then
         sh '$PROJECT/.github/kernel-pin-check.sh' | grep -q \"isn't pinned\"; exit; fi
     pinned=\$(sed -n 's/^KERNEL_PACKAGE=//p' '$PROJECT/hooks/customize.sh')
     bad=\$(grep -v '^#' '$PROJECT/tests/known-bad-kernels' | awk 'NR == 1 { print \$1 }')
