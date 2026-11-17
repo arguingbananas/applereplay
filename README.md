@@ -15,6 +15,11 @@ at full speed, with correct colours and stereo sound over HDMI.
 The build is rootless and runs on an ordinary Linux PC. Only writing the USB
 stick needs root.
 
+Nothing is installed on the Apple TV itself: everything lives on the stick,
+and the Apple TV's internal hard disk, with Apple's own software on it, is
+left untouched (never written, not even mounted). Take the stick out and
+the Apple TV should start its own software as before.
+
 ## What you need
 
 - An original Apple TV: the first generation, **model A1218**, sold from 2007

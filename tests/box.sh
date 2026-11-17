@@ -26,11 +26,18 @@ box '
     echo "fbsize $(cat /sys/class/graphics/fb0/virtual_size)"
     echo "factor $(/usr/local/lib/totalreplay/screen-factor 2>/dev/null)"
     echo "window $(sudo journalctl -b -t linapple -o cat | sed -n "s/^Screen size is //p" | tail -1)"
+    stick=$(lsblk -no PKNAME "$(findmnt -no SOURCE /)")
+    echo "stick $stick"
+    echo "elsewhere $(findmnt -rn -o SOURCE | grep "^/dev/" | while read -r s; do [ "$(lsblk -no PKNAME "$s")" = "$stick" ] || echo "$s"; done | wc -l)"
 ' > "$SCRATCH/box.txt" 2>&1
 B=$SCRATCH/box.txt
 has() { grep -qx "$1" "$B"; }
 
 check "it's applereplay" has "host applereplay"
+# The Apple TV's own hard disk stays as Apple left it (docs/NOTES.md).
+stick=$(sed -n 's/^stick //p' "$B")
+check "nothing is mounted from outside the stick (${stick:-unknown}): the internal disk is left alone" \
+    sh -c "[ -n '$stick' ] && grep -qx 'elsewhere 0' '$B'"
 kernel=$(sed -n 's/^kernel //p' "$B")
 check "it runs a kernel not known to be bad (${kernel:-unknown}; tests/known-bad-kernels)" sh -c "
     [ -n '$kernel' ] &&
