@@ -2393,17 +2393,23 @@ Status: install ok installed
 Architecture: all
 Version: 4.12.1~deb12u1
 
-Package: linux-image-6.1.0-54-686-pae
+Package: linux-image-6.1.0-56-686-pae
 Status: install ok installed
 Architecture: i386
-Source: linux-signed-i386 (6.1.190+1)
-Version: 6.1.190-1
+Source: linux-signed-i386 (6.1.192+2)
+Version: 6.1.192-2
+
+Package: linux-image-686-pae
+Status: install ok installed
+Architecture: i386
+Source: linux-signed-i386 (6.1.192+2)
+Version: 6.1.192-2
 
 Package: linux-libc-dev
 Status: install ok installed
 Architecture: i386
 Source: linux
-Version: 6.1.192-1
+Version: 6.1.192-2
 
 Package: login
 Status: install ok installed
