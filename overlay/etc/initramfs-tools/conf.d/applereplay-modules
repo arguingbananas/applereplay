@@ -1,0 +1,6 @@
+# Only the drivers in /etc/initramfs-tools/modules (plus what they depend on),
+# not Debian's default "most". The initramfs ends up inside mach_kernel, and
+# the Apple TV's firmware reads that from the stick at about 0.45 MB/s: with
+# "most" it was 24 MB of a 30 MB mach_kernel, over a minute before Linux
+# started. Everything else loads from the root filesystem after the switch.
+MODULES=list

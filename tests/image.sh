@@ -92,6 +92,19 @@ check "the image's kernel (${kernel:-none found}) isn't one known to be bad (tes
     ! grep -v '^#' '$PROJECT/tests/known-bad-kernels' | awk '{ print \$1 }' | grep -qx '$kernel'"
 check "out/boot/vmlinuz is the image's kernel" sh -c "
     for k in boot/vmlinuz-*; do cmp -s \"\$k\" '$PROJECT/out/boot/vmlinuz' && exit 0; done; exit 1"
+# The firmware reads mach_kernel, initramfs included, at about 0.45 MB/s, so
+# the initramfs carries only the drivers for the root partition on the stick
+# (overlay/etc/initramfs-tools/modules). It was 24 MB with Debian's default.
+if command -v zstd >/dev/null && command -v cpio >/dev/null; then
+    check "the initramfs is small (under 10 MB) and has the drivers for a root on a USB stick" sh -c "
+        [ \$(stat -c %s '$PROJECT/out/boot/initrd') -lt 10000000 ] &&
+        zstd -dc '$PROJECT/out/boot/initrd' | cpio -it --quiet > '$SCRATCH/initrd.txt' &&
+        for m in ehci-pci usb-storage sd_mod ext4 crc32c_generic usbhid; do
+            grep -q \"/\$m\\.ko\" '$SCRATCH/initrd.txt' || { echo \"missing: \$m\"; exit 1; }
+        done"
+else
+    echo "  skip  the initramfs is small and has the drivers for a root on a USB stick (needs zstd and cpio)"
+fi
 
 P=$PROJECT/out/com.apple.Boot.plist
 root_uuid=$(sed -n 's/^ROOT_PARTUUID=//p' "$PROJECT/mkimage.sh")

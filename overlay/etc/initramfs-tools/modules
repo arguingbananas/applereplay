@@ -1,0 +1,20 @@
+# Drivers the initramfs carries (MODULES=list, conf.d/applereplay-modules):
+# only what it takes to find and mount the root partition on the USB stick,
+# plus a USB keyboard for the rescue shell if that fails. They're loaded in
+# this order; their dependencies (usbcore, scsi_mod, jbd2, ...) come along.
+#
+# USB: the port's EHCI controller (USB 2.0), and UHCI for a full-speed stick.
+ehci_pci
+uhci_hcd
+# The stick: USB mass storage (and UAS, for sticks that speak it), as a SCSI disk.
+usb_storage
+uas
+sd_mod
+# The root filesystem. ext4 asks the crypto layer for crc32c at mount time,
+# which nothing would pull in as a dependency.
+ext4
+crc32c_generic
+# A USB keyboard (the Apple one included) for the initramfs's rescue shell.
+usbhid
+hid_generic
+hid_apple
