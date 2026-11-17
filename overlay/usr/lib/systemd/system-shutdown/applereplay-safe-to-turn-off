@@ -1,0 +1,9 @@
+#!/bin/sh
+# systemd-shutdown runs this as its last step, after the filesystems are
+# unmounted or read-only, with the action as $1. The Apple TV can't switch
+# itself off: after a poweroff its light blinks and the screen keeps the
+# shutdown splash for good. So say on the splash that it's safe to unplug.
+case ${1:-} in
+    poweroff | halt) plymouth display-message --text="IT IS NOW SAFE TO TURN OFF YOUR COMPUTER." ;;
+esac
+exit 0

@@ -1,10 +1,13 @@
 # applereplay's boot splash (a Plymouth script theme).
-# The logo goes exactly where boot.efi drew it (centred), so the hand-over
-# from the firmware's picture to this one can't be seen. Under it, a bar of
+# The logo is boot.efi's, centred and drawn pixel for pixel (on the Apple TV
+# it comes out larger than boot.efi draws it). Under it, a bar of
 # 32 blocks lights up in the Apple II's hi-res colours as the boot goes on;
 # Plymouth estimates the progress from how long earlier boots took. When the
-# kiosk is about to start Total Replay it sends "IP <address>", which fills
-# the bar and shows the address under it (images from logo/make-splash.py).
+# kiosk is about to start Total Replay, applereplay-splash-end sends
+# "IP <address>", which fills the bar and shows the address under it. At
+# shutdown there is no bar; the last step of a poweroff sends "IT IS NOW SAFE
+# TO TURN OFF YOUR COMPUTER." (the box can't switch itself off). Characters
+# are uppercase letters, digits and dots (images from logo/make-splash.py).
 
 Window.SetBackgroundTopColor(0, 0, 0);
 Window.SetBackgroundBottomColor(0, 0, 0);
@@ -53,7 +56,7 @@ Plymouth.SetBootProgressFunction(boot_progress);
 fun char_image(c) {
     if (c == ".")
         return Image("char-dot.png");
-    if (c == "I" || c == "P" || (c >= "0" && c <= "9"))
+    if ((c >= "A" && c <= "Z") || (c >= "0" && c <= "9"))
         return Image("char-" + c + ".png");
     return NULL;
 }
@@ -66,7 +69,7 @@ fun show_message(text) {
     message.count = 0;
     n = 0;
     c = text.CharAt(0);
-    while (c != "" && n < 40) {
+    while (c != "" && n < 60) {
         image = char_image(c);
         if (image) {
             message.sprite[message.count] = Sprite(image);

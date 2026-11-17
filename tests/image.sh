@@ -10,7 +10,7 @@ mkdir -p "$T/root"
 tar -x -f "$PROJECT/out/rootfs.tar" -C "$T/root" --wildcards \
     ./etc/hostname ./etc/asound.conf ./etc/X11 ./etc/totalreplay \
     ./etc/ssh/sshd_config.d ./etc/systemd/system ./etc/modprobe.d ./etc/nftables.conf ./etc/plymouth \
-    ./usr/share/plymouth/themes/applereplay/BootLogo.png \
+    ./usr/share/plymouth/themes/applereplay/BootLogo.png ./usr/lib/systemd/system-shutdown \
     './home/apple/.ssh/authorized_keys' './usr/local/bin/*' './usr/local/sbin/*' './usr/local/lib/totalreplay/*' \
     ./usr/bin/hda-verb './boot/vmlinuz-*' ./var/lib/dpkg/status 2>/dev/null
 R=$T/root
@@ -48,6 +48,13 @@ check "the boot splash is the applereplay theme, with a device timeout above 0" 
     grep -qx "Theme=applereplay" etc/plymouth/plymouthd.conf &&
     awk -F= "/^DeviceTimeout=/ { t = \$2 } END { exit !(t > 0) }" etc/plymouth/plymouthd.conf &&
     [ -f usr/share/plymouth/themes/applereplay/BootLogo.png ]'
+# The box can't switch itself off; the hook says on the splash when it can be
+# unplugged, which needs plymouthd spared by systemd's last step (named @plymouthd).
+check "a poweroff ends with \"safe to turn off\" on the splash" sh -c '
+    [ -x usr/lib/systemd/system-shutdown/applereplay-safe-to-turn-off ] &&
+    for u in poweroff halt; do
+        grep -q "^ExecStart=@/usr/sbin/plymouthd @plymouthd " etc/systemd/system/plymouth-$u.service.d/applereplay.conf || exit 1
+    done'
 check "apt's background timers are masked" sh -c '
     [ "$(readlink etc/systemd/system/apt-daily.timer)" = /dev/null ] &&
     [ "$(readlink etc/systemd/system/apt-daily-upgrade.timer)" = /dev/null ]'
