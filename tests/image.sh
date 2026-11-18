@@ -36,6 +36,8 @@ check "the keypad is the joystick by default, and the session hands it to a cont
     grep -qx "Joystick 0 = 2" etc/totalreplay/linapple.conf &&
     grep -q "^for js in /dev/input/js\*; do" usr/local/lib/totalreplay/xsession &&
     grep -q "s/^Joystick 0 = .\*/Joystick 0 = 1/" usr/local/lib/totalreplay/xsession'
+check "the Apple's Caps Lock is on at startup, whatever the keyboard's" \
+    grep -qx "Caps Lock Mode = 1" etc/totalreplay/linapple.conf
 check "HDMI (card 0 device 3) is the default sound output" \
     grep -qx 'defaults.pcm.device 3' etc/asound.conf
 check "the box's services are enabled" sh -c '

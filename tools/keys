@@ -8,8 +8,8 @@ uinput device), so tests can drive Total Replay over SSH with nothing installed.
     keys --list                 the key names
 
 A KEY is a name from --list, or several joined by + (held together, in order).
-A capital letter, or a word in capitals, is typed with Shift: Total Replay's
-search (an Apple II without lowercase) wants capitals. A number with an s
+A capital letter, or a word in capitals, is typed with Shift, so it arrives
+as a capital whatever the Apple's Caps Lock says. A number with an s
 (20s, 0.5s) waits that many seconds. In the image, Esc clears Total Replay's search and
 Ctrl+F10 takes it back to its menu from a game.
 
