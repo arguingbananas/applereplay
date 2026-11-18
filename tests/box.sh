@@ -6,6 +6,7 @@
 check "the Apple TV answers over SSH ($BOX_HOST)" box true || exit 1
 box '
     echo "host $(hostname)"
+    echo "mdns $(busctl call org.freedesktop.Avahi / org.freedesktop.Avahi.Server GetHostNameFqdn 2>&1)"
     echo "kernel $(uname -v | sed -n "s/.*Debian \([^ ]*\) .*/\1/p")"
     echo "oops $(sudo dmesg | grep -cE "BUG:|Oops:|general protection fault")"
     echo "cmdline $(cat /proc/cmdline)"
@@ -34,6 +35,8 @@ B=$SCRATCH/box.txt
 has() { grep -qx "$1" "$B"; }
 
 check "it's applereplay" has "host applereplay"
+# After a boot avahi once renamed the box applereplay-2.local (docs/NOTES.md).
+check "it answers to applereplay.local ($(sed -n 's/^mdns //p' "$B"))" has 'mdns s "applereplay.local"'
 # The Apple TV's own hard disk stays as Apple left it (docs/NOTES.md).
 stick=$(sed -n 's/^stick //p' "$B")
 check "nothing is mounted from outside the stick (${stick:-unknown}): the internal disk is left alone" \

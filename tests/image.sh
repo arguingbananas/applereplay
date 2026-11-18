@@ -8,7 +8,7 @@ rm -rf "$T"
 mkdir -p "$T/root"
 # One pass over the tarball for the files we look at.
 tar -x -f "$PROJECT/out/rootfs.tar" -C "$T/root" --wildcards \
-    ./etc/hostname ./etc/asound.conf ./etc/X11 ./etc/totalreplay \
+    ./etc/hostname ./etc/asound.conf ./etc/avahi/avahi-daemon.conf ./etc/X11 ./etc/totalreplay \
     ./etc/ssh/sshd_config.d ./etc/systemd/system ./etc/modprobe.d ./etc/nftables.conf ./etc/plymouth \
     ./usr/share/plymouth/themes/applereplay/BootLogo.png ./usr/lib/systemd/system-shutdown \
     './home/apple/.ssh/authorized_keys' './usr/local/bin/*' './usr/local/sbin/*' './usr/local/lib/totalreplay/*' \
@@ -58,6 +58,10 @@ check "a poweroff ends with \"safe to turn off\" on the splash" sh -c '
 check "apt's background timers are masked" sh -c '
     [ "$(readlink etc/systemd/system/apt-daily.timer)" = /dev/null ] &&
     [ "$(readlink etc/systemd/system/apt-daily-upgrade.timer)" = /dev/null ]'
+# A rename (applereplay-2.local) came with an IPv6 address change at boot.
+check "avahi leaves IPv6 alone (no socket, no IPv6 addresses announced)" sh -c '
+    grep -qx "use-ipv6=no" etc/avahi/avahi-daemon.conf &&
+    grep -qx "publish-aaaa-on-ipv4=no" etc/avahi/avahi-daemon.conf'
 check "SSH takes keys only, never root" sh -c '
     grep -qx "PasswordAuthentication no" etc/ssh/sshd_config.d/*.conf &&
     grep -qx "PermitRootLogin no" etc/ssh/sshd_config.d/*.conf'

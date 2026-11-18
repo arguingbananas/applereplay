@@ -88,6 +88,19 @@ install -m 644 "$STAGE/total-replay.hdv" /var/games/apple2/total-replay.hdv
 # Total Replay saves preferences and high scores back to its disk image.
 chown -R apple:apple /var/games/apple2
 
+echo "== avahi (mDNS) on IPv4 only"
+# Once, during a boot, avahi renamed the box applereplay-2 and then -3 within
+# 12 ms of the router's IPv6 address replacing the link-local one: too fast
+# for anything on the network to have claimed the name, and nothing else on
+# it ever sent a packet naming the box (docs/NOTES.md). Nothing here uses
+# IPv6, so avahi ignores it: no IPv6 socket, and no IPv6 addresses announced
+# over IPv4, which also stops it reacting to IPv6 addresses coming and going.
+sed -i -e 's/^use-ipv6=yes$/use-ipv6=no/' \
+    -e 's/^#\{0,1\}publish-aaaa-on-ipv4=yes$/publish-aaaa-on-ipv4=no/' \
+    /etc/avahi/avahi-daemon.conf
+grep -qx 'use-ipv6=no' /etc/avahi/avahi-daemon.conf
+grep -qx 'publish-aaaa-on-ipv4=no' /etc/avahi/avahi-daemon.conf
+
 echo "== services"
 install -d -m 2755 -g systemd-journal /var/log/journal
 systemctl enable applereplay-fb-wc.service applereplay-hdmi-audio.service ssh.service avahi-daemon.service systemd-timesyncd.service networking.service
