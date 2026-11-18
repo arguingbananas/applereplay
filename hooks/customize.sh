@@ -77,10 +77,15 @@ install -m 755 "$STAGE/fps" /usr/local/bin/fps
 # The directory is made here, not as an empty one in overlay/: git doesn't
 # keep empty directories, and a fresh clone then failed at this point.
 install -d /etc/totalreplay
+# Caps Lock Mode stays at linapple's default, 0: the Apple follows the
+# keyboard's Caps Lock, which the session (xsession) turns on at startup. Mode 1
+# (the Apple's own Caps Lock) was tried: its key toggles the Apple's caps off
+# while the keyboard's light comes on.
 sed -e 's/^Screen factor = .*/Screen factor = 1.75/' \
     /usr/local/src/linapple/res/linapple.conf > /etc/totalreplay/linapple.conf
 grep -qx 'Screen factor = 1.75' /etc/totalreplay/linapple.conf
 grep -qx 'Fullscreen = 0' /etc/totalreplay/linapple.conf
+grep -qx 'Caps Lock Mode = 0' /etc/totalreplay/linapple.conf
 
 echo "== Total Replay"
 install -d /var/games/apple2

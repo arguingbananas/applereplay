@@ -2,6 +2,15 @@
 # The whole X session: no window manager, just linapple filling the screen.
 xset s off -dpms s noblank
 
+# Caps Lock on, light and all: many older programs take only capitals (a
+# "(Y/N)" prompt ignoring "y"). linapple's Apple follows the keyboard's Caps
+# Lock (its default Caps Lock Mode 0), so the light says which case the Apple
+# gets, and pressing the key turns both off. X starts with it off; the key
+# press is only sent then, since it toggles.
+if xset q | grep -q 'Caps Lock: *off'; then
+    xdotool key Caps_Lock || true
+fi
+
 # X runs on the framebuffer the firmware set up (fbdev), usually 1280x720.
 # linapple's window is sized to fit it below; with no window manager it lands
 # centered.
