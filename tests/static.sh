@@ -120,3 +120,18 @@ no_leaks() {
       } | grep .
 }
 check "no home paths, private IPs or personal email addresses are tracked" no_leaks
+# Host names can't be listed here without publishing them, so they come from
+# this machine (its own name) and from out/private-names (one per line, for
+# other machines; out/ is never committed). Commit messages not yet pushed are
+# public too once they are. Names a fresh install gives are skipped.
+{ hostname; hostname -s; cat "$PROJECT/out/private-names" 2>/dev/null; } |
+    tr 'A-Z' 'a-z' | grep -vxE '|localhost|debian|ubuntu|fedora|raspberrypi|applereplay' |
+    sort -u > "$SCRATCH/private-names"
+no_host_names() {
+    [ -s "$SCRATCH/private-names" ] || return 0
+    ! { git grep -n -i -w -F -f "$SCRATCH/private-names" -- . ':!env/keyring'
+        git log --branches --not --remotes --format='%h %s%n%b' |
+            grep -i -w -F -f "$SCRATCH/private-names"
+      } | grep .
+}
+check "no host names (this machine's, out/private-names) in tracked files or unpushed commit messages" no_host_names
