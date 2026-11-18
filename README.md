@@ -2,7 +2,7 @@
 
 ![applereplay's boot logo: pixel art in Apple II colours](logo/BootLogo.png)
 
-What if a 2006 Apple TV could play the Apple II games of the 1980s, with tools
+What if a 2007 Apple TV could play the Apple II games of the 1980s, with tools
 from 2026?¹
 
 applereplay turns an original Apple TV (first generation, model A1218) into an

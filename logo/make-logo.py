@@ -40,7 +40,7 @@ FONT5 = {  # 5x7, the shapes of the Apple II's own uppercase-only text
 }
 FONT3 = {  # 3x5, for the small print
     "0": "111 101 101 101 111", "1": "010 110 010 010 111",
-    "2": "111 001 111 100 111", "6": "111 100 111 101 111",
+    "2": "111 001 111 100 111", "6": "111 100 111 101 111", "7": "111 001 001 010 010",
     "8": "111 101 111 101 111", "9": "111 101 111 001 111",
     "A": "010 101 111 101 101", "C": "111 100 100 100 111",
     "D": "110 101 101 101 110", "E": "111 100 110 100 111",
@@ -103,7 +103,7 @@ text(15, 21, "APPLEREPLAY", FONT5, [GREEN, VIOLET, ORANGE, BLUE], scale=2, shado
 for i, x in enumerate(range(15, 145, 6)):
     box(x, 41, 5, 3, [VIOLET, GREEN, WHITE, ORANGE, BLUE][i % 5])
 
-# 2006 hardware on the left, seen from above: a rounded square with a silver
+# 2007 hardware on the left, seen from above: a rounded square with a silver
 # edge and a whitish top, and our initials where the maker's mark would be.
 for inset, colour in enumerate([STEEL, SILVER, SILVER, PEARL]):
     box(20 + inset + 2, 47 + inset, 21 - 2 * inset - 4, 21 - 2 * inset, colour)
@@ -128,7 +128,7 @@ for x in range(48, 114, 3):
 # The small print.
 x = text(6, 78, "2026 TECH", FONT3, BLUE)
 x = text(x + 2, 78, ".", FONT3, ORANGE)
-x = text(x + 2, 78, "2006 HARDWARE", FONT3, WHITE)
+x = text(x + 2, 78, "2007 HARDWARE", FONT3, WHITE)
 x = text(x + 2, 78, ".", FONT3, ORANGE)
 text(x + 2, 78, "1980S GAMES", FONT3, GREEN)
 
