@@ -2178,6 +2178,12 @@ Architecture: i386
 Source: libxdmcp
 Version: 1:1.1.2-3
 
+Package: libxdo3
+Status: install ok installed
+Architecture: i386
+Source: xdotool
+Version: 1:3.20160805.1-5
+
 Package: libxext-dev
 Status: install ok installed
 Architecture: i386
@@ -2338,6 +2344,12 @@ Status: install ok installed
 Architecture: i386
 Source: iptables
 Version: 1.8.9-2
+
+Package: libxtst6
+Status: install ok installed
+Architecture: i386
+Source: libxtst
+Version: 2:1.2.3-1.1
 
 Package: libxv-dev
 Status: install ok installed
@@ -2736,6 +2748,11 @@ Package: xbitmaps
 Status: install ok installed
 Architecture: all
 Version: 1.1.1-2.2
+
+Package: xdotool
+Status: install ok installed
+Architecture: i386
+Version: 1:3.20160805.1-5
 
 Package: xinit
 Status: install ok installed
