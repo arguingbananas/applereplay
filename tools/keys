@@ -13,8 +13,9 @@ search (an Apple II without lowercase) wants capitals. A number with an s
 (20s, 0.5s) waits that many seconds. In the image, Esc clears Total Replay's search and
 Ctrl+F10 takes it back to its menu from a game.
 
---monkey repeats until the time is up: two random capitals and Enter (a random
-game), 20 s to load, about 4 minutes of random keys, Ctrl+F10. It never sends
+--monkey repeats until the time is up: Ctrl+F10 (back to the menu), two random
+capitals, 3 s for the menu to show the match, Enter (a random game), 20 s to
+load, about 4 minutes of random keys; then Ctrl+F10 at the end. It never sends
 function keys, Alt or other Ctrl combinations, which in linapple save states
 or screenshots, change the video mode, debug or quit. Each game start is
 printed with the time. Typing needs root (/dev/uinput); not in the image, copy
@@ -123,12 +124,14 @@ def monkey(kbd, minutes, rng):
     while time.time() < end:
         search = rng.choice(LETTERS).upper() + rng.choice(LETTERS).upper()
         print(time.strftime("%H:%M:%S"), "monkey: search", search, flush=True)
-        kbd.run(parse(["esc", search, "enter", "20s"]))
+        # From the menu whatever came before; Enter only once the menu has
+        # loaded the match's preview (sooner and it is lost).
+        kbd.run(parse(["ctrl+f10", "5s", "esc", search, "3s", "enter", "20s"]))
         game_end = min(time.time() + rng.uniform(180, 300), end)
         while time.time() < game_end:
             kbd.press(parse([rng.choice(PLAY)])[0], hold=rng.choice((0.08, 0.08, 0.3, 1.0)))
             time.sleep(rng.uniform(0.05, 0.6))
-        kbd.run(parse(["ctrl+f10", "5s"]))
+    kbd.run(parse(["ctrl+f10", "5s"]))
     print(time.strftime("%H:%M:%S"), "monkey: done", flush=True)
 
 
