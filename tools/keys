@@ -1,0 +1,167 @@
+#!/usr/bin/env python3
+"""Type keys into the box's X session through a virtual keyboard (the kernel's
+uinput device), so tests can drive Total Replay over SSH with nothing installed.
+
+    sudo keys KEY...            e.g. sudo keys KARATEKA enter 30s ctrl+f10
+    sudo keys --monkey MINUTES  start games from the menu and mash keys
+    keys --print KEY...         show the key codes instead of typing them
+    keys --list                 the key names
+
+A KEY is a name from --list, or several joined by + (held together, in order).
+A capital letter, or a word in capitals, is typed with Shift: Total Replay's
+search (an Apple II without lowercase) wants capitals. A number with an s
+(20s, 0.5s) waits that many seconds. In the image, Esc clears Total Replay's search and
+Ctrl+F10 takes it back to its menu from a game.
+
+--monkey repeats until the time is up: two random capitals and Enter (a random
+game), 20 s to load, about 4 minutes of random keys, Ctrl+F10. It never sends
+function keys, Alt or other Ctrl combinations, which in linapple save states
+or screenshots, change the video mode, debug or quit. Each game start is
+printed with the time. Typing needs root (/dev/uinput); not in the image, copy
+it to the box (tests/box.sh does).
+"""
+import fcntl
+import os
+import random
+import struct
+import subprocess
+import sys
+import time
+
+EV_SYN, EV_KEY, SYN_REPORT = 0, 1, 0
+
+
+def _ioc(direction, nr, size):
+    return (direction << 30) | (size << 16) | (ord("U") << 8) | nr
+
+
+UI_DEV_CREATE = _ioc(0, 1, 0)
+UI_DEV_DESTROY = _ioc(0, 2, 0)
+UI_DEV_SETUP = _ioc(1, 3, 92)  # struct uinput_setup: input_id (8) + name[80] + u32
+UI_SET_EVBIT = _ioc(1, 100, 4)
+UI_SET_KEYBIT = _ioc(1, 101, 4)
+
+# Codes from linux/input-event-codes.h.
+KEYS = {"esc": 1, "minus": 12, "equal": 13, "backspace": 14, "tab": 15,
+        "enter": 28, "ctrl": 29, "shift": 42, "alt": 56, "space": 57,
+        "up": 103, "left": 105, "right": 106, "down": 108}
+KEYS.update({str(d % 10): 1 + d for d in range(1, 11)})  # 1..9, then 0
+for row, first in (("qwertyuiop", 16), ("asdfghjkl", 30), ("zxcvbnm", 44)):
+    KEYS.update({c: first + i for i, c in enumerate(row)})
+KEYS.update({"f%d" % n: 58 + n for n in range(1, 11)})
+KEYS.update({"f11": 87, "f12": 88})
+KEYS.update({"kp%d" % n: c for n, c in
+             zip(range(10), (82, 79, 80, 81, 75, 76, 77, 71, 72, 73))})
+
+LETTERS = "abcdefghijklmnopqrstuvwxyz"
+# What --monkey plays with: no function keys, Alt or Ctrl.
+PLAY = (["up", "down", "left", "right"] * 4 + ["space"] * 4 + ["enter"]
+        + list("0123456789") + ["shift+" + c for c in LETTERS])
+
+EVENT = "llHHi"  # struct input_event with the native time_t (16 bytes on i386)
+
+
+def parse(args):
+    """Turn KEY arguments into steps: a list of codes, or seconds to wait."""
+    steps = []
+    for arg in args:
+        if arg.endswith("s") and arg[:-1].replace(".", "", 1).isdigit():
+            steps.append(float(arg[:-1]))
+            continue
+        if len(arg) > 1 and arg.isalpha() and arg.isupper():
+            steps.extend([KEYS["shift"], KEYS[c.lower()]] for c in arg)
+            continue
+        names = ["shift", arg.lower()] if len(arg) == 1 and arg.isupper() else arg.lower().split("+")
+        unknown = [n for n in names if n not in KEYS]
+        if unknown:
+            raise ValueError("unknown key %s (see --list)" % ", ".join(unknown))
+        steps.append([KEYS[n] for n in names])
+    return steps
+
+
+class Keyboard:
+    def __init__(self):
+        subprocess.run(["modprobe", "uinput"], check=False)
+        self.fd = os.open("/dev/uinput", os.O_WRONLY | os.O_NONBLOCK)
+        fcntl.ioctl(self.fd, UI_SET_EVBIT, EV_KEY)
+        for code in set(KEYS.values()):
+            fcntl.ioctl(self.fd, UI_SET_KEYBIT, code)
+        # BUS_VIRTUAL (6), and a name to find it by in /proc/bus/input/devices.
+        fcntl.ioctl(self.fd, UI_DEV_SETUP, struct.pack("HHHH80sI", 6, 1, 1, 1, b"applereplay-keys", 0))
+        fcntl.ioctl(self.fd, UI_DEV_CREATE)
+        time.sleep(1)  # X adds the new keyboard when udev announces it
+
+    def _emit(self, code, value):
+        os.write(self.fd, struct.pack(EVENT, 0, 0, EV_KEY, code, value))
+        os.write(self.fd, struct.pack(EVENT, 0, 0, EV_SYN, SYN_REPORT, 0))
+
+    def press(self, codes, hold=0.08):
+        for code in codes:
+            self._emit(code, 1)
+            time.sleep(0.03)
+        time.sleep(hold)
+        for code in reversed(codes):
+            self._emit(code, 0)
+            time.sleep(0.03)
+        time.sleep(0.15)
+
+    def run(self, steps):
+        for step in steps:
+            if isinstance(step, float):
+                time.sleep(step)
+            else:
+                self.press(step)
+
+    def close(self):
+        time.sleep(0.2)
+        fcntl.ioctl(self.fd, UI_DEV_DESTROY)
+        os.close(self.fd)
+
+
+def monkey(kbd, minutes, rng):
+    end = time.time() + minutes * 60
+    while time.time() < end:
+        search = rng.choice(LETTERS).upper() + rng.choice(LETTERS).upper()
+        print(time.strftime("%H:%M:%S"), "monkey: search", search, flush=True)
+        kbd.run(parse(["esc", search, "enter", "20s"]))
+        game_end = min(time.time() + rng.uniform(180, 300), end)
+        while time.time() < game_end:
+            kbd.press(parse([rng.choice(PLAY)])[0], hold=rng.choice((0.08, 0.08, 0.3, 1.0)))
+            time.sleep(rng.uniform(0.05, 0.6))
+        kbd.run(parse(["ctrl+f10", "5s"]))
+    print(time.strftime("%H:%M:%S"), "monkey: done", flush=True)
+
+
+def main(args):
+    if not args or args[0] in ("-h", "--help"):
+        print(__doc__.strip())
+        return 0 if args else 2
+    if args[0] == "--list":
+        print(" ".join(sorted(KEYS, key=lambda k: (len(k), k))))
+        return 0
+    try:
+        if args[0] == "--print":
+            for step in parse(args[1:]):
+                print(step if isinstance(step, float) else " ".join(map(str, step)))
+            return 0
+        if args[0] == "--monkey":
+            minutes = float(args[1])
+            steps = None
+        else:
+            steps = parse(args)
+    except (ValueError, IndexError) as e:
+        print("keys: %s" % (e or "--monkey needs MINUTES"), file=sys.stderr)
+        return 2
+    kbd = Keyboard()
+    try:
+        if steps is None:
+            monkey(kbd, minutes, random.Random())
+        else:
+            kbd.run(steps)
+    finally:
+        kbd.close()
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
