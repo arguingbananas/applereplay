@@ -220,7 +220,14 @@ applereplay stands on these projects:
 - [atv-linux-loader](https://github.com/DistroHopper39B/atv-linux-loader) and
   [DummyKext](https://github.com/DistroHopper39B/DummyKext) by
   DistroHopper39B, which make Linux on the Apple TV possible.
-- [Debian](https://www.debian.org), still shipping a 32-bit kernel.
+- [cctools-port](https://github.com/tpoechtrager/cctools-port) by Thomas
+  Pöchtrager, Apple's linker for Linux, which links `mach_kernel`.
+- [Debian](https://www.debian.org), still shipping a 32-bit kernel, and the
+  authors of every package in the image: Linux, X.Org, SDL, avahi, Plymouth
+  and the rest.
+- The build and test tools: [mmdebstrap](https://gitlab.mister-muffin.de/josch/mmdebstrap),
+  [bubblewrap](https://github.com/containers/bubblewrap) and
+  [ShellCheck](https://www.shellcheck.net).
 
 Our fixes to these projects are meant to go back upstream; `docs/NOTES.md` lists
 them.
@@ -229,8 +236,21 @@ them.
 
 applereplay's own files are under the [MIT License](LICENSE). The linapple
 patches in `patches/` change GPL-2.0 code and are offered under linapple's
-GPL-2.0, like the program they become part of. atv-linux-loader (a submodule)
-is GPL-2.0, and Total Replay is MIT; the games in it belong to their authors.
+GPL-2.0, like the program they become part of.
+
+What the build uses keeps its own license:
+
+- linapple: GPL-2.0.
+- atv-linux-loader (a submodule): GPL-2.0.
+- Total Replay: MIT; the games in it belong to their authors.
+- DummyKext: the Unlicense (public domain).
+- cctools-port: the Apple Public Source License 2.0. It is a build tool only;
+  nothing from it ends up in the image.
+- Apple's `boot.efi`: Apple's, proprietary. That is why you fetch it yourself.
+- Debian's packages: each under its own license. All of them come from
+  Debian's main archive, so all are free software (the GPL, LGPL, MIT, BSD
+  and others). The image keeps Debian's notice for each one in
+  `/usr/share/doc/<package>/copyright`.
 
 ---
 
