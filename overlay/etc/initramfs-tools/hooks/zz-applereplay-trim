@@ -4,12 +4,21 @@
 # This box draws on the firmware's framebuffer, blacklists nouveau, and its
 # theme draws its own characters without the label plugin, so both are dead
 # weight in an initramfs that ends up inside mach_kernel. (The hook needs
-# fc-cache, from the fontconfig package, to run at all.) Hooks in /etc run
-# after Debian's.
+# fc-cache, from the fontconfig package, to run at all.) So are, for a root
+# that is a plain partition on a USB stick: Plymouth's DRM renderer and its
+# libdrm, device-mapper (dmsetup's hook, for LVM and encrypted disks), and the
+# PS/2 mouse driver initramfs-tools adds for keyboards (the box has no PS/2).
+# Each MB is about 2.4 s that the firmware spends reading mach_kernel
+# (docs/NOTES.md, Where boot time goes). Hooks in /etc run after Debian's, and
+# mkinitramfs runs depmod after all hooks.
 set -e
 [ "${1:-}" = prereqs ] && exit 0
 for d in "${DESTDIR}"/lib/modules/*/kernel/drivers/gpu/drm "${DESTDIR}"/usr/lib/modules/*/kernel/drivers/gpu/drm; do
     if [ -d "$d" ]; then rm -rf "$d"; fi
 done
 rm -rf "${DESTDIR}/usr/share/fonts" "${DESTDIR}/etc/fonts" "${DESTDIR}/var/cache/fontconfig"
+rm -f "${DESTDIR}"/usr/lib/*/plymouth/renderers/drm.so "${DESTDIR}"/usr/lib/*/libdrm.so*
+rm -f "${DESTDIR}/usr/sbin/dmsetup" "${DESTDIR}"/usr/lib/*/libdevmapper.so* \
+    "${DESTDIR}"/usr/lib/udev/rules.d/*-dm.rules
+find "${DESTDIR}"/usr/lib/modules -name dm-mod.ko -delete -o -name psmouse.ko -delete
 exit 0

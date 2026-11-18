@@ -96,12 +96,13 @@ check "out/boot/vmlinuz is the image's kernel" sh -c "
 # the initramfs carries only the drivers for the root partition on the stick
 # (overlay/etc/initramfs-tools/modules). It was 24 MB with Debian's default.
 if command -v zstd >/dev/null && command -v cpio >/dev/null; then
-    check "the initramfs is small (under 10 MB) and has the drivers for a root on a USB stick" sh -c "
+    check "the initramfs is small (under 10 MB), has the drivers for a root on a USB stick, and none of what zz-applereplay-trim removes" sh -c "
         [ \$(stat -c %s '$PROJECT/out/boot/initrd') -lt 10000000 ] &&
         zstd -dc '$PROJECT/out/boot/initrd' | cpio -it --quiet > '$SCRATCH/initrd.txt' &&
         for m in ehci-pci usb-storage sd_mod ext4 crc32c_generic usbhid; do
             grep -q \"/\$m\\.ko\" '$SCRATCH/initrd.txt' || { echo \"missing: \$m\"; exit 1; }
-        done"
+        done &&
+        ! grep -E '/(dm-mod|psmouse)\\.ko\$|/(dmsetup|libdevmapper\\.so.*|libdrm\\.so.*|drm\\.so)\$' '$SCRATCH/initrd.txt'"
 else
     echo "  skip  the initramfs is small and has the drivers for a root on a USB stick (needs zstd and cpio)"
 fi
