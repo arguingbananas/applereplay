@@ -8,7 +8,7 @@ check "capitals are typed with Shift, + holds keys together, and 2.5s waits" sh 
     [ \"\$(python3 '$K' --print A KAR ctrl+f10 2.5s | tr '\n' ' ')\" = '42 30 42 37 42 30 42 19 29 68 2.5 ' ]"
 check "an unknown key name is refused (exit 2) before anything is typed" sh -c "
     python3 '$K' --print enter nosuchkey; [ \$? -eq 2 ]"
-check "--monkey sends no function keys, Alt or Ctrl (which save, quit or change the video mode)" python3 -c "
+check "--monkey sends no function keys, Alt or Ctrl (which save, quit or change the video mode)" python3 -B -c "
 import importlib.machinery, importlib.util
 l = importlib.machinery.SourceFileLoader('keys', '$K')
 m = importlib.util.module_from_spec(importlib.util.spec_from_loader('keys', l))
