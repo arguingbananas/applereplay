@@ -1,0 +1,6 @@
+# zstd at level 19, not Debian's 9: the initramfs is 0.8 MB smaller (6.2 MB
+# instead of 7.0), about 1.9 s less for the Apple TV's firmware to read, and
+# zstd unpacks at nearly the same speed whatever level packed it (0.48 s
+# against 0.40 s on the box). xz would be 0.6 MB smaller again but took 1.88 s
+# to unpack on the box's CPU, giving back what it saves (docs/NOTES.md).
+COMPRESSLEVEL=19
