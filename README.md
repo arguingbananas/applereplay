@@ -18,7 +18,9 @@ stick needs root.
 Nothing is installed on the Apple TV itself: everything lives on the stick,
 and the Apple TV's internal hard disk, with Apple's own software on it, is
 left untouched (never written, not even mounted). Take the stick out and
-the Apple TV should start its own software as before.
+the Apple TV starts its own software as before. Once, the first time this
+was tried, it came up in Apple TV Recovery instead; choosing Restart there
+started it normally, and it hasn't happened again.
 
 ## What you need
 
