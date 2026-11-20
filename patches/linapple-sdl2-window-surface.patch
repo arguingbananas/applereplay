@@ -1,5 +1,5 @@
 diff --git a/src/frontends/sdl2/Frame.cpp b/src/frontends/sdl2/Frame.cpp
-index 763a234..1947a3d 100644
+index 763a2341..4aaad3bd 100644
 --- a/src/frontends/sdl2/Frame.cpp
 +++ b/src/frontends/sdl2/Frame.cpp
 @@ -26,6 +26,7 @@
@@ -10,7 +10,7 @@ index 763a234..1947a3d 100644
  
  #include "apple2/Apple2Types.h"
  #include "apple2/Video.h"
-@@ -70,6 +71,90 @@ SDL_Rect new_rect{};
+@@ -70,6 +71,93 @@ SDL_Rect new_rect{};
  int buttondown = -1;
  bool window_resized = false;
  
@@ -20,6 +20,9 @@ index 763a234..1947a3d 100644
 +static bool use_window_surface = false;
 +// draw_frame_window drew this frame into the window surface, not screen.
 +static bool frame_in_window_surface = false;
++// The next frame goes into screen, as without the window surface, so screen
++// holds the emulator's frame again (after the help screen drew over it).
++static bool next_frame_to_screen = false;
 +// The part of the window surface that frame changed; empty if none of it.
 +static SDL_Rect window_surface_dirty{};
 +// The last frame drawn into the window surface, to find the rows that change.
@@ -101,7 +104,19 @@ index 763a234..1947a3d 100644
  auto frame_clear_screen() -> void {
    const std::lock_guard<std::recursive_mutex> lock(video_draw_mutex);
    if (screen == nullptr) {
-@@ -316,6 +401,21 @@ auto draw_apple_content() -> void {
+@@ -149,7 +237,10 @@ auto frame_save_bmp() -> void {
+                   screenshot_index);
+   }
+ 
+-  SDL_SaveBMP(screen.get(), bmp_name.data());
++  // With the window surface, frames are drawn there and screen isn't kept up
++  // to date; the window surface holds what is on show.
++  SDL_Surface* shown = direct_window_surface();
++  SDL_SaveBMP(shown != nullptr ? shown : screen.get(), bmp_name.data());
+   std::printf("File %s saved!\n", bmp_name.data());
+   screenshot_index++;
+ }
+@@ -316,6 +407,21 @@ auto draw_apple_content() -> void {
  
  auto frame_refresh() -> void {
    frame_poll_activity();
@@ -123,7 +138,7 @@ index 763a234..1947a3d 100644
    if (texture != nullptr && screen != nullptr && renderer != nullptr) {
      SDL_UpdateTexture(texture.get(), nullptr, screen->pixels,
                        screen->pitch);
-@@ -331,7 +431,7 @@ auto draw_frame_window() -> void {
+@@ -331,7 +437,7 @@ auto draw_frame_window() -> void {
  
    {
      const std::lock_guard<std::recursive_mutex> lock(video_draw_mutex);
@@ -132,12 +147,14 @@ index 763a234..1947a3d 100644
        return;
      }
      uint32_t* output = video_get_output_buffer();
-@@ -341,17 +441,26 @@ auto draw_frame_window() -> void {
+@@ -341,17 +447,28 @@ auto draw_frame_window() -> void {
      const SDL_Rect r = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
  
      if (system_state.mode != app_mode_debug) {
 -      ScopedSurfaceLock lock_screen(screen.get());
-+      SDL_Surface* target = direct_window_surface();
++      SDL_Surface* target =
++          next_frame_to_screen ? nullptr : direct_window_surface();
++      next_frame_to_screen = false;
 +      frame_in_window_surface = target != nullptr;
 +      ScopedSurfaceLock lock_screen(target != nullptr ? target : screen.get());
        const VideoSurfaceView vs_output(output, SCREEN_WIDTH, SCREEN_HEIGHT,
@@ -166,7 +183,15 @@ index 763a234..1947a3d 100644
        }
      } else {
  #if ENABLE_DEBUGGER
-@@ -697,13 +806,16 @@ auto frame_on_resize(int width, int height) -> void {
+@@ -645,6 +762,7 @@ auto frame_show_help_screen(int width, int height) -> void {
+ 
+   frame_clear_screen();
+   video_set_frame_ready(true);
++  next_frame_to_screen = true;
+   draw_frame_window();
+ }
+ 
+@@ -697,13 +815,16 @@ auto frame_on_resize(int width, int height) -> void {
        0, static_cast<int>(system_state.screen_width),
        static_cast<int>(system_state.screen_height), 32,
        SDL_PIXELFORMAT_ARGB8888));
@@ -188,7 +213,7 @@ index 763a234..1947a3d 100644
      system_state.mode = app_mode_exit;
      return;
    }
-@@ -1014,18 +1126,35 @@ auto frame_create_window() -> int {
+@@ -1014,18 +1135,35 @@ auto frame_create_window() -> int {
      return 1;
    }
  
@@ -227,7 +252,7 @@ index 763a234..1947a3d 100644
  
    screen.reset(SDL_CreateRGBSurfaceWithFormat(
        0, static_cast<int>(system_state.screen_width),
-@@ -1036,11 +1165,13 @@ auto frame_create_window() -> int {
+@@ -1036,11 +1174,13 @@ auto frame_create_window() -> int {
      return 1;
    }
  
@@ -246,7 +271,7 @@ index 763a234..1947a3d 100644
      std::fprintf(stderr, "Could not create SDL texture: %s\n", SDL_GetError());
      return 1;
    }
-@@ -1067,6 +1198,8 @@ auto frame_destroy_window() -> void {
+@@ -1067,6 +1207,8 @@ auto frame_destroy_window() -> void {
    screen.reset();
    renderer.reset();
    window.reset();
