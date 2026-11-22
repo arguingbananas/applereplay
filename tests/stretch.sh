@@ -33,7 +33,7 @@ check "the harness builds against upstream" build "$PROJECT/env/run" "$W/upstrea
 check "the harness builds against the patch" build "$PROJECT/env/run" "$W/patched" harness
 "$T/upstream/harness" > "$T/upstream.txt"
 "$T/patched/harness" > "$T/patched.txt"
-check "604 cases ran" sh -c "[ \$(wc -l < '$T/patched.txt') = 604 ]"
+check "839 cases ran" sh -c "[ \$(wc -l < '$T/patched.txt') = 839 ]"
 check "every case gives the same pixels as upstream (x86_64)" cmp "$T/upstream.txt" "$T/patched.txt"
 check "bands of whole blocks match the full frame at 768, 720 and 672 lines" "$T/patched/harness" bands
 
