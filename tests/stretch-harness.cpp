@@ -79,9 +79,40 @@ auto cases() -> void {
                560, 384, 1280, 800);
     }
   }
+  // Every factor the box can choose (screen-factor's steps of 1/8, from 1x to
+  // 4x), each on a surface exactly the window's size, so it touches every edge.
+  for (int k = 8; k <= 32; ++k) {
+    const int w = 560 * k / 8;
+    const int h = 384 * k / 8;
+    one_case(n++, 0, 4, 4, {0, 0, 560, 384}, {0, 0, w, h}, 560, 384, w, h);
+  }
+  const int formats[][2] = {{1, 1}, {1, 4}, {2, 2}, {3, 3}, {3, 4}, {4, 4}};
+  // Exactly 2x, where the speedup takes its fast paths when the row is fully
+  // on the surface: for every function and pixel format, at three widths,
+  // with the window inside, flush with either edge, and one pixel past either
+  // edge (which must fall back to the general path with the same result).
+  const int widths[] = {1, 37, 300};
+  for (int fn = 0; fn < 3; ++fn) {
+    for (const auto& f : formats) {
+      int sbpp = f[0];
+      int dbpp = f[1];
+      if (fn == 2 && sbpp != 1) {
+        continue;  // mono8 reads 8-bit sources only
+      }
+      for (int sw : widths) {
+        const int sh = 5;
+        const int dw = 2 * sw;
+        const int surface_w = dw + 6;
+        const int xs[] = {3, 0, surface_w - dw, -1, surface_w - dw + 1};
+        for (int x : xs) {
+          one_case(n++, fn, sbpp, dbpp, {0, 0, sw, sh}, {x, 1, dw, 2 * sh},
+                   sw, sh, surface_w, 2 * sh + 2);
+        }
+      }
+    }
+  }
   // Then every function and pixel format over random sizes and offsets,
   // including upscaling, downscaling and clipping at every edge.
-  const int formats[][2] = {{1, 1}, {1, 4}, {2, 2}, {3, 3}, {3, 4}, {4, 4}};
   for (int k = 0; k < 600; ++k) {
     const int fn = k % 3;
     const int* f = formats[k % 6];
