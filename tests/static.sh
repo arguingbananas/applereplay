@@ -24,6 +24,13 @@ pyscripts=$(git ls-files | grep -v '^src/' | while read -r f; do
     [ -f "$f" ] && head -c 30 "$f" | grep -q '^#!/usr/bin/env python3' && echo "$f"; done)
 check "every Python script checks for Python 3.11 or newer" sh -c '
     for f; do grep -q "sys.version_info < (3, 11)" "$f" || { echo "$f"; exit 1; }; done' sh $pyscripts
+# pyflakes: unused imports and variables, undefined names. Like shellcheck,
+# only env's copy, so everyone checks with the same version.
+if [ -x env/root/usr/bin/pyflakes3 ]; then
+    check "pyflakes (env) finds nothing" env/run pyflakes3 $pyscripts
+else
+    echo "  skip  pyflakes (not in env/root: env/run apt-get -o APT::Sandbox::User=root install python3-pyflakes)"
+fi
 if [ -x out/devroot/usr/bin/python3.11 ]; then
     P=$SCRATCH/py311
     rm -rf "$P"; mkdir -p "$P"
