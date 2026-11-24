@@ -12,6 +12,16 @@ running [Total Replay](https://github.com/a2-4am/4cade), a collection of
 hundreds of Apple II games behind one menu. Plug in a USB keyboard and play,
 at full speed, with correct colours and stereo sound over HDMI.
 
+> [!NOTE]
+> **Made with AI.** This project was built with
+> [Claude Code](https://claude.com/claude-code), Anthropic's AI coding
+> assistant (Claude), working under my direction: the build scripts, patches,
+> tools, tests and documentation. I directed the work, ran the steps that need
+> root, and did what only a person at the TV can: judged the picture and the
+> sound, filmed the boots, played the games and pulled the plug for the power
+> tests. Commits Claude wrote or co-wrote name it in a `Co-Authored-By`
+> trailer.
+
 The build is rootless and runs on an ordinary Linux PC. Only writing the USB
 stick needs root.
 
@@ -203,9 +213,9 @@ measured and why things are the way they are.
 
 ## Working on this with Claude Code
 
-The project was built with [Claude Code](https://claude.com/claude-code), and
-it's set up for you to carry on the same way. Open the repository in Claude
-Code and it reads `CLAUDE.md`, which loads `docs/NOTES.md`: the hardware
+The project was built with [Claude Code](https://claude.com/claude-code) (see
+the note at the top), and it's set up for you to carry on the same way. Open
+the repository in Claude Code and it reads `CLAUDE.md`, which loads `docs/NOTES.md`: the hardware
 facts, every fix and measurement, the gotchas, and the list of what's next.
 Put anything about your own setup (your build machine, your TV, the box's
 address) in `CLAUDE.local.md`; Claude Code loads it too, and git ignores it.
