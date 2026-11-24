@@ -61,7 +61,8 @@ started it normally, and it hasn't happened again.
   Apple II's joystick. It is the only kind tried; other USB controllers that
   Linux supports may work too. You still need the keyboard for the menu.
 - A Linux PC (x86_64) with `mmdebstrap`, `bubblewrap`, `uidmap` and `git`, and
-  unprivileged user namespaces enabled. Built and tested on Linux Mint 22
+  unprivileged user namespaces enabled, plus Python 3.11 or newer for the tests
+  and `tools/keys`. Built and tested on Linux Mint 22
   (Ubuntu 24.04 based); other distributions should work but are untested.
   Writing the stick needs `bmap-tools` and `gdisk`. On Debian, Ubuntu or Mint:
 

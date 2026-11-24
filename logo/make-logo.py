@@ -12,6 +12,9 @@ import struct
 import sys
 import zlib
 
+if sys.version_info < (3, 11):
+    sys.exit("make-logo.py: needs Python 3.11 or newer (this is %d.%d)" % sys.version_info[:2])
+
 W, H = 160, 90
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
