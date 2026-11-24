@@ -15,6 +15,9 @@ import struct
 import sys
 import zlib
 
+if sys.version_info < (3, 11):
+    sys.exit("make-splash.py: needs Python 3.11 or newer (this is %d.%d)" % sys.version_info[:2])
+
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (20, 245, 60)

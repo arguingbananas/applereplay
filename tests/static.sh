@@ -17,6 +17,27 @@ else
     echo "  skip  shellcheck (not installed)"
 fi
 
+# Python scripts must run on the box's Python, 3.11 (Debian 12), so compile
+# them with the devroot's copy of it: newer syntax would pass on the build host
+# and fail there. Each script also refuses to start on anything older.
+pyscripts=$(git ls-files | grep -v '^src/' | while read -r f; do
+    [ -f "$f" ] && head -c 30 "$f" | grep -q '^#!/usr/bin/env python3' && echo "$f"; done)
+check "every Python script checks for Python 3.11 or newer" sh -c '
+    for f; do grep -q "sys.version_info < (3, 11)" "$f" || { echo "$f"; exit 1; }; done' sh $pyscripts
+if [ -x out/devroot/usr/bin/python3.11 ]; then
+    P=$SCRATCH/py311
+    rm -rf "$P"; mkdir -p "$P"
+    for f in $pyscripts; do mkdir -p "$P/$(dirname "$f")"; cp "$f" "$P/$f"; done
+    check "the Python scripts compile with Python 3.11, the box's ($(echo $pyscripts | wc -w) of them)" \
+        env DEVROOT_SRC="$P" DEVROOT_BUILD="$P/build" env/devroot run python3.11 -c '
+import sys
+for f in sys.argv[1:]:
+    compile(open(f).read(), f, "exec")' $pyscripts
+    rm -rf "$P"
+else
+    echo "  skip  Python 3.11 compile check (no out/devroot; run env/devroot init)"
+fi
+
 check "each overlay service's ExecStart exists in the overlay or the image" sh -c '
     for u in overlay/etc/systemd/system/*.service; do
         exe=$(sed -n "s/^ExecStart=\([^ ]*\).*/\1/p" "$u")
