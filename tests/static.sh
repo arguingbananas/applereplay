@@ -1,18 +1,23 @@
 # Checks that need no build: scripts parse, patches apply, the overlay's
 # services point at files that exist, and nothing private is tracked by git.
-cd "$PROJECT"
+cd "$PROJECT" || exit 1
 
 # Every tracked shell script (by its #! line), except the submodule.
 scripts=$(git ls-files | grep -v '^src/' | while read -r f; do
     [ -f "$f" ] && head -c 20 "$f" | grep -q '^#!/bin/sh' && echo "$f"; done)
-check "the shell scripts parse ($(echo $scripts | wc -w) of them)" sh -c '
-    for f; do sh -n "$f" || exit 1; done' sh $scripts
+# The tests themselves have no #! line: tests/run sources them into sh, so
+# they are checked as sh too.
+tests=$(git ls-files 'tests/*.sh')
+check "the shell scripts parse ($(echo $scripts $tests | wc -w) of them, tests included)" sh -c '
+    for f; do sh -n "$f" || exit 1; done' sh $scripts $tests
+# The scripts, then the tests as sh (shellcheck can't tell from a #! line).
+lint() { "$@" -S warning $scripts && "$@" -s sh -S warning $tests; }
 # Prefer the build environment's shellcheck: newer versions add warnings, so
 # everyone should check with the same one.
 if [ -x env/root/usr/bin/shellcheck ]; then
-    check "shellcheck (env) finds no warnings" env/run shellcheck -S warning $scripts
+    check "shellcheck (env) finds no warnings" lint env/run shellcheck
 elif command -v shellcheck >/dev/null; then
-    check "shellcheck (host) finds no warnings" shellcheck -S warning $scripts
+    check "shellcheck (host) finds no warnings" lint shellcheck
 else
     echo "  skip  shellcheck (not installed)"
 fi
@@ -25,11 +30,14 @@ pyscripts=$(git ls-files | grep -v '^src/' | while read -r f; do
 check "every Python script checks for Python 3.11 or newer" sh -c '
     for f; do grep -q "sys.version_info < (3, 11)" "$f" || { echo "$f"; exit 1; }; done' sh $pyscripts
 # pyflakes: unused imports and variables, undefined names. Like shellcheck,
-# only env's copy, so everyone checks with the same version.
+# env's copy first, so everyone checks with the same version; the host's
+# otherwise (GitHub's runner has no env/root).
 if [ -x env/root/usr/bin/pyflakes3 ]; then
     check "pyflakes (env) finds nothing" env/run pyflakes3 $pyscripts
+elif command -v pyflakes3 >/dev/null; then
+    check "pyflakes (host) finds nothing" pyflakes3 $pyscripts
 else
-    echo "  skip  pyflakes (not in env/root: env/run apt-get -o APT::Sandbox::User=root install python3-pyflakes)"
+    echo "  skip  pyflakes (not installed: env/bootstrap.sh, or in an older env/root env/run apt-get -o APT::Sandbox::User=root install pyflakes3)"
 fi
 if [ -x out/devroot/usr/bin/python3.11 ]; then
     P=$SCRATCH/py311

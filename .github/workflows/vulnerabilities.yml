@@ -34,7 +34,9 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       DEBIAN_FRONTEND: noninteractive
     steps:
-      - uses: actions/checkout@v7
+      # By full SHA, so the code that runs can't change under the same name;
+      # Dependabot (github-actions) proposes updates.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 

@@ -1,0 +1,40 @@
+# The tests that need no build, the toolchain or the assets, on every push and
+# pull request: static (scripts parse, shellcheck, pyflakes, the logo and
+# splash images, the overlay, nothing private tracked), screen-factor and
+# keys. Everything else needs out/ (a built image) or the Apple TV, so it
+# runs locally (tests/run, TEST_BOX=1 tests/run).
+# GitHub's runner has no env/root, so static falls back to the runner's
+# shellcheck (0.9.0 on Ubuntu 24.04; env/root has 0.10.0) and pyflakes 3.2.0,
+# and skips the Python 3.11 compile check, which needs the devroot.
+name: Tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quick:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      # A full commit SHA, not a tag, so the code that runs can't change
+      # under the same name; Dependabot (github-actions) proposes updates.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install the linters
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq shellcheck pyflakes3
+
+      - name: Run the tests
+        run: tests/run static screen-factor keys
