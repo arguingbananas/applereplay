@@ -17,11 +17,13 @@ R=$T/root
 
 # The image is only worth checking against the repo if it was built after
 # the last change to anything that goes into it.
-newer=$(cd "$PROJECT" && git ls-files build.sh hooks overlay patches tools |
+# dash and bash both have -nt, though POSIX doesn't define it.
+# shellcheck disable=SC3013
+newer=$(cd "$PROJECT" && git ls-files build.sh hooks overlay patches tools/fps logo/BootLogo.png |
     while read -r f; do [ "$f" -nt out/rootfs.tar ] && echo "$f"; done)
 check "out/rootfs.tar is newer than every build input (else run ./build.sh)" \
     sh -c '[ -z "$1" ] || { echo "changed since the build: $1"; exit 1; }' sh "$(echo $newer)"
-cd "$R"
+cd "$R" || exit 1
 
 check "the hostname is applereplay" grep -qx applereplay etc/hostname
 check "X uses fbdev with no shadow framebuffer, and no nouveau config" sh -c '
@@ -73,6 +75,24 @@ check "the firewall drops what it doesn't name, and names SSH and mDNS" sh -c '
     grep -q "hook input priority filter; policy drop;" etc/nftables.conf &&
     grep -qx " *tcp dport 22 accept" etc/nftables.conf &&
     grep -qx " *udp dport 5353 accept" etc/nftables.conf'
+# The same files, checked by the image's own nft and systemd: the devroot is
+# the image's system, if it was made from this rootfs.tar. bwrap (env/devroot
+# run) drops every capability, so nft runs under unshare instead, which keeps
+# them inside its own user and network namespaces.
+D=$PROJECT/out/devroot
+# shellcheck disable=SC3013
+if [ -x "$D/usr/sbin/nft" ] && ! [ "$PROJECT/out/rootfs.tar" -nt "$D/.devroot-from" ]; then
+    check "the image's nft accepts its firewall rules (nft -c)" \
+        unshare -rn --root="$D" /usr/sbin/nft -c -f /etc/nftables.conf
+    # Any output counts: verify only warns about unknown keys.
+    check "the image's systemd finds nothing wrong in our units and drop-ins (systemd-analyze verify)" sh -c '
+        out=$("$1/env/devroot" run sh -c "systemd-analyze verify --man=no \
+            /etc/systemd/system/applereplay-*.service getty@tty1.service \
+            plymouth-halt.service plymouth-poweroff.service 2>&1") && [ -z "$out" ] ||
+            { echo "$out"; exit 1; }' sh "$PROJECT"
+else
+    echo "  skip  nft -c and systemd-analyze verify (no devroot made from this rootfs.tar; run env/devroot init)"
+fi
 check "the root services are confined to the one capability each needs (the splash's to none)" sh -c '
     grep -qx "CapabilityBoundingSet=CAP_SYS_ADMIN" etc/systemd/system/applereplay-fb-wc.service &&
     grep -qx "CapabilityBoundingSet=CAP_SYS_RAWIO" etc/systemd/system/applereplay-hdmi-audio.service &&
@@ -162,5 +182,5 @@ else
     echo "  skip  image checks (no out/totalreplay.img or no toolchain)"
 fi
 
-cd "$PROJECT"
+cd "$PROJECT" || exit 1
 rm -rf "$T"

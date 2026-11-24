@@ -122,18 +122,28 @@ Settings, as environment variables:
 | `TEST_BOX` | `tests/run`: `1` also tests a running Apple TV over SSH | unset |
 | `TEST_HOST` | `tests/run`: the Apple TV's SSH address | `apple@applereplay.local` |
 
+`env/devroot` also reads `DEVROOT`, `DEVROOT_SRC`, `DEVROOT_BUILD` and
+`DEVROOT_TARBALL`, so the tests can point it at a scratch directory. Their
+defaults are `out/devroot`, `out/src/linapple`, `out/devbuild/sdl2` and
+`out/rootfs.tar`.
+
 ## Tests
 
 ```
-tests/run                # everything that needs no Apple TV, about 1.5 minutes
-tests/run static         # one test by name: static, image, stretch, devroot, box
+tests/run                # everything that needs no Apple TV, about 2 minutes
+tests/run static         # one test by name (the files in tests/): static, image,
+                         # stretch, screen-factor, keys, devroot, linapple-upstream, box
 TEST_BOX=1 tests/run     # also checks a running box: services, display and sound setup, 60 fps
 ```
 
 Tests skip what they can't check yet and say what to run first: most need
 `env/bootstrap.sh` and a finished `./build.sh` and `./mkimage.sh`, and the
-i386 checks need `env/devroot init`. The shell scripts are checked with
-[shellcheck](https://www.shellcheck.net), which `env/bootstrap.sh` installs.
+i386 checks need `env/devroot init`. `linapple-upstream` builds and runs
+linapple's own test suite on the patched linapple, for the box's system: the
+first run takes about half an hour, later ones about a minute and a half. The
+shell scripts are checked with [shellcheck](https://www.shellcheck.net) and the
+Python scripts with [pyflakes](https://github.com/PyCQA/pyflakes), both
+installed by `env/bootstrap.sh`.
 
 ## Write the stick
 
@@ -237,8 +247,10 @@ applereplay stands on these projects:
   authors of every package in the image: Linux, X.Org, SDL, avahi, Plymouth
   and the rest.
 - The build and test tools: [mmdebstrap](https://gitlab.mister-muffin.de/josch/mmdebstrap),
-  [bubblewrap](https://github.com/containers/bubblewrap) and
-  [ShellCheck](https://www.shellcheck.net).
+  [bubblewrap](https://github.com/containers/bubblewrap),
+  [ShellCheck](https://www.shellcheck.net),
+  [pyflakes](https://github.com/PyCQA/pyflakes), and
+  [doctest](https://github.com/doctest/doctest), which linapple's own tests use.
 
 Our fixes to these projects are meant to go back upstream; `docs/NOTES.md` lists
 them.
