@@ -2673,6 +2673,12 @@ Status: install ok installed
 Architecture: i386
 Version: 1.34+dfsg-1.2+deb12u1
 
+Package: triggerhappy
+Status: install ok installed
+Architecture: i386
+Source: triggerhappy (0.5.0-1.1)
+Version: 0.5.0-1.1+b2
+
 Package: tzdata
 Status: install ok installed
 Architecture: all

@@ -19,6 +19,7 @@ avahi-daemon libnss-mdns systemd-timesyncd sudo nftables
 less nano procps pciutils usbutils evtest alsa-utils alsa-tools libdrm-tests
 xserver-xorg-core xserver-xorg-legacy
 xserver-xorg-video-fbdev xserver-xorg-input-libinput xinit x11-xserver-utils xterm xdotool
+triggerhappy
 libsdl2-2.0-0 libsdl1.2debian libsdl-image1.2 libzip4
 build-essential cmake pkg-config imagemagick
 libzip-dev zlib1g-dev libsdl2-dev libsdl1.2-dev libsdl-image1.2-dev
