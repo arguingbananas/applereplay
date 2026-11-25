@@ -117,6 +117,9 @@ systemctl mask apt-daily.timer apt-daily-upgrade.timer
 # just before the login on tty1, in place of Plymouth's own services.
 systemctl enable applereplay-splash-end.service
 systemctl mask plymouth-quit.service plymouth-quit-wait.service
+# The Apple Remote: triggerhappy turns its buttons into keys for linapple
+# (overlay/etc/triggerhappy, and a drop-in so it watches only the receiver).
+systemctl enable triggerhappy.service
 
 apt-get clean
 rm -rf "$STAGE"

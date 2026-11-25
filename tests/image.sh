@@ -12,7 +12,7 @@ tar -x -f "$PROJECT/out/rootfs.tar" -C "$T/root" --wildcards \
     ./etc/ssh/sshd_config.d ./etc/systemd/system ./etc/modprobe.d ./etc/nftables.conf ./etc/plymouth \
     ./usr/share/plymouth/themes/applereplay/BootLogo.png ./usr/lib/systemd/system-shutdown \
     './home/apple/.ssh/authorized_keys' './usr/local/bin/*' './usr/local/sbin/*' './usr/local/lib/totalreplay/*' \
-    ./usr/bin/hda-verb './boot/vmlinuz-*' ./var/lib/dpkg/status 2>/dev/null
+    ./usr/bin/hda-verb ./usr/sbin/thd ./etc/triggerhappy ./etc/udev/rules.d './boot/vmlinuz-*' ./var/lib/dpkg/status 2>/dev/null
 R=$T/root
 
 # The image is only worth checking against the repo if it was built after
@@ -45,8 +45,21 @@ check "Caps Lock is on at startup (the session turns X's on; the Apple follows i
 check "HDMI (card 0 device 3) is the default sound output" \
     grep -qx 'defaults.pcm.device 3' etc/asound.conf
 check "the box's services are enabled" sh -c '
-    for s in applereplay-fb-wc applereplay-hdmi-audio applereplay-splash-end ssh avahi-daemon systemd-timesyncd nftables; do
+    for s in applereplay-fb-wc applereplay-hdmi-audio applereplay-splash-end ssh avahi-daemon systemd-timesyncd nftables triggerhappy; do
         ls etc/systemd/system/*.wants/$s.service >/dev/null 2>&1 || { echo "$s not enabled"; exit 1; }
+    done'
+# The Apple Remote: triggerhappy runs as apple, watches only the IR receiver
+# (not every input device, and no udev rule hands it new ones), and maps the
+# white remote's six buttons.
+check "the Apple Remote's buttons become keys for linapple (triggerhappy, receiver only, as apple)" sh -c '
+    [ -x usr/sbin/thd ] &&
+    grep -q -- "--user apple /dev/input/by-id/usb-Apple_Inc._IR_Receiver-event-ir\$" etc/systemd/system/triggerhappy.service.d/applereplay.conf &&
+    ! grep -qv "^#" etc/udev/rules.d/60-triggerhappy.rules &&
+    t=etc/triggerhappy/triggers.d/applereplay-remote.conf &&
+    for k in "KEY_BACK 1:key Left" "KEY_FORWARD 1:key Right" "KEY_VOLUMEUP 1:key Up" "KEY_VOLUMEDOWN 1:key Down" \
+             "KEY_PLAYPAUSE 1:key Return" "KEY_MENU 1:keydown ctrl sleep 0.1 key F2 sleep 0.2 keyup ctrl"; do
+        ev=${k%%:*}; act=${k#*:}
+        grep -E "^${ev%% *} +${ev#* } DISPLAY=:0 xdotool $act\$" "$t" >/dev/null || { echo "no trigger: $k"; exit 1; }
     done'
 # plymouthd aborts on DeviceTimeout=0 (an assertion in its timer code), and
 # then there is no splash and the boot messages show.

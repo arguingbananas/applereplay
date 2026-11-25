@@ -167,6 +167,11 @@ logo, some boot text, then Total Replay.
   quits the emulator, which starts again at the menu. F1 lists every emulator
   key, and Pause pauses. Mind F10 and F11 on their own: they load and save a
   snapshot.
+- **Apple Remote:** the Apple TV's own remote (the white one) browses Total
+  Replay's menu from the couch: left and right (or up and down) step through
+  the games, the centre button starts the one shown, and Menu leaves a game
+  for the menu (a quick restart of the Apple II, about 2 seconds). Games
+  themselves still want the keyboard or a controller.
 - **Joystick:** with a game controller plugged in when the emulator starts,
   its left stick is the Apple II's joystick and its first two buttons (A and
   B on an Xbox pad) are the Apple II's two. The d-pad works as a stick pushed

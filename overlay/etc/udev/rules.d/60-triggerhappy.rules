@@ -1,0 +1,3 @@
+# Replaces Debian's /lib/udev/rules.d/60-triggerhappy.rules, which hands every
+# new input device to triggerhappy: here it watches only the Apple Remote's
+# receiver (see /etc/systemd/system/triggerhappy.service.d/applereplay.conf).
