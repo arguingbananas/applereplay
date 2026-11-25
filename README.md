@@ -3,7 +3,7 @@
 ![applereplay's boot logo: pixel art in Apple II colours](logo/BootLogo.png)
 
 What if a 2007 Apple TV could play the Apple II games of the 1980s, with tools
-from 2026?¹
+from 2026?
 
 applereplay turns an original Apple TV (first generation, model A1218) into an
 Apple II games console. It boots Debian from a USB stick straight into
@@ -274,7 +274,3 @@ What the build uses keeps its own license:
   Debian's main archive, so all are free software (the GPL, LGPL, MIT, BSD
   and others). The image keeps Debian's notice for each one in
   `/usr/share/doc/<package>/copyright`.
-
----
-
-¹ The entire project — concept, specification, and code — was an original human idea written by an artificial intelligence.
