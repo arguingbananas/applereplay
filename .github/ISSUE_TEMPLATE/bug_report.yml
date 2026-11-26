@@ -1,0 +1,41 @@
+name: Bug report
+description: Something in the build, the image or the box doesn't work
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: input
+    id: commit
+    attributes:
+      label: Commit you built from
+      description: "`git rev-parse --short HEAD` in your checkout."
+    validations:
+      required: true
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where does it go wrong?
+      options:
+        - Setting up the build environment (env/bootstrap.sh)
+        - Building the image (build.sh / mkimage.sh)
+        - Writing the stick
+        - Booting the Apple TV
+        - Playing (picture, sound, keyboard, controller)
+        - Over SSH
+        - Tests
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Output or logs
+      description: >
+        Paste the error output. Please remove anything about your own setup
+        first: IP addresses, host names, user names, serial numbers.
+      render: text
