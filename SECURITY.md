@@ -2,9 +2,10 @@
 
 ## Reporting a problem
 
-Please report security problems privately, not in a public issue: on this
-repository's GitHub page, open the **Security** tab and choose **Report a
-vulnerability**. Say what you found, how to reproduce it, and which commit you
+Please report security problems privately, not in a public issue:
+**[report a vulnerability](https://github.com/arguingbananas/applereplay/security/advisories/new)**
+(on this repository's GitHub page, the **Security** tab, then **Report a
+vulnerability**). Say what you found, how to reproduce it, and which commit you
 built from. This is a hobby project with no promised response time, but
 reports are read and answered.
 
