@@ -10,7 +10,7 @@ HERE=$(cd "$(dirname "$0")" && pwd)
 OUT=$HERE/out
 SUITE=bookworm
 LINAPPLE_REPO=https://github.com/linappleii/linapple
-LINAPPLE_REF=${LINAPPLE_REF:-0b22441e91cb95cb813193195187d02db7227bd0}
+LINAPPLE_REF=${LINAPPLE_REF:-0dd044286ff35d30430d41814c92881f3cd69913}
 
 PACKAGES="
 systemd-sysv udev dbus kmod initramfs-tools zstd plymouth fontconfig

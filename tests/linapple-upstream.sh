@@ -2,8 +2,6 @@
 # ships: build.sh's pinned commit plus patches/, built in the devroot (the
 # box's Debian 12 i386, its compiler and SDL2) with the image's options plus
 # BUILD_TESTING. Release, as in the image and in upstream's CI.
-# test-peripheral-abi is left out, with the reason printed, until the pin
-# includes linapple#372 (HostLocalTime is 20 bytes on i386 before it).
 # The build directory persists in out/test/linapple-upstream: upstream builds
 # each test from source, about 8,200 objects, so the first run takes about 30
 # minutes on 8 cores; later runs rebuild only what changed.
@@ -54,30 +52,18 @@ in_devroot() {
         cd /usr/local/src/linapple/build-sdl2
         $1"
 }
-# The image's options (hooks/customize.sh), plus the tests. Built with make's
-# -k, since test-peripheral-abi doesn't even compile on i386 before
-# linapple#372 (its static_assert on HostLocalTime's size fails); any other
-# target that fails to build is a failure.
+# The image's options (hooks/customize.sh), plus the tests.
 in_devroot "
     cmake .. -DFRONTEND=sdl2 -DENABLE_FTP=OFF -DCMAKE_BUILD_TYPE=Release \
         -DENABLE_STRICT_WARNINGS=OFF -DBUILD_TESTING=ON \
         -DDOCTEST_INCLUDE_DIR=/usr/local/src/linapple/_doctest/doctest >cfg.log 2>&1 ||
         { tail -30 cfg.log; exit 1; }
-    cmake --build . -j$(nproc) -- -k >build.log 2>&1" || true
-failed_targets=$(sed -n 's|.*CMakeFiles/\([^/]*\)\.dir/all\] Error.*|\1|p' "$T/build/build.log" | sort -u)
+    cmake --build . -j$(nproc) >build.log 2>&1" || true
 check "upstream's tests build (log: out/test/linapple-upstream/build/build.log)" sh -c "
     [ -f '$T/build/cfg.log' ] && grep -q 'Generating done' '$T/build/cfg.log' || { tail -30 '$T/build/cfg.log'; exit 1; }
-    for t in $(echo "$failed_targets" | tr '\n' ' '); do
-        [ \"\$t\" = test-peripheral-abi ] || { echo \"\$t failed to build\"; grep -m5 'error:' '$T/build/build.log'; exit 1; }
-    done" || exit 1
+    ! grep -q -E 'Error [0-9]|error:' '$T/build/build.log' || { grep -m5 -E 'error:|Error [0-9]' '$T/build/build.log'; exit 1; }" || exit 1
 
-echo "        test-peripheral-abi left out: HostLocalTime is 20 bytes on i386 until linapple#372"
-in_devroot "ctest -j$(nproc) -E '^test-peripheral-abi\$' --output-on-failure >ctest.log 2>&1" || true
+in_devroot "ctest -j$(nproc) --output-on-failure >ctest.log 2>&1" || true
 summary=$(grep -E 'tests passed, [0-9]+ tests failed' "$T/build/ctest.log")
 check "upstream's tests pass (${summary:-no summary}; log: out/test/linapple-upstream/build/ctest.log)" \
     sh -c "echo '$summary' | grep -q '^100% tests passed, 0 tests failed' || { grep -E 'Failed|\\*\\*\\*' '$T/build/ctest.log'; exit 1; }"
-# Say so when the excluded test starts passing, so the exclusion can go.
-if [ -z "$failed_targets" ] &&
-    in_devroot "ctest -R '^test-peripheral-abi\$' >ctest-abi.log 2>&1"; then
-    echo "        note: test-peripheral-abi passes now; drop its exclusion here"
-fi
