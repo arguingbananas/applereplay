@@ -1,7 +1,8 @@
 // Drives linapple's VideoStretch over many cases and prints one checksum per
-// case. tests/stretch.sh builds it against upstream's VideoStretch.cpp and
-// against ours (patches/linapple-stretch-speedup.patch) and compares the
-// output, so any pixel the patch changes shows up as a differing line.
+// case. tests/stretch.sh builds it for x86_64 and for the box's i386 and
+// compares the output, so any pixel that differs between them shows up as a
+// differing line. (It was written to check the division-free stretch, now
+// upstream as linapple#373, against the original, case by case.)
 // With "bands" it instead checks what the changed-rows patch relies on:
 // stretching a band of whole row blocks gives exactly the full frame's rows.
 #include <cstdint>
