@@ -1453,25 +1453,25 @@ Package: libpam-modules
 Status: install ok installed
 Architecture: i386
 Source: pam
-Version: 1.5.2-6+deb12u2
+Version: 1.5.2-6+deb12u3
 
 Package: libpam-modules-bin
 Status: install ok installed
 Architecture: i386
 Source: pam
-Version: 1.5.2-6+deb12u2
+Version: 1.5.2-6+deb12u3
 
 Package: libpam-runtime
 Status: install ok installed
 Architecture: all
 Source: pam
-Version: 1.5.2-6+deb12u2
+Version: 1.5.2-6+deb12u3
 
 Package: libpam0g
 Status: install ok installed
 Architecture: i386
 Source: pam
-Version: 1.5.2-6+deb12u2
+Version: 1.5.2-6+deb12u3
 
 Package: libpci3
 Status: install ok installed
@@ -2403,36 +2403,36 @@ Package: libzstd-dev
 Status: install ok installed
 Architecture: i386
 Source: libzstd
-Version: 1.5.4+dfsg2-5
+Version: 1.5.4+dfsg2-5+deb12u1
 
 Package: libzstd1
 Status: install ok installed
 Architecture: i386
 Source: libzstd
-Version: 1.5.4+dfsg2-5
+Version: 1.5.4+dfsg2-5+deb12u1
 
 Package: linux-base
 Status: install ok installed
 Architecture: all
 Version: 4.12.1~deb12u1
 
-Package: linux-image-6.1.0-56-686-pae
+Package: linux-image-6.1.0-57-686-pae
 Status: install ok installed
 Architecture: i386
-Source: linux-signed-i386 (6.1.192+2)
-Version: 6.1.192-2
+Source: linux-signed-i386 (6.1.192+3)
+Version: 6.1.192-3
 
 Package: linux-image-686-pae
 Status: install ok installed
 Architecture: i386
-Source: linux-signed-i386 (6.1.192+2)
-Version: 6.1.192-2
+Source: linux-signed-i386 (6.1.192+3)
+Version: 6.1.192-3
 
 Package: linux-libc-dev
 Status: install ok installed
 Architecture: i386
 Source: linux
-Version: 6.1.192-2
+Version: 6.1.192-3
 
 Package: login
 Status: install ok installed
@@ -2842,5 +2842,5 @@ Package: zstd
 Status: install ok installed
 Architecture: i386
 Source: libzstd
-Version: 1.5.4+dfsg2-5
+Version: 1.5.4+dfsg2-5+deb12u1
 
