@@ -121,6 +121,23 @@ systemctl mask plymouth-quit.service plymouth-quit-wait.service
 # (overlay/etc/triggerhappy, and a drop-in so it watches only the receiver).
 systemctl enable triggerhappy.service
 
+echo "== /etc/applereplay-release (what this image is)"
+# build.sh's part (commit, build time, linapple's pin and patches), then the
+# kernel and linapple's binaries as built here. tests/box.sh compares a
+# running box with it; a linapple replaced later (env/devroot install) shows
+# as a different SHA-256.
+kernel=$(basename /boot/vmlinuz-*)
+kernel=${kernel#vmlinuz-}
+{
+    cat "$STAGE/release"
+    echo "KERNEL=$kernel"
+    echo "KERNEL_DEBIAN=$(dpkg-query -W -f '${Version}' "linux-image-$kernel")"
+    echo "LINAPPLE_SDL2_SHA256=$(sha256sum < /usr/local/bin/linapple-sdl2 | cut -d' ' -f1)"
+    echo "LINAPPLE_SDL1_SHA256=$(sha256sum < /usr/local/bin/linapple-sdl1 | cut -d' ' -f1)"
+} > /etc/applereplay-release
+chmod 644 /etc/applereplay-release
+cat /etc/applereplay-release
+
 apt-get clean
 rm -rf "$STAGE"
 # mmdebstrap copied in the build host's resolv.conf; dhclient writes the real one.

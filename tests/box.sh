@@ -33,11 +33,29 @@ box '
     stick=$(lsblk -no PKNAME "$(findmnt -no SOURCE /)")
     echo "stick $stick"
     echo "elsewhere $(findmnt -rn -o SOURCE | grep "^/dev/" | while read -r s; do [ "$(lsblk -no PKNAME "$s")" = "$stick" ] || echo "$s"; done | wc -l)"
+    sed "s/^/release /" /etc/applereplay-release 2>/dev/null
+    echo "uname $(uname -r)"
+    echo "sum_SDL2 $(sha256sum < /usr/local/bin/linapple-sdl2 | cut -d" " -f1)"
+    echo "sum_SDL1 $(sha256sum < /usr/local/bin/linapple-sdl1 | cut -d" " -f1)"
 ' > "$SCRATCH/box.txt" 2>&1
 B=$SCRATCH/box.txt
 has() { grep -qx "$1" "$B"; }
 
 check "it's applereplay" has "host applereplay"
+
+# What the box runs: /etc/applereplay-release, written by the build.
+rel() { sed -n "s/^release $1=//p" "$B" | tr -d '"'; }
+check "it says what it runs (/etc/applereplay-release: commit $(rel APPLEREPLAY_COMMIT), built $(rel APPLEREPLAY_BUILT))" \
+    sh -c "[ -n '$(rel APPLEREPLAY_COMMIT)' ] && [ -n '$(rel LINAPPLE_SDL2_SHA256)' ]"
+check "it runs the kernel the release file names ($(sed -n 's/^uname //p' "$B"))" \
+    sh -c "[ -n '$(rel KERNEL)' ] && grep -qx 'uname $(rel KERNEL)' '$B'"
+check "its linapple binaries are the ones built into the image (not replaced since, e.g. by env/devroot install)" sh -c "
+    grep -qx 'sum_SDL2 $(rel LINAPPLE_SDL2_SHA256)' '$B' && grep -qx 'sum_SDL1 $(rel LINAPPLE_SDL1_SHA256)' '$B'"
+repo_ref=$(sed -n 's/^LINAPPLE_REF=\${LINAPPLE_REF:-\(.*\)}$/\1/p' "$PROJECT/build.sh")
+repo_patches=$(cd "$PROJECT/patches" && for p in linapple-*.patch; do
+    printf '%s:%s ' "$p" "$(sha256sum < "$p" | cut -c1-12)"; done)
+check "its linapple is the repo's: build.sh's pin and patches/ as they are now (else rebuild and rewrite the stick)" \
+    sh -c "[ '$(rel LINAPPLE_REF)' = '$repo_ref' ] && [ '$(rel LINAPPLE_PATCHES)' = '${repo_patches% }' ]"
 # After a boot avahi once renamed the box applereplay-2.local (docs/NOTES.md).
 check "it answers to applereplay.local ($(sed -n 's/^mdns //p' "$B"))" has 'mdns s "applereplay.local"'
 # The Apple TV's own hard disk stays as Apple left it (docs/NOTES.md).
