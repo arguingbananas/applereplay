@@ -32,8 +32,8 @@ rel() { sed -n "s/^$1=//p" etc/applereplay-release | tr -d '"'; }
 repo_ref=$(sed -n 's/^LINAPPLE_REF=\${LINAPPLE_REF:-\(.*\)}$/\1/p' "$PROJECT/build.sh")
 repo_patches=$(cd "$PROJECT/patches" && for p in linapple-*.patch; do
     printf '%s:%s ' "$p" "$(sha256sum < "$p" | cut -c1-12)"; done)
-check "/etc/applereplay-release names the commit and build time ($(rel APPLEREPLAY_COMMIT), $(rel APPLEREPLAY_BUILT))" sh -c "
-    [ -n '$(rel APPLEREPLAY_COMMIT)' ] && echo '$(rel APPLEREPLAY_BUILT)' | grep -qE '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9:]{8}Z\$'"
+check "/etc/applereplay-release names the commit, its tree and the build time ($(rel APPLEREPLAY_COMMIT), tree $(rel APPLEREPLAY_TREE), $(rel APPLEREPLAY_BUILT))" sh -c "
+    [ -n '$(rel APPLEREPLAY_COMMIT)' ] && [ -n '$(rel APPLEREPLAY_TREE)' ] && echo '$(rel APPLEREPLAY_BUILT)' | grep -qE '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9:]{8}Z\$'"
 case $(rel APPLEREPLAY_COMMIT) in
     *-dirty) echo "  note  built from a tree with uncommitted changes; commit, then rebuild before writing a stick" ;;
 esac

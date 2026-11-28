@@ -45,7 +45,7 @@ check "it's applereplay" has "host applereplay"
 
 # What the box runs: /etc/applereplay-release, written by the build.
 rel() { sed -n "s/^release $1=//p" "$B" | tr -d '"'; }
-check "it says what it runs (/etc/applereplay-release: commit $(rel APPLEREPLAY_COMMIT), built $(rel APPLEREPLAY_BUILT))" \
+check "it says what it runs (/etc/applereplay-release: commit $(rel APPLEREPLAY_COMMIT), tree $(rel APPLEREPLAY_TREE), built $(rel APPLEREPLAY_BUILT))" \
     sh -c "[ -n '$(rel APPLEREPLAY_COMMIT)' ] && [ -n '$(rel LINAPPLE_SDL2_SHA256)' ]"
 check "it runs the kernel the release file names ($(sed -n 's/^uname //p' "$B"))" \
     sh -c "[ -n '$(rel KERNEL)' ] && grep -qx 'uname $(rel KERNEL)' '$B'"
