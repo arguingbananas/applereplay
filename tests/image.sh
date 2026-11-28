@@ -8,7 +8,7 @@ rm -rf "$T"
 mkdir -p "$T/root"
 # One pass over the tarball for the files we look at.
 tar -x -f "$PROJECT/out/rootfs.tar" -C "$T/root" --wildcards \
-    ./etc/hostname ./etc/asound.conf ./etc/avahi/avahi-daemon.conf ./etc/X11 ./etc/totalreplay \
+    ./etc/hostname ./etc/applereplay-release ./etc/asound.conf ./etc/avahi/avahi-daemon.conf ./etc/X11 ./etc/totalreplay \
     ./etc/ssh/sshd_config.d ./etc/systemd/system ./etc/modprobe.d ./etc/nftables.conf ./etc/plymouth \
     ./usr/share/plymouth/themes/applereplay/BootLogo.png ./usr/lib/systemd/system-shutdown \
     './home/apple/.ssh/authorized_keys' './usr/local/bin/*' './usr/local/sbin/*' './usr/local/lib/totalreplay/*' \
@@ -26,6 +26,24 @@ check "out/rootfs.tar is newer than every build input (else run ./build.sh)" \
 cd "$R" || exit 1
 
 check "the hostname is applereplay" grep -qx applereplay etc/hostname
+
+# /etc/applereplay-release says what the image is (build.sh and hooks/customize.sh).
+rel() { sed -n "s/^$1=//p" etc/applereplay-release | tr -d '"'; }
+repo_ref=$(sed -n 's/^LINAPPLE_REF=\${LINAPPLE_REF:-\(.*\)}$/\1/p' "$PROJECT/build.sh")
+repo_patches=$(cd "$PROJECT/patches" && for p in linapple-*.patch; do
+    printf '%s:%s ' "$p" "$(sha256sum < "$p" | cut -c1-12)"; done)
+check "/etc/applereplay-release names the commit and build time ($(rel APPLEREPLAY_COMMIT), $(rel APPLEREPLAY_BUILT))" sh -c "
+    [ -n '$(rel APPLEREPLAY_COMMIT)' ] && echo '$(rel APPLEREPLAY_BUILT)' | grep -qE '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9:]{8}Z\$'"
+case $(rel APPLEREPLAY_COMMIT) in
+    *-dirty) echo "  note  built from a tree with uncommitted changes; commit, then rebuild before writing a stick" ;;
+esac
+check "it names build.sh's linapple pin and patches/ as they are now" \
+    sh -c "[ '$(rel LINAPPLE_REF)' = '$repo_ref' ] && [ '$(rel LINAPPLE_PATCHES)' = '${repo_patches% }' ]"
+check "it names the image's kernel ($(rel KERNEL), Debian $(rel KERNEL_DEBIAN))" \
+    sh -c "[ -n '$(rel KERNEL_DEBIAN)' ] && [ -e 'boot/vmlinuz-$(rel KERNEL)' ]"
+check "it has the SHA-256 of the image's linapple-sdl2 and linapple-sdl1" sh -c "
+    [ \"\$(sha256sum < usr/local/bin/linapple-sdl2 | cut -d' ' -f1)\" = '$(rel LINAPPLE_SDL2_SHA256)' ] &&
+    [ \"\$(sha256sum < usr/local/bin/linapple-sdl1 | cut -d' ' -f1)\" = '$(rel LINAPPLE_SDL1_SHA256)' ]"
 check "X uses fbdev with no shadow framebuffer, and no nouveau config" sh -c '
     grep -q "Option \"ShadowFB\" \"false\"" etc/X11/xorg.conf.d/20-fbdev.conf &&
     ! [ -e etc/X11/xorg.conf.d/20-nouveau.conf ]'
