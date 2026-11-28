@@ -2517,7 +2517,7 @@ Version: 1:4.13+dfsg1-1+deb12u2
 Package: patch
 Status: install ok installed
 Architecture: i386
-Version: 2.7.6-7
+Version: 2.7.6-7+deb12u1
 
 Package: pci.ids
 Status: install ok installed
