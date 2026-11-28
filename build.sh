@@ -53,15 +53,22 @@ for p in "$HERE"/patches/linapple-*.patch; do git -C "$OUT/src/linapple" apply "
 
 # What this image is, for /etc/applereplay-release (hooks/customize.sh adds the
 # kernel and linapple's binaries): this repo's commit, "-dirty" when tracked
-# files differ from it, when it was built, and linapple's pin and patches,
-# each with the start of its SHA-256 so an edited patch shows.
+# files differ from it, and its tree (the commit's contents: main takes only
+# rebase merges, which give a pull request's commit a new hash but keep its
+# tree), when it was built, and linapple's pin and patches, each with the
+# start of its SHA-256 so an edited patch shows.
 commit=$(git -C "$HERE" rev-parse --short=12 HEAD 2>/dev/null || echo unknown)
-git -C "$HERE" diff --quiet HEAD -- 2>/dev/null || commit=$commit-dirty
+tree=$(git -C "$HERE" rev-parse --short=12 'HEAD^{tree}' 2>/dev/null || echo unknown)
+if ! git -C "$HERE" diff --quiet HEAD -- 2>/dev/null; then
+    commit=$commit-dirty
+    tree=$tree-dirty
+fi
 patches=$(cd "$HERE/patches" && for p in linapple-*.patch; do
     printf '%s:%s ' "$p" "$(sha256sum < "$p" | cut -c1-12)"
 done)
 {
     echo "APPLEREPLAY_COMMIT=$commit"
+    echo "APPLEREPLAY_TREE=$tree"
     echo "APPLEREPLAY_BUILT=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
     echo "LINAPPLE_REF=$LINAPPLE_REF"
     echo "LINAPPLE_PATCHES=\"${patches% }\""
